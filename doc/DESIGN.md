@@ -1,4 +1,4 @@
-# Simulation Design Final
+# cellSociety Design Final
 ### Names
 
 ## Team Roles and Responsibilities

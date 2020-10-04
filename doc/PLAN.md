@@ -1,4 +1,4 @@
-# Simulation Design Plan
+# cellSociety Design Plan
 ### Team Number
 ### Names
 
