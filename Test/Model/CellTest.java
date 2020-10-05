@@ -1,19 +1,19 @@
 package Model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
 class CellTest {
 
   @Test
-  void testCellConstructor(){
+  void testCellConstructor() {
     Cell testCell = new Cell(1);
     assertEquals(1, testCell.getCurrentState());
   }
 
   @Test
-  void testCellFutureState(){
+  void testCellFutureState() {
     Cell testCell = new Cell(1);
     assertEquals(1, testCell.getCurrentState());
     testCell.nextState();

@@ -1,6 +1,6 @@
 package Model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test;
 class GridTest {
 
   @Test
-  public void testGridReadingFromFile(){
+  public void testGridReadingFromFile() {
     Grid myGrid = new Grid("Test/ConwayStates1.csv");
     List<List<Cell>> myCells = myGrid.getGridCells();
-    assertEquals(1,myCells.get(9).get(5).getCurrentState());
-    assertEquals(0,myCells.get(9).get(4).getCurrentState());
+    assertEquals(1, myCells.get(9).get(5).getCurrentState());
+    assertEquals(0, myCells.get(9).get(4).getCurrentState());
   }
 
 }
