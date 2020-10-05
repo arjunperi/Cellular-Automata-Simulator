@@ -1,11 +1,11 @@
-package cellsociety;
+package Model;
 
+import Model.Cell;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class Grid {
             List<Cell> cellRow = new ArrayList<>();
             for(String stateString : row){
                 int state = Integer.parseInt(stateString);
-                cellRow.add(new Cell(state, x, y, xOffset, yOffset));
+                cellRow.add(new Cell(state));
                 x += xOffset;
             }
             myCells.add(cellRow);
