@@ -1,14 +1,13 @@
 package Model;
 
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import Model.Cell;
 
 public class Grid {
 
@@ -41,6 +40,22 @@ public class Grid {
     } catch (IOException | CsvException e) {
       e.printStackTrace();
       return Collections.emptyList();
+    }
+  }
+
+  void writeToCSV(String fileOut) {
+    try (CSVWriter csvWriter = new CSVWriter(new FileWriter(PATH + fileOut))) {
+      String[] rowsAndColumns = new String[] {Double.toString(cellsPerRow), Double.toString(cellsPerColumn)};
+      csvWriter.writeNext(rowsAndColumns,false);
+      for(List<Cell> currentRow:myCells) {
+        String[] currentRowStates = new String[currentRow.size()];
+        for(int i=0;i< currentRow.size();i++) {
+          currentRowStates[i] = Integer.toString(currentRow.get(i).getCurrentState());
+        }
+        csvWriter.writeNext(currentRowStates,false);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 

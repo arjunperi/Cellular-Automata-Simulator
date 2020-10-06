@@ -32,7 +32,7 @@ public class Simulation extends Application {
 
   @Override
   public void start(final Stage stage) {
-    mainModel = new GameOfLifeModel("ConwayStatesBlinker.csv");
+    mainModel = new GameOfLifeModel("ConwayStatesToad.csv");
     mainView = new View(mainModel);
     mainController = new Controller(mainModel);
     stage.setScene(mainView.setupScene());

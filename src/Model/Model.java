@@ -10,6 +10,7 @@ import java.util.List;
 public abstract class Model {
 
   private final List<List<Cell>> myCells;
+  private final String fileOut;
   private final Grid myGrid;
   private boolean isPaused = false;
   private boolean isStep = false;
@@ -18,6 +19,13 @@ public abstract class Model {
   public Model(String fileName) {
     myGrid = new Grid(fileName);
     myCells = myGrid.getGridCells();
+    this.fileOut="";
+  }
+
+  public Model(String fileName, String fileOut) {
+    myGrid = new Grid(fileName);
+    myCells = myGrid.getGridCells();
+    this.fileOut=fileOut;
   }
 
   public abstract void updateCells(Cell cell, int x, int y);
@@ -35,6 +43,9 @@ public abstract class Model {
         for (int j = 0; j < myGrid.getCellsPerRow(); j++) {
           this.myCells.get(i).get(j).nextState();
         }
+      }
+      if(fileOut.length()>0) {
+        myGrid.writeToCSV(fileOut);
       }
     }
   }

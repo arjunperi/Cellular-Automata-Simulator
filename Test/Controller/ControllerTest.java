@@ -119,5 +119,4 @@ public class ControllerTest {
     testView.viewStep();
     assertEquals(1, testView.getFrontEndCellGrid().get(9).get(10).getCellState());
   }
-
 }

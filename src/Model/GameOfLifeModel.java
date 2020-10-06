@@ -8,6 +8,10 @@ public class GameOfLifeModel extends Model {
     super(fileName);
   }
 
+  public GameOfLifeModel(String fileName, String fileOut) {
+    super(fileName, fileOut);
+  }
+
   @Override
   public void updateCells(Cell cell, int x, int y) {
     List<List<Integer>> neighbors = getNeighbors(x, y);
