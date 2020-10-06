@@ -13,8 +13,9 @@ public class GameOfLifeModel extends Model {
   }
 
   @Override
-  public void updateCells(Cell cell, int x, int y) {
-    List<List<Integer>> neighbors = getNeighbors(x, y);
+  public void updateCell(int row, int column) {
+    List<List<Integer>> neighbors = getNeighbors(row, column);
+    Cell cell = gridOfCells.getCell(row,column);
     int countAliveNeighbors = 0;
     for (List<Integer> neighbor : neighbors) {
       int neighborX = neighbor.get(0);
@@ -23,7 +24,7 @@ public class GameOfLifeModel extends Model {
         countAliveNeighbors++;
       }
     }
-    if (cell.getCurrentState() == 1) {
+    if (getCellState(row,column) == 1) {
       if (countAliveNeighbors < 2) {
         cell.setFutureState(0);
       } else if (countAliveNeighbors == 2 || countAliveNeighbors == 3) {

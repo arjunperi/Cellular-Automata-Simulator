@@ -10,22 +10,22 @@ import java.util.List;
 public abstract class Model {
 
   private final String fileOut;
-  private final Grid gridOfCells;
+  protected final Grid gridOfCells;
   private boolean isPaused = false;
   private boolean isStep = false;
   private double cycles = 0;
 
   public Model(String fileName) {
     gridOfCells = new Grid(fileName);
-    this.fileOut="";
+    this.fileOut = "";
   }
 
   public Model(String fileName, String fileOut) {
     gridOfCells = new Grid(fileName);
-    this.fileOut=fileOut;
+    this.fileOut = fileOut;
   }
 
-  public abstract void updateCells(Cell cell, int x, int y);
+  public abstract void updateCell(int row, int column);
 
   public void modelStep() {
     boolean isUpdate = checkTimeElapsed();
@@ -33,16 +33,16 @@ public abstract class Model {
       cycles = 0;
       for (int i = 0; i < gridOfCells.getCellsPerColumn(); i++) {
         for (int j = 0; j < gridOfCells.getCellsPerRow(); j++) {
-          gridOfCells.updateSpecificCell(i,j);
-          updateCells(gridOfCells.getCell(i,j), i, j);
+          gridOfCells.updateSpecificCell(i, j);
+          updateCell(i, j);
         }
       }
       for (int i = 0; i < gridOfCells.getCellsPerColumn(); i++) {
         for (int j = 0; j < gridOfCells.getCellsPerRow(); j++) {
-          gridOfCells.getCell(i,j).nextState();
+          toNextState(i, j);
         }
       }
-      if(fileOut.length()>0) {
+      if (fileOut.length() > 0) {
         gridOfCells.writeToCSV(fileOut);
       }
     }
@@ -86,8 +86,8 @@ public abstract class Model {
     return gridOfCells.getCell(row, column).getCurrentState();
   }
 
-  public Cell getCell(int row, int column) {
-    return gridOfCells.getCell(row, column);
+  public void toNextState(int row, int column) {
+    gridOfCells.getCell(row, column).nextState();
   }
 
   public int getNumberOfRows() {
@@ -97,6 +97,4 @@ public abstract class Model {
   public int getNumberOfColumns() {
     return (int) gridOfCells.getCellsPerRow();
   }
-
-
 }

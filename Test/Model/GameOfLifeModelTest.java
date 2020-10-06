@@ -19,9 +19,9 @@ class GameOfLifeModelTest {
   public void testUpdateCells() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesPulsar.csv");
     assertEquals(0, testModel.getCellState(3,6));
-    testModel.updateCells(testModel.getCell(3,6), 3, 6);
+    testModel.updateCell(3, 6);
     assertEquals(0, testModel.getCellState(3,6));
-    testModel.getCell(3,6).nextState();
+    testModel.toNextState(3,6); ;
     assertEquals(1, testModel.getCellState(3,6));
   }
 
