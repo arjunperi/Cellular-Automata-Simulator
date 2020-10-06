@@ -13,15 +13,15 @@ public class Cell extends Rectangle {
     this.futureState = currentState;
   }
 
-  public void setFutureState(int state){
+  public void setFutureState(int state) {
     futureState = state;
   }
 
-  public int getCurrentState(){
+  public int getCurrentState() {
     return currentState;
   }
 
-  public void nextState(){
+  public void nextState() {
     currentState = futureState;
   }
 }
