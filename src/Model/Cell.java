@@ -1,24 +1,27 @@
 package Model;
 
-public class Cell {
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
+public class Cell extends Rectangle {
 
   private int currentState;
   private int futureState;
 
   public Cell(int state) {
-    currentState = state;
-    futureState = currentState;
+    this.currentState = state;
+    this.futureState = currentState;
   }
 
-  public void setFutureState(int state) {
+  public void setFutureState(int state){
     futureState = state;
   }
 
-  public int getCurrentState() {
+  public int getCurrentState(){
     return currentState;
   }
 
-  public void nextState() {
+  public void nextState(){
     currentState = futureState;
   }
 }

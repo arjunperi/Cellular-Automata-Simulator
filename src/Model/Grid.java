@@ -2,31 +2,33 @@ package Model;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import Model.Cell;
 
 public class Grid {
 
-  private final List<String[]> cellStates;
-  private final List<List<Cell>> myCells = new ArrayList<>();
+  private List<String[]> cellStates;
+  private List<List<Cell>> myCells = new ArrayList<>();
   final String PATH = "data/";
-  private final double cellsPerRow;
-  private final double cellsPerColumn;
+  private double cellsPerRow;
+  private double cellsPerColumn;
 
 
-  public Grid(String fileName) {
+  public Grid(String fileName){
     cellStates = readAll(fileName);
     String[] firstRow = cellStates.get(0);
     cellsPerRow = Double.parseDouble(firstRow[0]);
     cellsPerColumn = Double.parseDouble(firstRow[1]);
 
-    for (int i = 1; i < cellStates.size(); i++) {
+    for(int i = 1; i< cellStates.size(); i++){
       String[] row = cellStates.get(i);
       List<Cell> cellRow = new ArrayList<>();
-      for (String stateString : row) {
+      for(String stateString : row){
         int state = Integer.parseInt(stateString);
         cellRow.add(new Cell(state));
       }
@@ -34,24 +36,26 @@ public class Grid {
     }
   }
 
-  private List<String[]> readAll(String fileName) {
+  private List<String[]> readAll (String fileName) {
     try (CSVReader csvReader = new CSVReader(new FileReader(PATH + fileName))) {
       return csvReader.readAll();
-    } catch (IOException | CsvException e) {
+    }
+    catch (IOException | CsvException e) {
       e.printStackTrace();
       return Collections.emptyList();
     }
   }
 
-  public List<List<Cell>> getGridCells() {
+  public List<List<Cell>> getGridCells(){
     return myCells;
   }
 
-  public double getCellsPerRow() {
+  public double getCellsPerRow(){
     return cellsPerRow;
   }
 
-  public double getCellsPerColumn() {
+  public double getCellsPerColumn(){
     return cellsPerColumn;
   }
 }
+
