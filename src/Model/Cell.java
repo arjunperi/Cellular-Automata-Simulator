@@ -1,9 +1,7 @@
 package Model;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
-public class Cell extends Rectangle {
+public class Cell {
 
   private int currentState;
   private int futureState;

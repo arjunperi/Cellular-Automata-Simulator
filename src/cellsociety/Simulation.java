@@ -21,6 +21,10 @@ import javafx.util.Duration;
 public class Simulation extends Application {
 
   public static final String TITLE = "GameOfLife";
+//  private static final String RESOURCES = "resources/";
+//  public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES;
+//  public static final String STYLESHEET = "GameOfLife.css";
+
   public static final double FRAMES_PER_SECOND = 60;
   public static final double FRAMES_PER_MODEL_UPDATE = 60;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
@@ -39,6 +43,7 @@ public class Simulation extends Application {
     stage.setTitle(TITLE);
     stage.show();
     stage.getScene().setOnKeyPressed(e -> mainController.handleKeyInput(e.getCode()));
+    //stage.getScene().getStylesheets().add(getClass().getResource(DEFAULT_RESOURCE_FOLDER + STYLESHEET).toExternalForm());
     initializeAnimation();
   }
 
