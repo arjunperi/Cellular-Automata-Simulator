@@ -19,7 +19,7 @@ public class GameOfLifeModel extends Model {
     for (List<Integer> neighbor : neighbors) {
       int neighborX = neighbor.get(0);
       int neighborY = neighbor.get(1);
-      if (getModelCells().get(neighborX).get(neighborY).getCurrentState() == 1) {
+      if (getCellState(neighborX,neighborY) == 1) {
         countAliveNeighbors++;
       }
     }

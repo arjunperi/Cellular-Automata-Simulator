@@ -10,9 +10,8 @@ class GridTest {
   @Test
   public void testGridReadingFromFile() {
     Grid myGrid = new Grid("Test/ConwayStatesPulsar.csv");
-    List<List<Cell>> myCells = myGrid.getGridCells();
-    assertEquals(1, myCells.get(9).get(5).getCurrentState());
-    assertEquals(0, myCells.get(9).get(4).getCurrentState());
+    assertEquals(1, myGrid.getCell(9,5).getCurrentState());
+    assertEquals(0, myGrid.getCell(9,4).getCurrentState());
   }
 
 }

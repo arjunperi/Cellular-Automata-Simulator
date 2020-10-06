@@ -9,22 +9,19 @@ import java.util.List;
 
 public abstract class Model {
 
-  private final List<List<Cell>> myCells;
   private final String fileOut;
-  private final Grid myGrid;
+  private final Grid gridOfCells;
   private boolean isPaused = false;
   private boolean isStep = false;
   private double cycles = 0;
 
   public Model(String fileName) {
-    myGrid = new Grid(fileName);
-    myCells = myGrid.getGridCells();
+    gridOfCells = new Grid(fileName);
     this.fileOut="";
   }
 
   public Model(String fileName, String fileOut) {
-    myGrid = new Grid(fileName);
-    myCells = myGrid.getGridCells();
+    gridOfCells = new Grid(fileName);
     this.fileOut=fileOut;
   }
 
@@ -34,18 +31,19 @@ public abstract class Model {
     boolean isUpdate = checkTimeElapsed();
     if ((!isPaused && isUpdate) || isStep) {
       cycles = 0;
-      for (int i = 0; i < myGrid.getCellsPerColumn(); i++) {
-        for (int j = 0; j < myGrid.getCellsPerRow(); j++) {
-          updateCells(myCells.get(i).get(j), i, j);
+      for (int i = 0; i < gridOfCells.getCellsPerColumn(); i++) {
+        for (int j = 0; j < gridOfCells.getCellsPerRow(); j++) {
+          gridOfCells.updateSpecificCell(i,j);
+          updateCells(gridOfCells.getCell(i,j), i, j);
         }
       }
-      for (int i = 0; i < myGrid.getCellsPerColumn(); i++) {
-        for (int j = 0; j < myGrid.getCellsPerRow(); j++) {
-          this.myCells.get(i).get(j).nextState();
+      for (int i = 0; i < gridOfCells.getCellsPerColumn(); i++) {
+        for (int j = 0; j < gridOfCells.getCellsPerRow(); j++) {
+          gridOfCells.getCell(i,j).nextState();
         }
       }
       if(fileOut.length()>0) {
-        myGrid.writeToCSV(fileOut);
+        gridOfCells.writeToCSV(fileOut);
       }
     }
   }
@@ -65,7 +63,7 @@ public abstract class Model {
       if (currentX < 0 || currentY < 0) {
         continue;
       }
-      if (currentX >= myGrid.getCellsPerColumn() || currentY >= myGrid.getCellsPerRow()) {
+      if (currentX >= gridOfCells.getCellsPerColumn() || currentY >= gridOfCells.getCellsPerRow()) {
         continue;
       }
       neighbors.add(Arrays.asList(currentX, currentY));
@@ -84,7 +82,21 @@ public abstract class Model {
     isStep = false;
   }
 
-  public List<List<Cell>> getModelCells() {
-    return myCells;
+  public int getCellState(int row, int column) {
+    return gridOfCells.getCell(row, column).getCurrentState();
   }
+
+  public Cell getCell(int row, int column) {
+    return gridOfCells.getCell(row, column);
+  }
+
+  public int getNumberOfRows() {
+    return (int) gridOfCells.getCellsPerColumn();
+  }
+
+  public int getNumberOfColumns() {
+    return (int) gridOfCells.getCellsPerRow();
+  }
+
+
 }

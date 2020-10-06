@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Grid {
 
-  private final List<List<Cell>> myCells = new ArrayList<>();
+  private final List<List<Cell>> gridOfCells = new ArrayList<>();
   final String PATH = "data/";
   private final double cellsPerRow;
   private final double cellsPerColumn;
@@ -30,7 +30,7 @@ public class Grid {
         int state = Integer.parseInt(stateString);
         cellRow.add(new Cell(state));
       }
-      myCells.add(cellRow);
+      gridOfCells.add(cellRow);
     }
   }
 
@@ -47,7 +47,7 @@ public class Grid {
     try (CSVWriter csvWriter = new CSVWriter(new FileWriter(PATH + fileOut))) {
       String[] rowsAndColumns = new String[] {Double.toString(cellsPerRow), Double.toString(cellsPerColumn)};
       csvWriter.writeNext(rowsAndColumns,false);
-      for(List<Cell> currentRow:myCells) {
+      for(List<Cell> currentRow: gridOfCells) {
         String[] currentRowStates = new String[currentRow.size()];
         for(int i=0;i< currentRow.size();i++) {
           currentRowStates[i] = Integer.toString(currentRow.get(i).getCurrentState());
@@ -59,8 +59,12 @@ public class Grid {
     }
   }
 
-  public List<List<Cell>> getGridCells() {
-    return myCells;
+  public Cell getCell(int row, int column) {
+    return gridOfCells.get(row).get(column);
+  }
+
+  public void updateSpecificCell(int row, int column) {
+    gridOfCells.get(row).get(column).nextState();
   }
 
   public double getCellsPerRow() {

@@ -86,37 +86,4 @@ public class ControllerTest {
     assertEquals(0, currentCell.getCellState());
     assertEquals(Color.WHITE, currentCell.getCellColor());
   }
-
-  @Test
-  public void testViewStepBlinker() {
-    Model testModel = new GameOfLifeModel("Test/ConwayStatesBlinker.csv");
-    View testView = new View(testModel);
-    Controller testController = new Controller(testModel);
-    assertEquals(1, testView.getFrontEndCellGrid().get(7).get(8).getCellState());
-    testController.handleKeyInput(KeyCode.S);
-    testView.viewStep();
-    assertEquals(0, testView.getFrontEndCellGrid().get(7).get(8).getCellState());
-  }
-
-  @Test
-  public void testViewStepBlock() {
-    Model testModel = new GameOfLifeModel("Test/ConwayStatesBlock.csv");
-    View testView = new View(testModel);
-    Controller testController = new Controller(testModel);
-    assertEquals(1, testView.getFrontEndCellGrid().get(9).get(13).getCellState());
-    testController.handleKeyInput(KeyCode.S);
-    testView.viewStep();
-    assertEquals(1, testView.getFrontEndCellGrid().get(9).get(13).getCellState());
-  }
-
-  @Test
-  public void testViewStepToad() {
-    Model testModel = new GameOfLifeModel("Test/ConwayStatesToad.csv");
-    View testView = new View(testModel);
-    Controller testController = new Controller(testModel);
-    assertEquals(0, testView.getFrontEndCellGrid().get(9).get(10).getCellState());
-    testController.handleKeyInput(KeyCode.S);
-    testView.viewStep();
-    assertEquals(1, testView.getFrontEndCellGrid().get(9).get(10).getCellState());
-  }
 }

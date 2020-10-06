@@ -11,21 +11,18 @@ class GameOfLifeModelTest {
   @Test
   public void testConstructor() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesPulsar.csv");
-    List<List<Cell>> modelCells = testModel.getModelCells();
-    assertEquals(0, modelCells.get(0).get(0).getCurrentState());
-    assertEquals(1, modelCells.get(0).get(1).getCurrentState());
+    assertEquals(0, testModel.getCellState(0,0));
+    assertEquals(1, testModel.getCellState(0,1));
   }
 
   @Test
   public void testUpdateCells() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesPulsar.csv");
-    List<List<Cell>> cells = testModel.getModelCells();
-    Cell testCell = cells.get(3).get(6);
-    assertEquals(0, testCell.getCurrentState());
-    testModel.updateCells(cells.get(3).get(6), 3, 6);
-    assertEquals(0, testCell.getCurrentState());
-    testCell.nextState();
-    assertEquals(1, testCell.getCurrentState());
+    assertEquals(0, testModel.getCellState(3,6));
+    testModel.updateCells(testModel.getCell(3,6), 3, 6);
+    assertEquals(0, testModel.getCellState(3,6));
+    testModel.getCell(3,6).nextState();
+    assertEquals(1, testModel.getCellState(3,6));
   }
 
 
@@ -46,47 +43,42 @@ class GameOfLifeModelTest {
   @Test
   public void testStepPulsar() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesPulsar.csv");
-    List<List<Cell>> modelCells = testModel.getModelCells();
-    assertEquals(1, modelCells.get(0).get(1).getCurrentState());
+    assertEquals(1, testModel.getCellState(0,1));
     testModel.step();
-    assertEquals(0, modelCells.get(0).get(1).getCurrentState());
+    assertEquals(0, testModel.getCellState(0,1));
   }
 
 
   @Test
   public void testStepBeacon() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesBeacon.csv");
-    List<List<Cell>> modelCells = testModel.getModelCells();
-    assertEquals(0, modelCells.get(7).get(7).getCurrentState());
+    assertEquals(0, testModel.getCellState(7,7));
     testModel.step();
-    assertEquals(1, modelCells.get(7).get(7).getCurrentState());
+    assertEquals(1, testModel.getCellState(7,7));
   }
 
   @Test
   public void testStepBlinker() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesBlinker.csv");
-    List<List<Cell>> modelCells = testModel.getModelCells();
-    assertEquals(1, modelCells.get(7).get(8).getCurrentState());
+    assertEquals(1, testModel.getCellState(7,8));
     testModel.step();
-    assertEquals(0, modelCells.get(7).get(8).getCurrentState());
+    assertEquals(0, testModel.getCellState(7,8));
   }
 
   @Test
   public void testStepBlock() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesBlock.csv");
-    List<List<Cell>> modelCells = testModel.getModelCells();
-    assertEquals(1, modelCells.get(9).get(13).getCurrentState());
+    assertEquals(1, testModel.getCellState(9,13));
     testModel.step();
-    assertEquals(1, modelCells.get(9).get(13).getCurrentState());
+    assertEquals(1, testModel.getCellState(9,13));
   }
 
   @Test
   public void testStepToad() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesToad.csv");
-    List<List<Cell>> modelCells = testModel.getModelCells();
-    assertEquals(0, modelCells.get(9).get(10).getCurrentState());
+    assertEquals(0, testModel.getCellState(9,10));
     testModel.step();
-    assertEquals(1, modelCells.get(9).get(10).getCurrentState());
+    assertEquals(1, testModel.getCellState(9,10));
   }
 
 

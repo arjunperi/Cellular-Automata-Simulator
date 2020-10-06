@@ -21,6 +21,8 @@ public class View {
   private static final Paint BACKGROUND = Color.AZURE;
 
   private final Model backendModel;
+  private final int numberOfRows;
+  private final int numberOfColumns;
   private final Group root;
   private List<List<AbstractFrontendCell>> frontEndCellGrid;
 
@@ -28,6 +30,8 @@ public class View {
   public View(Model model) {
     root = new Group();
     backendModel = model;
+    numberOfColumns = backendModel.getNumberOfColumns();
+    numberOfRows = backendModel.getNumberOfRows();
     initializeFrontEndCells();
   }
 
@@ -41,17 +45,16 @@ public class View {
 
   private void initializeFrontEndCells() {
     frontEndCellGrid = new ArrayList<>();
-    List<List<Cell>> backendCells = backendModel.getModelCells();
-    double xOffset = Simulation.SCENE_WIDTH / backendCells.size();
-    double yOffset = Simulation.SCENE_HEIGHT / backendCells.get(0).size();
+    double xOffset = Simulation.SCENE_WIDTH / (double)numberOfRows;
+    double yOffset = Simulation.SCENE_HEIGHT / (double)numberOfColumns;
     double x;
     double y = 0;
 
-    for (List<Cell> currentBackendCellRow : backendCells) {
+    for (int row = 0; row < numberOfRows; row++) {
       x = 0;
       List<AbstractFrontendCell> frontEndCellRow = new ArrayList<>();
-      for (Cell currentBackEndCell : currentBackendCellRow) {
-        int state = currentBackEndCell.getCurrentState();
+      for (int column = 0; column < numberOfColumns; column++) {
+        int state = backendModel.getCellState(row,column);
         AbstractFrontendCell currentFrontEndCell = new GameOfLifeFrontendCell(state, x, y, xOffset,
             yOffset);
         frontEndCellRow.add(currentFrontEndCell);
@@ -64,10 +67,9 @@ public class View {
   }
 
   private void updateFrontEndCells() {
-    List<List<Cell>> backendCells = backendModel.getModelCells();
-    for (int row = 0; row < backendCells.size(); row++) {
-      for (int column = 0; column < backendCells.get(row).size(); column++) {
-        int state = backendCells.get(row).get(column).getCurrentState();
+    for (int row = 0; row < numberOfRows; row++) {
+      for (int column = 0; column < numberOfColumns; column++) {
+        int state = backendModel.getCellState(row,column);
         frontEndCellGrid.get(row).get(column).setCellState(state);
       }
     }
