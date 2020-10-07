@@ -1,8 +1,13 @@
 package Model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameOfLifeModel extends Model {
+
+  public static final int[][] POSSIBLE_NEIGHBORS_GAME_OF_LIFE = new int[][]{{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1},
+      {0, -1}, {-1, -1}};
 
   public GameOfLifeModel(String fileName) {
     super(fileName);
@@ -10,6 +15,10 @@ public class GameOfLifeModel extends Model {
 
   public GameOfLifeModel(String fileName, String fileOut) {
     super(fileName, fileOut);
+  }
+
+  protected List<List<Integer>> getNeighbors(int x, int y) {
+    return processNeighbors(x,y,POSSIBLE_NEIGHBORS_GAME_OF_LIFE);
   }
 
   @Override

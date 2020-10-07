@@ -1,13 +1,12 @@
 package cellsociety;
 
 import Controller.Controller;
-import Model.Model;
 import View.View;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import Model.GameOfLifeModel;
+import Model.*;
 import javafx.util.Duration;
 
 
@@ -20,7 +19,7 @@ import javafx.util.Duration;
  */
 public class Simulation extends Application {
 
-  public static final String TITLE = "GameOfLife";
+  public static final String TITLE = "Percolation";
 //  private static final String RESOURCES = "resources/";
 //  public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES;
 //  public static final String STYLESHEET = "GameOfLife.css";
@@ -36,7 +35,7 @@ public class Simulation extends Application {
 
   @Override
   public void start(final Stage stage) {
-    mainModel = new GameOfLifeModel("ConwayStatesToad.csv");
+    mainModel = new PercolationModel("PercolationExample.csv");
     mainView = new View(mainModel);
     mainController = new Controller(mainModel);
     stage.setScene(mainView.setupScene());

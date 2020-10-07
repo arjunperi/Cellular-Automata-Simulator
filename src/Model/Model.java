@@ -53,9 +53,9 @@ public abstract class Model {
     return cycles % Simulation.FRAMES_PER_MODEL_UPDATE == 0;
   }
 
-  public List<List<Integer>> getNeighbors(int x, int y) {
-    int[][] possibleNeighbors = new int[][]{{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1},
-        {0, -1}, {-1, -1}};
+  protected abstract List<List<Integer>> getNeighbors(int x, int y);
+
+  protected List<List<Integer>> processNeighbors(int x, int y, int[][] possibleNeighbors) {
     List<List<Integer>> neighbors = new ArrayList<>();
     for (int[] possibleNeighbor : possibleNeighbors) {
       int currentX = x + possibleNeighbor[0];
