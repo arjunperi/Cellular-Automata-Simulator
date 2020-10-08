@@ -55,7 +55,7 @@ public class View {
       List<AbstractFrontendCell> frontEndCellRow = new ArrayList<>();
       for (int column = 0; column < numberOfColumns; column++) {
         int state = backendModel.getCellState(row,column);
-        AbstractFrontendCell currentFrontEndCell = new PercolationFrontEndCell(state, x, y, xOffset,
+        AbstractFrontendCell currentFrontEndCell = new RPSFrontEndCell(state, x, y, xOffset,
             yOffset);
         frontEndCellRow.add(currentFrontEndCell);
         root.getChildren().add(currentFrontEndCell.getCellShape());

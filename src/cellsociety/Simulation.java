@@ -2,6 +2,12 @@ package cellsociety;
 
 import Controller.Controller;
 import View.View;
+import com.opencsv.CSVWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -25,17 +31,17 @@ public class Simulation extends Application {
 //  public static final String STYLESHEET = "GameOfLife.css";
 
   public static final double FRAMES_PER_SECOND = 60;
-  public static final double FRAMES_PER_MODEL_UPDATE = 60;
+  public static final double FRAMES_PER_MODEL_UPDATE = 4;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-  public static final double SCENE_WIDTH = 400;
-  public static final double SCENE_HEIGHT = 400;
+  public static final double SCENE_WIDTH = 800;
+  public static final double SCENE_HEIGHT = 800;
   private Model mainModel;
   private View mainView;
   private Controller mainController;
 
   @Override
   public void start(final Stage stage) {
-    mainModel = new PercolationModel("PercolationExample.csv");
+    mainModel = new RPSModel("RPS100.csv");
     mainView = new View(mainModel);
     mainController = new Controller(mainModel);
     stage.setScene(mainView.setupScene());
@@ -63,6 +69,22 @@ public class Simulation extends Application {
   }
 
   public static void main(String[] args) {
+    try (CSVWriter csvWriter = new CSVWriter(new FileWriter("data/RPS100.csv"))) {
+      int size=150;
+      String[] rowsAndColumns = new String[] {Integer.toString(size), Integer.toString(size)};
+      Random random = new Random();
+      csvWriter.writeNext(rowsAndColumns,false);
+      for(int i=0; i<size;i++) {
+        String[] currentRowStates = new String[size];
+        for(int j=0;j< size;j++) {
+          currentRowStates[j] = Integer.toString(random.nextInt(6));
+        }
+        csvWriter.writeNext(currentRowStates,false);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     launch(args);
   }
 }
