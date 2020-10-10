@@ -28,9 +28,40 @@ public class Grid {
       List<Cell> cellRow = new ArrayList<>();
       for (String stateString : row) {
         int state = Integer.parseInt(stateString);
-        cellRow.add(new Cell(state));
+        cellRow.add(new GameOfLifeCell(state));
       }
       gridOfCells.add(cellRow);
+    }
+  }
+
+  protected List<Cell> getNeighbors(int x, int y, Cell currentCell) {
+    int[][] allPossibleNeighbors=currentCell.getPossibleNeighbors();
+    List<Cell> neighbors = new ArrayList<>();
+    for (int[] possibleNeighbor : allPossibleNeighbors) {
+      int currentX = x + possibleNeighbor[0];
+      int currentY = y + possibleNeighbor[1];
+      if (currentX < 0 || currentY < 0 || currentX >= getCellsPerColumn() || currentY >= getCellsPerRow()) {
+        continue;
+      }
+      neighbors.add(getCell(currentX,currentY));
+    }
+    return neighbors;
+  }
+
+  protected void updateCells() {
+    for(int row=0;row<gridOfCells.size();row++) {
+      for(int column=0;column<gridOfCells.get(0).size();column++) {
+        List<Cell> cellNeighbors = getNeighbors(row,column, gridOfCells.get(row).get(column));
+        getCell(row,column).updateState(cellNeighbors);
+      }
+    }
+  }
+
+  protected void toNextState() {
+    for(int row=0;row<gridOfCells.size();row++) {
+      for(int column=0;column<gridOfCells.get(0).size();column++) {
+        getCell(row,column).toNextState();
+      }
     }
   }
 
@@ -64,7 +95,7 @@ public class Grid {
   }
 
   public void updateSpecificCell(int row, int column) {
-    gridOfCells.get(row).get(column).nextState();
+    gridOfCells.get(row).get(column).toNextState();
   }
 
   public double getCellsPerRow() {

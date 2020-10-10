@@ -1,5 +1,6 @@
 package View;
 
+import Model.State;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.paint.Color;
@@ -23,7 +24,7 @@ public abstract class AbstractFrontendCell extends Shape {
   }
 
   public void updateCellColor() {
-    this.cellShape.setFill(stateColorMapping.get(this.cellState));
+    this.cellShape.setFill(Color.valueOf(String.valueOf(stateColorMapping.get(this.cellState))));
   }
 
   public void setCellShape(Shape shape) {

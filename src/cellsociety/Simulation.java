@@ -31,7 +31,7 @@ public class Simulation extends Application {
 //  public static final String STYLESHEET = "GameOfLife.css";
 
   public static final double FRAMES_PER_SECOND = 60;
-  public static final double FRAMES_PER_MODEL_UPDATE = 10;
+  public static final double FRAMES_PER_MODEL_UPDATE = 20;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   public static final double SCENE_WIDTH = 800;
   public static final double SCENE_HEIGHT = 800;
@@ -41,7 +41,7 @@ public class Simulation extends Application {
 
   @Override
   public void start(final Stage stage) {
-    mainModel = new SpreadingFireModel("SpreadingFire20.csv");
+    mainModel = new GameOfLifeModel("ConwayStatesPulsar.csv");
     mainView = new View(mainModel);
     mainController = new Controller(mainModel);
     stage.setScene(mainView.setupScene());
