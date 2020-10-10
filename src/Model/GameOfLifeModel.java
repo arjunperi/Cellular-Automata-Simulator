@@ -16,7 +16,6 @@ public class GameOfLifeModel extends Model {
 
   public GameOfLifeModel(String fileName, String fileOut) {
     super(fileName, fileOut);
-    enum A
   }
 
   public enum GameOfLifeState implements State {
