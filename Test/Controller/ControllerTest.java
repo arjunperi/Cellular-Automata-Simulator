@@ -16,7 +16,7 @@ public class ControllerTest {
   @Test
   public void testPauseConwayPulsar() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesPulsar.csv");
-    View testView = new View(testModel);
+    View testView = new View("English", );
     Controller testController = new Controller(testModel);
     testController.handleKeyInput(KeyCode.SPACE);
     AbstractFrontendCell currentCell;
@@ -34,7 +34,7 @@ public class ControllerTest {
   @Test
   public void testStepConwayPulsar() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesPulsar.csv");
-    View testView = new View(testModel);
+    View testView = new View("English", );
     Controller testController = new Controller(testModel);
     AbstractFrontendCell currentCell = testView.getFrontEndCellGrid().get(5).get(6);
     testController.handleKeyInput(KeyCode.SPACE);
@@ -53,7 +53,7 @@ public class ControllerTest {
   @Test
   public void testPauseConwayBlinker() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesBlinker.csv");
-    View testView = new View(testModel);
+    View testView = new View("English", );
     Controller testController = new Controller(testModel);
     testController.handleKeyInput(KeyCode.SPACE);
     AbstractFrontendCell currentCell;
@@ -71,7 +71,7 @@ public class ControllerTest {
   @Test
   public void testStepConwayBlinker() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesBlinker.csv");
-    View testView = new View(testModel);
+    View testView = new View("English", );
     Controller testController = new Controller(testModel);
     AbstractFrontendCell currentCell = testView.getFrontEndCellGrid().get(6).get(9);
     testController.handleKeyInput(KeyCode.SPACE);

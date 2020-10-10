@@ -2,18 +2,14 @@ package cellsociety;
 
 import Controller.Controller;
 import View.View;
-import com.opencsv.CSVWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import Model.*;
 import javafx.util.Duration;
+
+import java.io.IOException;
 
 
 /**
@@ -40,10 +36,12 @@ public class Simulation extends Application {
   private Controller mainController;
 
   @Override
-  public void start(final Stage stage) {
+  public void start(final Stage stage) throws IOException {
     mainModel = new SpreadingFireModel("SpreadingFire20.csv");
-    mainView = new View(mainModel);
     mainController = new Controller(mainModel);
+    //mainView = new View("English", mainController);
+    //stage.setScene(mainView.setupScene());
+    mainView = mainController.getView();
     stage.setScene(mainView.setupScene());
     stage.setTitle(TITLE);
     stage.show();
@@ -64,6 +62,7 @@ public class Simulation extends Application {
   }
 
   private void gameStep() {
+    mainModel = mainController.getModel();
     mainModel.modelStep();
     mainView.viewStep();
   }

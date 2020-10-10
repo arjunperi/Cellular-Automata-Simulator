@@ -14,14 +14,14 @@ public class CSVWriteTest {
   @Test
   public void testPauseConwayToad() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesToad.csv", "Test/ConwayStatesToadOut.csv");
-    View testView = new View(testModel);
+    View testView = new View("English", );
     Controller testController = new Controller(testModel);
     AbstractFrontendCell currentCell = testView.getFrontEndCellGrid().get(7).get(10);
     assertEquals(1, currentCell.getCellState());
     assertEquals(Color.BLACK, currentCell.getCellColor());
     testController.handleKeyInput(KeyCode.S);
     Model testModelOut = new GameOfLifeModel("Test/ConwayStatesToadOut.csv");
-    View testViewOut = new View(testModelOut);
+    View testViewOut = new View("English", );
     currentCell = testViewOut.getFrontEndCellGrid().get(7).get(10);
     assertEquals(0, currentCell.getCellState());
     assertEquals(Color.WHITE, currentCell.getCellColor());
@@ -30,14 +30,14 @@ public class CSVWriteTest {
   @Test
   public void testPauseConwayPulsar() {
     Model testModel = new GameOfLifeModel("Test/ConwayStatesPulsar.csv", "Test/ConwayStatesPulsarOut.csv");
-    View testView = new View(testModel);
+    View testView = new View("English", );
     Controller testController = new Controller(testModel);
     AbstractFrontendCell currentCell = testView.getFrontEndCellGrid().get(4).get(5);
     assertEquals(1, currentCell.getCellState());
     assertEquals(Color.BLACK, currentCell.getCellColor());
     testController.handleKeyInput(KeyCode.S);
     Model testModelOut = new GameOfLifeModel("Test/ConwayStatesPulsarOut.csv");
-    View testViewOut = new View(testModelOut);
+    View testViewOut = new View("English", );
     currentCell = testViewOut.getFrontEndCellGrid().get(4).get(5);
     assertEquals(0, currentCell.getCellState());
     assertEquals(Color.WHITE, currentCell.getCellColor());
