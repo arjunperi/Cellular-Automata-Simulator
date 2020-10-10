@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
-public class SpreadingFireFrontEndCell extends AbstractFrontendCell{
+public class SpreadingFireFrontEndCell extends AbstractFrontEndCell {
   public SpreadingFireFrontEndCell(int cellState, double x, double y, double width, double height) {
     super(cellState);
     super.setCellShape(new Rectangle(x, y, width, height));

@@ -41,8 +41,9 @@ public class Simulation extends Application {
 
   @Override
   public void start(final Stage stage) {
-    mainModel = new GameOfLifeModel("ConwayStatesPulsar.csv");
-    mainView = new View(mainModel);
+    String modelType = "Percolation";
+    mainModel = new Model("PercolationExample.csv", modelType);
+    mainView = new View(mainModel, modelType);
     mainController = new Controller(mainModel);
     stage.setScene(mainView.setupScene());
     stage.setTitle(TITLE);

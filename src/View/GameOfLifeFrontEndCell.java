@@ -5,9 +5,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
-public class GameOfLifeFrontendCell extends AbstractFrontendCell {
+public class GameOfLifeFrontEndCell extends AbstractFrontEndCell {
 
-  public GameOfLifeFrontendCell(int cellState, double x, double y, double width, double height) {
+  public GameOfLifeFrontEndCell(int cellState, double x, double y, double width, double height) {
     super(cellState);
     super.setCellShape(new Rectangle(x, y, width, height));
     super.updateCellColor();

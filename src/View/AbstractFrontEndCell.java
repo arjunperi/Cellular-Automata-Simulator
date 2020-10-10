@@ -7,13 +7,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 
-public abstract class AbstractFrontendCell extends Shape {
+public abstract class AbstractFrontEndCell extends Shape {
 
   private int cellState;
   private Shape cellShape;
   private Map<Integer, Paint> stateColorMapping;
 
-  public AbstractFrontendCell(int cellState) {
+  public AbstractFrontEndCell(int cellState) {
     this.cellState = cellState;
     this.stateColorMapping = new HashMap<>();
     initializeColorMapping();

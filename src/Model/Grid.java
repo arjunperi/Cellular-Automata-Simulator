@@ -5,6 +5,7 @@ import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,20 +18,26 @@ public class Grid {
   private final double cellsPerColumn;
 
 
-  public Grid(String fileName) {
+  public Grid(String fileName, String modelType) {
     List<String[]> cellStates = readAll(fileName);
+    String fullModelClassName = "Model." + modelType + "Cell";
     String[] firstRow = cellStates.get(0);
     cellsPerRow = Double.parseDouble(firstRow[0]);
     cellsPerColumn = Double.parseDouble(firstRow[1]);
-
-    for (int i = 1; i < cellStates.size(); i++) {
-      String[] row = cellStates.get(i);
-      List<Cell> cellRow = new ArrayList<>();
-      for (String stateString : row) {
-        int state = Integer.parseInt(stateString);
-        cellRow.add(new GameOfLifeCell(state));
+    try {
+      for (int i = 1; i < cellStates.size(); i++) {
+        String[] row = cellStates.get(i);
+        List<Cell> cellRow = new ArrayList<>();
+        for (String stateString : row) {
+          int state = Integer.parseInt(stateString);
+          Class<?> cl = Class.forName(fullModelClassName);
+          Cell cellToAdd = (Cell)cl.getConstructor(int.class).newInstance(state);
+          cellRow.add(cellToAdd);
+        }
+        gridOfCells.add(cellRow);
       }
-      gridOfCells.add(cellRow);
+    } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+      e.printStackTrace();
     }
   }
 

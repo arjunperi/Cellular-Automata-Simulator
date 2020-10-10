@@ -4,7 +4,7 @@ package Model;
 import cellsociety.Simulation;
 
 
-public abstract class Model {
+public class Model {
 
   private final String fileOut;
   protected final Grid gridOfCells;
@@ -12,13 +12,13 @@ public abstract class Model {
   private boolean isStep = false;
   private double cycles = 0;
 
-  public Model(String fileName) {
-    gridOfCells = new Grid(fileName);
+  public Model(String fileName, String modelType) {
+    gridOfCells = new Grid(fileName,modelType);
     this.fileOut = null;
   }
 
-  public Model(String fileName, String fileOut) {
-    gridOfCells = new Grid(fileName);
+  public Model(String fileName, String modelType, String fileOut) {
+    gridOfCells = new Grid(fileName,modelType);
     this.fileOut = fileOut;
   }
 
