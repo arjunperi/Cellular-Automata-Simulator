@@ -92,7 +92,7 @@ public class Controller {
   public void initializeButtonMenu() {
     HBox result = new HBox();
     ComboBox comboBoxGameOfLife = new ComboBox(FXCollections.observableArrayList(
-            "ConwayStatesPulsar", "ConwayStatesBlinker", "ConwayStatesBLock", "ConwayStatesToad",
+            "ConwayStatesPulsar", "ConwayStatesBlinker", "ConwayStatesBlock", "ConwayStatesToad",
             "ConwayStatesBeacon"));
     comboBoxGameOfLife
             .setOnAction(event -> transition("GameOfLife", comboBoxGameOfLife.getValue().toString()));
@@ -129,19 +129,6 @@ public class Controller {
       throw new UnsupportedOperationException(String.format("Unrecognized command: %s", token));
     }
   }
-
-//  public List<List<String>> initializeCellStatesColors(Grid grid) {
-//    List<List<String>> stateToColorGrid = new ArrayList<>();
-//    for (int row = 0; row < grid.getCellsPerColumn(); row++) {
-//      List<String> currentColorRow = new ArrayList<>();
-//      for (int column = 0; column < grid.getCellsPerRow(); column++) {
-//        String currentColor = stateToColor(grid.getCell(row, column).getCurrentState());
-//        currentColorRow.add(currentColor);
-//      }
-//      stateToColorGrid.add(currentColorRow);
-//    }
-//    return stateToColorGrid;
-//  }
 
   public void initializeColorMapping(int state) {
     String result = "";
