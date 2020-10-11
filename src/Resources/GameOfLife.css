@@ -1,0 +1,51 @@
+/*.GameOfLifeFrontEndCell {*/
+/*  -fx-background-color: #DFB951;*/
+/*}*/
+
+#SpreadingFireState0{
+  -fx-fill: rgb(135, 47, 145);
+}
+
+
+#SpreadingFireState1{
+  -fx-fill: rgb(57, 145, 47);
+}
+
+
+#SpreadingFireState2{
+  -fx-fill: rgb(47, 145, 86);
+}
+
+.button {
+  -fx-text-fill: #006464;
+  -fx-background-color: #DFB951;
+  -fx-border-radius: 20;
+  -fx-background-radius: 20;
+  -fx-padding: 8;
+}
+
+.button:hover {
+  -fx-background-color: #3a3a3a;
+}
+
+.combo-box-base {
+  -fx-text-base-color: #006464;
+  -fx-background-color: #DFB951;
+  -fx-border-radius: 20;
+  -fx-background-radius: 20;
+}
+.combo-box-base:hover {
+  -fx-background-color: #3a3a3a;
+}
+
+.label {
+  -fx-font-size: 11pt;
+  -fx-font-family: "Segoe UI Semibold";
+  -fx-text-fill: #006464;
+  -fx-opacity: 0.6;
+}
+
+.text-field {
+  -fx-font-size: 14pt;
+  -fx-font-family: "Segoe UI Semibold";
+}

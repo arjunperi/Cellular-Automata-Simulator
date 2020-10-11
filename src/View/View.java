@@ -1,19 +1,16 @@
 package View;
 
 import Model.Grid;
-import Model.Model;
 import cellsociety.Simulation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-
-import java.util.List;
 
 
 public class View {
+
   private final Group root;
   private List<List<AbstractFrontEndCell>> frontEndCellGrid;
 
@@ -29,7 +26,8 @@ public class View {
     updateFrontEndCells(grid);
   }
 
-  public void initializeFrontEndCells(String modelType, int numberOfRows, int numberOfColumns, Grid grid) {
+  public void initializeFrontEndCells(String modelType, int numberOfRows, int numberOfColumns,
+      Grid grid) {
     String fullAbstractCellType = "View." + modelType + "FrontEndCell";
     frontEndCellGrid = new ArrayList<>();
     double xOffset = Simulation.SCENE_WIDTH / (double) numberOfRows;
@@ -40,7 +38,8 @@ public class View {
       x = 0;
       List<AbstractFrontEndCell> frontEndCellRow = new ArrayList<>();
       for (int column = 0; column < numberOfColumns; column++) {
-        addFrontEndCellToScene(row, column, x, y, xOffset, yOffset, frontEndCellRow, fullAbstractCellType, grid);
+        addFrontEndCellToScene(row, column, x, y, xOffset, yOffset, frontEndCellRow,
+            fullAbstractCellType, grid);
         x += xOffset;
       }
       frontEndCellGrid.add(frontEndCellRow);
@@ -49,7 +48,8 @@ public class View {
   }
 
   private void addFrontEndCellToScene(int row, int column, double x, double y, double xOffset,
-      double yOffset, List<AbstractFrontEndCell> frontEndCellRow, String fullAbstractCellType, Grid grid) {
+      double yOffset, List<AbstractFrontEndCell> frontEndCellRow, String fullAbstractCellType,
+      Grid grid) {
     try {
       int state = grid.getCell(row, column).getCurrentState();
       Class<?> cl = Class.forName(fullAbstractCellType);
@@ -75,4 +75,9 @@ public class View {
   public List<List<AbstractFrontEndCell>> getFrontEndCellGrid() {
     return frontEndCellGrid;
   }
+
+  public Group getRoot() {
+    return this.root;
+  }
+
 }

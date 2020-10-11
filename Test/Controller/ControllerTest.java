@@ -2,24 +2,28 @@ package Controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import View.View;
-import View.AbstractFrontEndCell;
 import Model.Model;
+import View.AbstractFrontEndCell;
+import View.View;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import org.junit.jupiter.api.Test;
+import util.DukeApplicationTest;
 
-public class ControllerTest {
+public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testPauseConwayPulsar() {
     Controller testController = new Controller();
-    testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife", "Test/ConwayStatesPulsarOut.csv");
-    testController.handleKeyInput(KeyCode.SPACE);
+    testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife",
+        "Test/ConwayStatesPulsarOut.csv");
+    testController.handleKeyInput(KeyCode.P);
     AbstractFrontEndCell currentCell;
-    int previousCellState = testController.getMainView().getFrontEndCellGrid().get(4).get(5).getCellState();
-    Paint previousCellColor = testController.getMainView().getFrontEndCellGrid().get(4).get(5).getCellColor();
+    int previousCellState = testController.getMainView().getFrontEndCellGrid().get(4).get(5)
+        .getCellState();
+    Paint previousCellColor = testController.getMainView().getFrontEndCellGrid().get(4).get(5)
+        .getCellColor();
     for (int i = 0; i < 120; i++) {
       testController.getMainView().viewStep(testController.getMainModel().getGridOfCells());
       testController.getMainModel().modelStep();
@@ -32,7 +36,8 @@ public class ControllerTest {
   @Test
   public void testStepConwayPulsar() {
     Controller testController = new Controller();
-    testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife", "Test/ConwayStatesPulsarOut.csv");
+    testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife",
+        "Test/ConwayStatesPulsarOut.csv");
     View testView = testController.getMainView();
     Model testModel = testController.getMainModel();
     AbstractFrontEndCell currentCell = testView.getFrontEndCellGrid().get(5).get(6);
@@ -52,10 +57,11 @@ public class ControllerTest {
   @Test
   public void testPauseConwayBlinker() {
     Controller testController = new Controller();
-    testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife", "Test/ConwayStatesBlinkerOut.csv");
+    testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
+        "Test/ConwayStatesBlinkerOut.csv");
     View testView = testController.getMainView();
     Model testModel = testController.getMainModel();
-    testController.handleKeyInput(KeyCode.SPACE);
+    testController.handleKeyInput(KeyCode.P);
     AbstractFrontEndCell currentCell;
     int previousCellState = testView.getFrontEndCellGrid().get(7).get(8).getCellState();
     Paint previousCellColor = testView.getFrontEndCellGrid().get(7).get(8).getCellColor();
@@ -71,7 +77,8 @@ public class ControllerTest {
   @Test
   public void testStepConwayBlinker() {
     Controller testController = new Controller();
-    testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife", "Test/ConwayStatesBlinkerOut.csv");
+    testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
+        "Test/ConwayStatesBlinkerOut.csv");
     View testView = testController.getMainView();
     Model testModel = testController.getMainModel();
     AbstractFrontEndCell currentCell = testView.getFrontEndCellGrid().get(6).get(9);
