@@ -2,12 +2,16 @@ package Controller;
 
 import Model.Model;
 import View.View;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Paint;
 
 public class Controller {
 
@@ -21,6 +25,8 @@ public class Controller {
   public static final String STYLESHEET = "GameOfLife.css";
   public static final String BLANK = " ";
   private final ResourceBundle myResources;
+  private Map<Integer, String> stateColorMapping;
+  private List<List<String>> frontEndCellColors;
 
 
   public Controller() {
@@ -31,17 +37,40 @@ public class Controller {
 
   //on button press
   public void initializeSimulation(String fileName, String modelType, String fileOut) {
+    frontEndCellColors = new ArrayList<>();
+    initializeColorMapping();
     this.mainModel = new Model(fileName, modelType, fileOut);
-    mainView.initializeFrontEndCells(modelType, mainModel.getNumberOfRows(),
-        mainModel.getNumberOfColumns(), mainModel.getGridOfCells());
+    this.frontEndCellColors = updateFrontEndCellColors();
+    mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
+        mainModel.getNumberOfColumns(), frontEndCellColors);
     simIsSet = true;
   }
 
   public void gameStep() {
     if (simIsSet) {
       mainModel.modelStep();
-      mainView.viewStep(mainModel.getGridOfCells());
+      this.frontEndCellColors = updateFrontEndCellColors();
+      mainView.viewStep(this.frontEndCellColors);
     }
+  }
+
+  private List<List<String>> updateFrontEndCellColors() {
+    List<List<String>> frontEndCellColors = new ArrayList<>();
+    for(int row=0; row<mainModel.getNumberOfRows();row++) {
+      List<String> colorRow = new ArrayList<>();
+      for(int column=0; column< mainModel.getNumberOfColumns(); column++) {
+        colorRow.add(stateColorMapping.get(mainModel.getCellState(row,column)));
+      }
+      frontEndCellColors.add(colorRow);
+    }
+    return frontEndCellColors;
+  }
+
+  public void initializeColorMapping() {
+    Map<Integer, String> colorMap = Map.of(
+        0, "WHITE",
+        1, "BLACK");
+    this.stateColorMapping = colorMap;
   }
 
   public Scene setupScene() {
