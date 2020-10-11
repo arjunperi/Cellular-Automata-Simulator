@@ -5,11 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import Model.Model;
 import View.AbstractFrontEndCell;
 import View.View;
+import Model.Grid;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
+
+import java.util.List;
 
 public class ControllerTest extends DukeApplicationTest {
 
@@ -94,4 +97,19 @@ public class ControllerTest extends DukeApplicationTest {
     assertEquals(0, currentCell.getCellState());
     assertEquals(Color.WHITE, currentCell.getCellColor());
   }
+
+  @Test
+  public void testInitializeStateColors(){
+    Controller testController = new Controller();
+    testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
+            "Test/ConwayStatesBlinkerOut.csv");
+    Grid testGrid = new Grid("Test/ConwayStatesBlinker.csv", "GameOfLife");
+    List<List<String>> testColorGrid = testController.initializeCellStatesColors(testGrid);
+    String deadCheck = testColorGrid.get(0).get(0);
+    assertEquals("White", deadCheck);
+    String aliveCheck = testColorGrid.get(7).get(8);
+    assertEquals("Black", aliveCheck);
+  }
 }
+
+
