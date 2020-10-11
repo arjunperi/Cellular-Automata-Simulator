@@ -1,12 +1,12 @@
 package Model;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
-public class SpreadingFireCell extends Cell{
-  public static final int[][] POSSIBLE_NEIGHBORS_SPREADING_FIRE = new int[][]{{-1, 0}, {0, 1}, {1, 0},
+public class SpreadingFireCell extends Cell {
+
+  public static final int[][] POSSIBLE_NEIGHBORS_SPREADING_FIRE = new int[][]{{-1, 0}, {0, 1},
+      {1, 0},
       {0, -1}};
   public static final int ALIVE = 1;
   public static final int EMPTY = 0;
@@ -23,14 +23,14 @@ public class SpreadingFireCell extends Cell{
    */
   @Override
   public void updateState(List<Cell> neighbors) {
-    if(this.getCurrentState()==BURNING) {
+    if (this.getCurrentState() == BURNING) {
       this.setFutureState(EMPTY);
-    } else if(this.getCurrentState()==ALIVE) {
-      for(Cell currentNeighbor : neighbors) {
+    } else if (this.getCurrentState() == ALIVE) {
+      for (Cell currentNeighbor : neighbors) {
         int neighborState = currentNeighbor.getCurrentState();
-        if(neighborState==BURNING) {
-          double chanceToCatchFire=RANDOM_NUMBER_GEN.nextDouble();
-          if(chanceToCatchFire<=PROB_CATCH_FIRE) {
+        if (neighborState == BURNING) {
+          double chanceToCatchFire = RANDOM_NUMBER_GEN.nextDouble();
+          if (chanceToCatchFire <= PROB_CATCH_FIRE) {
             this.setFutureState(BURNING);
           }
         }

@@ -36,8 +36,6 @@ public abstract class AbstractFrontEndCell extends Shape {
     updateCellColor();
   }
 
-//  public abstract void setCellLocation(int x, int y);
-
   public Shape getCellShape() {
     return this.cellShape;
   }

@@ -26,9 +26,6 @@ import javafx.util.Duration;
 public class Simulation extends Application {
 
   public static final String TITLE = "Percolation";
-//  private static final String RESOURCES = "resources/";
-//  public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES;
-//  public static final String STYLESHEET = "GameOfLife.css";
 
   public static final double FRAMES_PER_SECOND = 60;
   public static final double FRAMES_PER_MODEL_UPDATE = 20;
@@ -41,15 +38,14 @@ public class Simulation extends Application {
 
   @Override
   public void start(final Stage stage) {
-    String modelType = "Percolation";
-    mainModel = new Model("PercolationExample.csv", modelType);
+    String modelType = "GameOfLife";
+    mainModel = new Model("ConwayStatesPulsar.csv", modelType);
     mainView = new View(mainModel, modelType);
     mainController = new Controller(mainModel);
     stage.setScene(mainView.setupScene());
     stage.setTitle(TITLE);
     stage.show();
     stage.getScene().setOnKeyPressed(e -> mainController.handleKeyInput(e.getCode()));
-    //stage.getScene().getStylesheets().add(getClass().getResource(DEFAULT_RESOURCE_FOLDER + STYLESHEET).toExternalForm());
     initializeAnimation();
   }
 
@@ -70,23 +66,6 @@ public class Simulation extends Application {
   }
 
   public static void main(String[] args) {
-//    try (CSVWriter csvWriter = new CSVWriter(new FileWriter("data/SpreadingFire20.csv"))) {
-//      int size=20;
-//      String[] rowsAndColumns = new String[] {Integer.toString(size), Integer.toString(size)};
-//      Random random = new Random();
-//      csvWriter.writeNext(rowsAndColumns,false);
-//      for(int i=0; i<size;i++) {
-//        String[] currentRowStates = new String[size];
-//        for(int j=0;j< size;j++) {
-//          //currentRowStates[j] = Integer.toString(random.nextInt(6));
-//          currentRowStates[j] = Integer.toString(1);
-//        }
-//        csvWriter.writeNext(currentRowStates,false);
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-
     launch(args);
   }
 }

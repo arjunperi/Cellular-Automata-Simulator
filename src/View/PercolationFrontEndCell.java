@@ -6,6 +6,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 public class PercolationFrontEndCell extends AbstractFrontEndCell {
+
   public PercolationFrontEndCell(int cellState, double x, double y, double width, double height) {
     super(cellState);
     super.setCellShape(new Rectangle(x, y, width, height));

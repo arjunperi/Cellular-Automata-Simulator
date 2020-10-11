@@ -13,12 +13,12 @@ public class Model {
   private double cycles = 0;
 
   public Model(String fileName, String modelType) {
-    gridOfCells = new Grid(fileName,modelType);
+    gridOfCells = new Grid(fileName, modelType);
     this.fileOut = null;
   }
 
   public Model(String fileName, String modelType, String fileOut) {
-    gridOfCells = new Grid(fileName,modelType);
+    gridOfCells = new Grid(fileName, modelType);
     this.fileOut = fileOut;
   }
 
@@ -33,11 +33,10 @@ public class Model {
   }
 
   private void writeToCSV() {
-    if (fileOut!=null) {
+    if (fileOut != null) {
       gridOfCells.writeToCSV(fileOut);
     }
   }
-
 
   private boolean checkTimeElapsed() {
     cycles += 1;
