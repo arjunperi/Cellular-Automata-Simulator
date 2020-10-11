@@ -2,12 +2,9 @@ package Model;
 
 
 import cellsociety.Simulation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
-public abstract class Model {
+public class Model {
 
   private final String fileOut;
   protected final Grid gridOfCells;
@@ -15,60 +12,35 @@ public abstract class Model {
   private boolean isStep = false;
   private double cycles = 0;
 
-  public Model(String fileName) {
-    gridOfCells = new Grid(fileName);
-    this.fileOut = "";
+  public Model(String fileName, String modelType) {
+    gridOfCells = new Grid(fileName, modelType);
+    this.fileOut = null;
   }
 
-  public Model(String fileName, String fileOut) {
-    gridOfCells = new Grid(fileName);
+  public Model(String fileName, String modelType, String fileOut) {
+    gridOfCells = new Grid(fileName, modelType);
     this.fileOut = fileOut;
   }
-
-  public abstract void updateCell(int row, int column);
 
   public void modelStep() {
     boolean isUpdate = checkTimeElapsed();
     if ((!isPaused && isUpdate) || isStep) {
       cycles = 0;
-      for (int i = 0; i < gridOfCells.getCellsPerColumn(); i++) {
-        for (int j = 0; j < gridOfCells.getCellsPerRow(); j++) {
-          gridOfCells.updateSpecificCell(i, j);
-          updateCell(i, j);
-        }
-      }
-      for (int i = 0; i < gridOfCells.getCellsPerColumn(); i++) {
-        for (int j = 0; j < gridOfCells.getCellsPerRow(); j++) {
-          toNextState(i, j);
-        }
-      }
-      if (fileOut.length() > 0) {
-        gridOfCells.writeToCSV(fileOut);
-      }
+      gridOfCells.updateCells();
+      gridOfCells.toNextState();
+      writeToCSV();
+    }
+  }
+
+  private void writeToCSV() {
+    if (fileOut != null) {
+      gridOfCells.writeToCSV(fileOut);
     }
   }
 
   private boolean checkTimeElapsed() {
     cycles += 1;
     return cycles % Simulation.FRAMES_PER_MODEL_UPDATE == 0;
-  }
-
-  protected abstract List<List<Integer>> getNeighbors(int x, int y);
-
-  protected List<List<Integer>> processNeighbors(int x, int y, int[][] possibleNeighbors) {
-    List<List<Integer>> neighbors = new ArrayList<>();
-    for (int[] possibleNeighbor : possibleNeighbors) {
-      int currentX = x + possibleNeighbor[0];
-      int currentY = y + possibleNeighbor[1];
-      if (currentX < 0 || currentY < 0) {
-        continue;
-      }
-      if (currentX >= gridOfCells.getCellsPerColumn() || currentY >= gridOfCells.getCellsPerRow()) {
-        continue;
-      }
-      neighbors.add(Arrays.asList(currentX, currentY));
-    }
-    return neighbors;
   }
 
   public void switchPause() {
@@ -86,8 +58,8 @@ public abstract class Model {
     return gridOfCells.getCell(row, column).getCurrentState();
   }
 
-  public void toNextState(int row, int column) {
-    gridOfCells.getCell(row, column).nextState();
+  public Grid getGridOfCells() {
+    return gridOfCells;
   }
 
   public int getNumberOfRows() {

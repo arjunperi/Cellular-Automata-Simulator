@@ -9,7 +9,7 @@ class GridTest {
 
   @Test
   public void testGridReadingFromFile() {
-    Grid myGrid = new Grid("Test/ConwayStatesPulsar.csv");
+    Grid myGrid = new Grid("Test/ConwayStatesPulsar.csv", "GameOfLife");
     assertEquals(1, myGrid.getCell(9,5).getCurrentState());
     assertEquals(0, myGrid.getCell(9,4).getCurrentState());
   }

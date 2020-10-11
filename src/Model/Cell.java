@@ -1,7 +1,9 @@
 package Model;
 
 
-public class Cell {
+import java.util.List;
+
+public abstract class Cell {
 
   private int currentState;
   private int futureState;
@@ -19,7 +21,11 @@ public class Cell {
     return currentState;
   }
 
-  public void nextState() {
+  public abstract void updateState(List<Cell> neighbors);
+
+  public abstract int[][] getPossibleNeighbors();
+
+  public void toNextState() {
     currentState = futureState;
   }
 }

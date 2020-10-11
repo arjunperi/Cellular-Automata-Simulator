@@ -2,14 +2,22 @@ package cellsociety;
 
 import Controller.Controller;
 import View.View;
+import com.opencsv.CSVWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import Model.*;
 import javafx.util.Duration;
-
-import java.io.IOException;
 
 
 /**
@@ -22,31 +30,22 @@ import java.io.IOException;
 public class Simulation extends Application {
 
   public static final String TITLE = "Percolation";
-//  private static final String RESOURCES = "resources/";
-//  public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES;
-//  public static final String STYLESHEET = "GameOfLife.css";
 
+  public static final Paint BACKGROUND = Color.AZURE;
   public static final double FRAMES_PER_SECOND = 60;
-  public static final double FRAMES_PER_MODEL_UPDATE = 10;
+  public static final double FRAMES_PER_MODEL_UPDATE = 20;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   public static final double SCENE_WIDTH = 800;
   public static final double SCENE_HEIGHT = 800;
-  private Model mainModel;
-  private View mainView;
   private Controller mainController;
 
   @Override
-  public void start(final Stage stage) throws IOException {
-    mainModel = new SpreadingFireModel("SpreadingFire20.csv");
-    mainController = new Controller(mainModel);
-    //mainView = new View("English", mainController);
-    //stage.setScene(mainView.setupScene());
-    mainView = mainController.getView();
-    stage.setScene(mainView.setupScene());
+  public void start(final Stage stage) {
+    mainController = new Controller();
+    stage.setScene(mainController.setupScene());
     stage.setTitle(TITLE);
     stage.show();
     stage.getScene().setOnKeyPressed(e -> mainController.handleKeyInput(e.getCode()));
-    //stage.getScene().getStylesheets().add(getClass().getResource(DEFAULT_RESOURCE_FOLDER + STYLESHEET).toExternalForm());
     initializeAnimation();
   }
 
@@ -62,29 +61,10 @@ public class Simulation extends Application {
   }
 
   private void gameStep() {
-    mainModel = mainController.getModel();
-    mainModel.modelStep();
-    mainView.viewStep();
+    mainController.gameStep();
   }
 
   public static void main(String[] args) {
-//    try (CSVWriter csvWriter = new CSVWriter(new FileWriter("data/SpreadingFire20.csv"))) {
-//      int size=20;
-//      String[] rowsAndColumns = new String[] {Integer.toString(size), Integer.toString(size)};
-//      Random random = new Random();
-//      csvWriter.writeNext(rowsAndColumns,false);
-//      for(int i=0; i<size;i++) {
-//        String[] currentRowStates = new String[size];
-//        for(int j=0;j< size;j++) {
-//          //currentRowStates[j] = Integer.toString(random.nextInt(6));
-//          currentRowStates[j] = Integer.toString(1);
-//        }
-//        csvWriter.writeNext(currentRowStates,false);
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-
     launch(args);
   }
 }
