@@ -11,73 +11,65 @@ import javafx.scene.Scene;
 
 public class View {
 
-    private final Group root;
-    private List<List<AbstractFrontEndCell>> frontEndCellGrid;
+  private final Group root;
+  private List<List<FrontEndCell>> frontEndCellGrid;
+  private List<List<String>> frontEndCellColors;
 
-    public View() {
-        root = new Group();
+  public View() {
+    root = new Group();
+  }
+
+  public Scene setupScene() {
+    return new Scene(root, Simulation.SCENE_WIDTH, Simulation.SCENE_HEIGHT, Simulation.BACKGROUND);
+  }
+
+  public void viewStep(List<List<String>> frontEndCellColors) {
+    updateFrontEndCells(frontEndCellColors);
+  }
+
+  public void initializeFrontEndCells(int numberOfRows, int numberOfColumns,
+      List<List<String>> frontEndCellColors) {
+    this.frontEndCellColors = frontEndCellColors;
+    this.frontEndCellGrid = new ArrayList<>();
+    double xOffset = Simulation.SCENE_WIDTH / (double) numberOfRows;
+    double yOffset = Simulation.SCENE_HEIGHT / (double) numberOfColumns;
+    double x;
+    double y = 0;
+    for (int row = 0; row < numberOfRows; row++) {
+      x = 0;
+      List<FrontEndCell> frontEndCellRow = new ArrayList<>();
+      for (int column = 0; column < numberOfColumns; column++) {
+        addFrontEndCellToScene(row, column, x, y, xOffset, yOffset, frontEndCellRow);
+        x += xOffset;
+      }
+      frontEndCellGrid.add(frontEndCellRow);
+      y += yOffset;
+    }
+  }
+
+    private void addFrontEndCellToScene ( int row, int column, double x, double y, double xOffset,
+    double yOffset, List<FrontEndCell > frontEndCellRow){
+      String stateString = this.frontEndCellColors.get(row).get(column);
+      FrontEndCell currentFrontEndCell = new FrontEndCell(stateString, x, y, xOffset, yOffset);
+      frontEndCellRow.add(currentFrontEndCell);
+      root.getChildren().add(currentFrontEndCell.getCellShape());
     }
 
-    public Scene setupScene() {
-        return new Scene(root, Simulation.SCENE_WIDTH, Simulation.SCENE_HEIGHT, Simulation.BACKGROUND);
-    }
-
-    public void viewStep(Grid grid) {
-        updateFrontEndCells(grid);
-    }
-
-    public void initializeFrontEndCells(String modelType, int numberOfRows, int numberOfColumns,
-                                        Grid grid) {
-        String fullAbstractCellType = "View." + modelType + "FrontEndCell";
-        frontEndCellGrid = new ArrayList<>();
-        double xOffset = Simulation.SCENE_WIDTH / (double) numberOfRows;
-        double yOffset = Simulation.SCENE_HEIGHT / (double) numberOfColumns;
-        double x;
-        double y = 0;
-        for (int row = 0; row < numberOfRows; row++) {
-            x = 0;
-            List<AbstractFrontEndCell> frontEndCellRow = new ArrayList<>();
-            for (int column = 0; column < numberOfColumns; column++) {
-                addFrontEndCellToScene(row, column, x, y, xOffset, yOffset, frontEndCellRow,
-                        fullAbstractCellType, grid);
-                x += xOffset;
-            }
-            frontEndCellGrid.add(frontEndCellRow);
-            y += yOffset;
+    private void updateFrontEndCells (List < List < String >> frontEndCellColors) {
+      this.frontEndCellColors = frontEndCellColors;
+      for (int row = 0; row < this.frontEndCellColors.size(); row++) {
+        for (int column = 0; column < this.frontEndCellColors.get(0).size(); column++) {
+          frontEndCellGrid.get(row).get(column)
+              .updateCellColor(this.frontEndCellColors.get(row).get(column));
         }
+      }
     }
 
-    private void addFrontEndCellToScene(int row, int column, double x, double y, double xOffset,
-                                        double yOffset, List<AbstractFrontEndCell> frontEndCellRow, String fullAbstractCellType,
-                                        Grid grid) {
-        try {
-            int state = grid.getCell(row, column).getCurrentState();
-            Class<?> cl = Class.forName(fullAbstractCellType);
-            AbstractFrontEndCell currentFrontEndCell = (AbstractFrontEndCell) cl
-                    .getConstructor(int.class, double.class,
-                            double.class, double.class, double.class).newInstance(state, x, y, xOffset, yOffset);
-            frontEndCellRow.add(currentFrontEndCell);
-            root.getChildren().add(currentFrontEndCell.getCellShape());
-        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public List<List<FrontEndCell>> getFrontEndCellGrid () {
+      return frontEndCellGrid;
     }
 
-    private void updateFrontEndCells(Grid grid) {
-        for (int row = 0; row < grid.getCellsPerColumn(); row++) {
-            for (int column = 0; column < grid.getCellsPerRow(); column++) {
-                int state = grid.getCell(row, column).getCurrentState();
-                frontEndCellGrid.get(row).get(column).setCellState(state);
-            }
-        }
+    public Group getRoot () {
+      return this.root;
     }
-
-    public List<List<AbstractFrontEndCell>> getFrontEndCellGrid() {
-        return frontEndCellGrid;
-    }
-
-    public Group getRoot() {
-        return this.root;
-    }
-
-}
+  }

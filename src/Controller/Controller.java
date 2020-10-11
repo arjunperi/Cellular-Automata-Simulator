@@ -6,8 +6,10 @@ import Model.Grid;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
@@ -27,6 +29,9 @@ public class Controller {
   public static final String STYLESHEET = "GameOfLife.css";
   public static final String BLANK = " ";
   private final ResourceBundle myResources;
+  private final Map<Integer, String> stateColorMapping = new HashMap<>();
+  private List<List<String>> frontEndCellColors;
+  private String simulationName;
 
 
   public Controller() {
@@ -37,17 +42,38 @@ public class Controller {
 
   //on button press
   public void initializeSimulation(String fileName, String modelType, String fileOut) {
+    this.simulationName=modelType;
+    frontEndCellColors = new ArrayList<>();
     this.mainModel = new Model(fileName, modelType, fileOut);
-    mainView.initializeFrontEndCells(modelType, mainModel.getNumberOfRows(),
-            mainModel.getNumberOfColumns(), mainModel.getGridOfCells());
+
+    this.frontEndCellColors = updateFrontEndCellColors();
+    mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
+        mainModel.getNumberOfColumns(), frontEndCellColors);
     simIsSet = true;
   }
 
   public void gameStep() {
     if (simIsSet) {
       mainModel.modelStep();
-      mainView.viewStep(mainModel.getGridOfCells());
+      this.frontEndCellColors = updateFrontEndCellColors();
+      mainView.viewStep(this.frontEndCellColors);
     }
+  }
+
+  private List<List<String>> updateFrontEndCellColors() {
+    List<List<String>> frontEndCellColors = new ArrayList<>();
+    for(int row=0; row<mainModel.getNumberOfRows();row++) {
+      List<String> colorRow = new ArrayList<>();
+      for(int column=0; column< mainModel.getNumberOfColumns(); column++) {
+        int currentState = mainModel.getCellState(row,column);
+        if(!stateColorMapping.containsKey(currentState)) {
+          initializeColorMapping(currentState);
+        }
+        colorRow.add(stateColorMapping.get(mainModel.getCellState(row,column)));
+      }
+      frontEndCellColors.add(colorRow);
+    }
+    return frontEndCellColors;
   }
 
   public Scene setupScene() {
@@ -76,7 +102,7 @@ public class Controller {
     comboBoxPercolation
             .setOnAction(event -> transition("Percolation", comboBoxPercolation.getValue().toString()));
     comboBoxPercolation.setPromptText("Percolation");
-    ComboBox comboBoxRPS = new ComboBox(FXCollections.observableArrayList("RPS100"));
+    ComboBox comboBoxRPS = new ComboBox(FXCollections.observableArrayList("RPSExample"));
     comboBoxRPS.setOnAction(event -> transition("RPS", comboBoxRPS.getValue().toString()));
     comboBoxRPS.setPromptText("RPS");
     ComboBox comboBoxSpreadingFire = new ComboBox(
@@ -104,29 +130,32 @@ public class Controller {
     }
   }
 
-  public List<List<String>> initializeCellStatesColors(Grid grid) {
-    List<List<String>> stateToColorGrid = new ArrayList<>();
-    for (int row = 0; row < grid.getCellsPerColumn(); row++) {
-      List<String> currentColorRow = new ArrayList<>();
-      for (int column = 0; column < grid.getCellsPerRow(); column++) {
-        String currentColor = stateToColor(grid.getCell(row, column).getCurrentState());
-        currentColorRow.add(currentColor);
-      }
-      stateToColorGrid.add(currentColorRow);
-    }
-    return stateToColorGrid;
-  }
+//  public List<List<String>> initializeCellStatesColors(Grid grid) {
+//    List<List<String>> stateToColorGrid = new ArrayList<>();
+//    for (int row = 0; row < grid.getCellsPerColumn(); row++) {
+//      List<String> currentColorRow = new ArrayList<>();
+//      for (int column = 0; column < grid.getCellsPerRow(); column++) {
+//        String currentColor = stateToColor(grid.getCell(row, column).getCurrentState());
+//        currentColorRow.add(currentColor);
+//      }
+//      stateToColorGrid.add(currentColorRow);
+//    }
+//    return stateToColorGrid;
+//  }
 
-  public String stateToColor(int state) {
+  public void initializeColorMapping(int state) {
     String result = "";
+    String propertyFileName = simulationName + ".properties";
     try {
       Properties prop = new Properties();
-      prop.load(Controller.class.getClassLoader().getResourceAsStream("GameOfLife.properties"));
+      prop.load(Controller.class.getClassLoader().getResourceAsStream(propertyFileName));
       result = prop.getProperty(String.valueOf(state));
+      if(!stateColorMapping.containsKey(state)) {
+        stateColorMapping.put(state,result);
+      }
     } catch (IOException e) {
       System.out.println("error");
     }
-    return result;
   }
 
   public void handleKeyInput(KeyCode code) {
