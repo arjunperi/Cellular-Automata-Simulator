@@ -58,6 +58,10 @@ public class Model {
     return gridOfCells.getCell(row, column).getCurrentState();
   }
 
+  public Grid getGridOfCells() {
+    return gridOfCells;
+  }
+
   public int getNumberOfRows() {
     return (int) gridOfCells.getCellsPerColumn();
   }

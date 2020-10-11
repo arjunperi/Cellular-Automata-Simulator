@@ -14,62 +14,66 @@ public class ViewTest {
     @Test
     public void testInitializeFrontendCells(){
         Model testModel = new Model("Test/ConwayStatesPulsar.csv", "GameOfLife");
-        View testView = new View(testModel, "GameOfLife");
+        View testView = new View();
+        testView.initializeFrontEndCells("GameOfLife", testModel.getNumberOfRows(), testModel.getNumberOfColumns(), testModel.getGridOfCells());
         assertEquals(Color.WHITE,  testView.getFrontEndCellGrid().get(0).get(0).getCellColor());
         assertEquals(0,  testView.getFrontEndCellGrid().get(0).get(0).getCellState());
     }
 
     @Test
     public void testViewStepPulsar(){
-        Model testModel = new Model("Test/ConwayStatesPulsar.csv", "GameOfLife");
-        View testView = new View(testModel, "GameOfLife");
-        Controller testController = new Controller(testModel);
+        Controller testController = new Controller();
+        testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife", "Test/ConwayStatesPulsarOut.csv");
+        View testView = testController.getMainView();
+        Model testModel = testController.getMainModel();
         assertEquals(1,  testView.getFrontEndCellGrid().get(0).get(1).getCellState());
         testController.handleKeyInput(KeyCode.S);
-        testView.viewStep();
+        testView.viewStep(testModel.getGridOfCells());
         assertEquals(0,  testView.getFrontEndCellGrid().get(0).get(1).getCellState());
     }
 
     @Test
     public void testViewStepBeacon(){
-        Model testModel = new Model("Test/ConwayStatesBeacon.csv", "GameOfLife");
-        View testView = new View(testModel, "GameOfLife");
-        Controller testController = new Controller(testModel);
-        assertEquals(0,  testView.getFrontEndCellGrid().get(7).get(7).getCellState());
+        Controller testController = new Controller();
+        testController.initializeSimulation("Test/ConwayStatesBeacon.csv", "GameOfLife", "Test/ConwayStatesBeaconOut.csv");
+        assertEquals(0,  testController.getMainView().getFrontEndCellGrid().get(7).get(7).getCellState());
         testController.handleKeyInput(KeyCode.S);
-        testView.viewStep();
-        assertEquals(1,  testView.getFrontEndCellGrid().get(7).get(7).getCellState());
+        testController.getMainView().viewStep(testController.getMainModel().getGridOfCells());
+        assertEquals(1,  testController.getMainView().getFrontEndCellGrid().get(7).get(7).getCellState());
     }
 
     @Test
     public void testViewStepBlinker(){
-        Model testModel = new Model("Test/ConwayStatesBlinker.csv", "GameOfLife");
-        View testView = new View(testModel, "GameOfLife");
-        Controller testController = new Controller(testModel);
+        Controller testController = new Controller();
+        testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife", "Test/ConwayStatesBlinkerOut.csv");
+        View testView = testController.getMainView();
+        Model testModel = testController.getMainModel();
         assertEquals(1,  testView.getFrontEndCellGrid().get(7).get(8).getCellState());
         testController.handleKeyInput(KeyCode.S);
-        testView.viewStep();
+        testView.viewStep(testModel.getGridOfCells());
         assertEquals(0,  testView.getFrontEndCellGrid().get(7).get(8).getCellState());
     }
     @Test
     public void testViewStepBlock(){
-        Model testModel = new Model("Test/ConwayStatesBlock.csv", "GameOfLife");
-        View testView = new View(testModel, "GameOfLife");
-        Controller testController = new Controller(testModel);
+        Controller testController = new Controller();
+        testController.initializeSimulation("Test/ConwayStatesBlock.csv", "GameOfLife", "Test/ConwayStatesBlockOut.csv");
+        View testView = testController.getMainView();
+        Model testModel = testController.getMainModel();
         assertEquals(1,  testView.getFrontEndCellGrid().get(9).get(13).getCellState());
         testController.handleKeyInput(KeyCode.S);
-        testView.viewStep();
+        testView.viewStep(testModel.getGridOfCells());
         assertEquals(1,  testView.getFrontEndCellGrid().get(9).get(13).getCellState());
     }
 
     @Test
     public void testViewStepToad(){
-        Model testModel = new Model("Test/ConwayStatesToad.csv", "GameOfLife");
-        View testView = new View(testModel, "GameOfLife");
-        Controller testController = new Controller(testModel);
+        Controller testController = new Controller();
+        testController.initializeSimulation("Test/ConwayStatesToad.csv", "GameOfLife", "Test/ConwayStatesToadOut.csv");
+        View testView = testController.getMainView();
+        Model testModel = testController.getMainModel();
         assertEquals(0,  testView.getFrontEndCellGrid().get(9).get(10).getCellState());
         testController.handleKeyInput(KeyCode.S);
-        testView.viewStep();
+        testView.viewStep(testModel.getGridOfCells());
         assertEquals(1,  testView.getFrontEndCellGrid().get(9).get(10).getCellState());
     }
 

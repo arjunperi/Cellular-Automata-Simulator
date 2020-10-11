@@ -11,6 +11,10 @@ import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import Model.*;
 import javafx.util.Duration;
@@ -27,22 +31,18 @@ public class Simulation extends Application {
 
   public static final String TITLE = "Percolation";
 
+  public static final Paint BACKGROUND = Color.AZURE;
   public static final double FRAMES_PER_SECOND = 60;
   public static final double FRAMES_PER_MODEL_UPDATE = 20;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   public static final double SCENE_WIDTH = 800;
   public static final double SCENE_HEIGHT = 800;
-  private Model mainModel;
-  private View mainView;
   private Controller mainController;
 
   @Override
   public void start(final Stage stage) {
-    String modelType = "GameOfLife";
-    mainModel = new Model("ConwayStatesPulsar.csv", modelType);
-    mainView = new View(mainModel, modelType);
-    mainController = new Controller(mainModel);
-    stage.setScene(mainView.setupScene());
+    mainController = new Controller();
+    stage.setScene(mainController.setupScene());
     stage.setTitle(TITLE);
     stage.show();
     stage.getScene().setOnKeyPressed(e -> mainController.handleKeyInput(e.getCode()));
@@ -61,8 +61,7 @@ public class Simulation extends Application {
   }
 
   private void gameStep() {
-    mainModel.modelStep();
-    mainView.viewStep();
+    mainController.gameStep();
   }
 
   public static void main(String[] args) {

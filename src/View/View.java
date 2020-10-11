@@ -1,5 +1,6 @@
 package View;
 
+import Model.Grid;
 import Model.Model;
 import cellsociety.Simulation;
 import java.lang.reflect.InvocationTargetException;
@@ -13,35 +14,23 @@ import java.util.List;
 
 
 public class View {
-
-  private static final Paint BACKGROUND = Color.AZURE;
-
-  private final Model backendModel;
-  private final String fullAbstractCellType;
-  private final int numberOfRows;
-  private final int numberOfColumns;
   private final Group root;
   private List<List<AbstractFrontEndCell>> frontEndCellGrid;
 
-
-  public View(Model model, String modelType) {
+  public View() {
     root = new Group();
-    backendModel = model;
-    this.fullAbstractCellType = "View." + modelType + "FrontEndCell";
-    numberOfColumns = backendModel.getNumberOfColumns();
-    numberOfRows = backendModel.getNumberOfRows();
-    initializeFrontEndCells();
   }
 
   public Scene setupScene() {
-    return new Scene(root, Simulation.SCENE_WIDTH, Simulation.SCENE_HEIGHT, BACKGROUND);
+    return new Scene(root, Simulation.SCENE_WIDTH, Simulation.SCENE_HEIGHT, Simulation.BACKGROUND);
   }
 
-  public void viewStep() {
-    updateFrontEndCells();
+  public void viewStep(Grid grid) {
+    updateFrontEndCells(grid);
   }
 
-  private void initializeFrontEndCells() {
+  public void initializeFrontEndCells(String modelType, int numberOfRows, int numberOfColumns, Grid grid) {
+    String fullAbstractCellType = "View." + modelType + "FrontEndCell";
     frontEndCellGrid = new ArrayList<>();
     double xOffset = Simulation.SCENE_WIDTH / (double) numberOfRows;
     double yOffset = Simulation.SCENE_HEIGHT / (double) numberOfColumns;
@@ -51,7 +40,7 @@ public class View {
       x = 0;
       List<AbstractFrontEndCell> frontEndCellRow = new ArrayList<>();
       for (int column = 0; column < numberOfColumns; column++) {
-        addFrontEndCellToScene(row, column, x, y, xOffset, yOffset, frontEndCellRow);
+        addFrontEndCellToScene(row, column, x, y, xOffset, yOffset, frontEndCellRow, fullAbstractCellType, grid);
         x += xOffset;
       }
       frontEndCellGrid.add(frontEndCellRow);
@@ -60,9 +49,9 @@ public class View {
   }
 
   private void addFrontEndCellToScene(int row, int column, double x, double y, double xOffset,
-      double yOffset, List<AbstractFrontEndCell> frontEndCellRow) {
+      double yOffset, List<AbstractFrontEndCell> frontEndCellRow, String fullAbstractCellType, Grid grid) {
     try {
-      int state = backendModel.getCellState(row, column);
+      int state = grid.getCell(row, column).getCurrentState();
       Class<?> cl = Class.forName(fullAbstractCellType);
       AbstractFrontEndCell currentFrontEndCell = (AbstractFrontEndCell) cl
           .getConstructor(int.class, double.class,
@@ -74,10 +63,10 @@ public class View {
     }
   }
 
-  private void updateFrontEndCells() {
-    for (int row = 0; row < numberOfRows; row++) {
-      for (int column = 0; column < numberOfColumns; column++) {
-        int state = backendModel.getCellState(row, column);
+  private void updateFrontEndCells(Grid grid) {
+    for (int row = 0; row < grid.getCellsPerColumn(); row++) {
+      for (int column = 0; column < grid.getCellsPerRow(); column++) {
+        int state = grid.getCell(row, column).getCurrentState();
         frontEndCellGrid.get(row).get(column).setCellState(state);
       }
     }

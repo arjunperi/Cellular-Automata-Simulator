@@ -14,17 +14,16 @@ public class ControllerTest {
 
   @Test
   public void testPauseConwayPulsar() {
-    Model testModel = new Model("Test/ConwayStatesPulsar.csv", "GameOfLife");
-    View testView = new View(testModel, "GameOfLife");
-    Controller testController = new Controller(testModel);
+    Controller testController = new Controller();
+    testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife", "Test/ConwayStatesPulsarOut.csv");
     testController.handleKeyInput(KeyCode.SPACE);
     AbstractFrontEndCell currentCell;
-    int previousCellState = testView.getFrontEndCellGrid().get(4).get(5).getCellState();
-    Paint previousCellColor = testView.getFrontEndCellGrid().get(4).get(5).getCellColor();
+    int previousCellState = testController.getMainView().getFrontEndCellGrid().get(4).get(5).getCellState();
+    Paint previousCellColor = testController.getMainView().getFrontEndCellGrid().get(4).get(5).getCellColor();
     for (int i = 0; i < 120; i++) {
-      testView.viewStep();
-      testModel.modelStep();
-      currentCell = testView.getFrontEndCellGrid().get(4).get(5);
+      testController.getMainView().viewStep(testController.getMainModel().getGridOfCells());
+      testController.getMainModel().modelStep();
+      currentCell = testController.getMainView().getFrontEndCellGrid().get(4).get(5);
       assertEquals(previousCellState, currentCell.getCellState());
       assertEquals(previousCellColor, currentCell.getCellColor());
     }
@@ -32,34 +31,36 @@ public class ControllerTest {
 
   @Test
   public void testStepConwayPulsar() {
-    Model testModel = new Model("Test/ConwayStatesPulsar.csv", "GameOfLife");
-    View testView = new View(testModel, "GameOfLife");
-    Controller testController = new Controller(testModel);
+    Controller testController = new Controller();
+    testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife", "Test/ConwayStatesPulsarOut.csv");
+    View testView = testController.getMainView();
+    Model testModel = testController.getMainModel();
     AbstractFrontEndCell currentCell = testView.getFrontEndCellGrid().get(5).get(6);
     testController.handleKeyInput(KeyCode.SPACE);
     assertEquals(0, currentCell.getCellState());
     assertEquals(Color.WHITE, currentCell.getCellColor());
     testController.handleKeyInput(KeyCode.S);
-    testView.viewStep();
+    testView.viewStep(testModel.getGridOfCells());
     assertEquals(1, currentCell.getCellState());
     assertEquals(Color.BLACK, currentCell.getCellColor());
     testController.handleKeyInput(KeyCode.S);
-    testView.viewStep();
+    testView.viewStep(testModel.getGridOfCells());
     assertEquals(1, currentCell.getCellState());
     assertEquals(Color.BLACK, currentCell.getCellColor());
   }
 
   @Test
   public void testPauseConwayBlinker() {
-    Model testModel = new Model("Test/ConwayStatesBlinker.csv", "GameOfLife");
-    View testView = new View(testModel, "GameOfLife");
-    Controller testController = new Controller(testModel);
+    Controller testController = new Controller();
+    testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife", "Test/ConwayStatesBlinkerOut.csv");
+    View testView = testController.getMainView();
+    Model testModel = testController.getMainModel();
     testController.handleKeyInput(KeyCode.SPACE);
     AbstractFrontEndCell currentCell;
     int previousCellState = testView.getFrontEndCellGrid().get(7).get(8).getCellState();
     Paint previousCellColor = testView.getFrontEndCellGrid().get(7).get(8).getCellColor();
     for (int i = 0; i < 120; i++) {
-      testView.viewStep();
+      testView.viewStep(testModel.getGridOfCells());
       testModel.modelStep();
       currentCell = testView.getFrontEndCellGrid().get(7).get(8);
       assertEquals(previousCellState, currentCell.getCellState());
@@ -69,19 +70,20 @@ public class ControllerTest {
 
   @Test
   public void testStepConwayBlinker() {
-    Model testModel = new Model("Test/ConwayStatesBlinker.csv", "GameOfLife");
-    View testView = new View(testModel, "GameOfLife");
-    Controller testController = new Controller(testModel);
+    Controller testController = new Controller();
+    testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife", "Test/ConwayStatesBlinkerOut.csv");
+    View testView = testController.getMainView();
+    Model testModel = testController.getMainModel();
     AbstractFrontEndCell currentCell = testView.getFrontEndCellGrid().get(6).get(9);
     testController.handleKeyInput(KeyCode.SPACE);
     assertEquals(0, currentCell.getCellState());
     assertEquals(Color.WHITE, currentCell.getCellColor());
     testController.handleKeyInput(KeyCode.S);
-    testView.viewStep();
+    testView.viewStep(testModel.getGridOfCells());
     assertEquals(1, currentCell.getCellState());
     assertEquals(Color.BLACK, currentCell.getCellColor());
     testController.handleKeyInput(KeyCode.S);
-    testView.viewStep();
+    testView.viewStep(testModel.getGridOfCells());
     assertEquals(0, currentCell.getCellState());
     assertEquals(Color.WHITE, currentCell.getCellColor());
   }
