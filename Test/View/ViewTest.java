@@ -14,25 +14,10 @@ public class ViewTest extends DukeApplicationTest {
 
   @Test
   public void testInitializeFrontendCells() {
-    Model testModel = new Model("Test/ConwayStatesPulsar.csv", "GameOfLife");
-    View testView = new View();
-    testView.initializeFrontEndCells("GameOfLife", testModel.getNumberOfRows(),
-        testModel.getNumberOfColumns(), testModel.getGridOfCells());
-    assertEquals(Color.WHITE, testView.getFrontEndCellGrid().get(0).get(0).getCellColor());
-    assertEquals(0, testView.getFrontEndCellGrid().get(0).get(0).getCellState());
-  }
-
-  @Test
-  public void testViewStepPulsar() {
     Controller testController = new Controller();
-    testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife",
-        "Test/ConwayStatesPulsarOut.csv");
+    testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife", "Test/ConwayStatesPulsarOut.csv");
     View testView = testController.getMainView();
-    Model testModel = testController.getMainModel();
-    assertEquals(1, testView.getFrontEndCellGrid().get(0).get(1).getCellState());
-    testController.handleKeyInput(KeyCode.S);
-    testView.viewStep(testModel.getGridOfCells());
-    assertEquals(0, testView.getFrontEndCellGrid().get(0).get(1).getCellState());
+    assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(0).get(0).getCellColor());
   }
 
   @Test
@@ -40,12 +25,12 @@ public class ViewTest extends DukeApplicationTest {
     Controller testController = new Controller();
     testController.initializeSimulation("Test/ConwayStatesBeacon.csv", "GameOfLife",
         "Test/ConwayStatesBeaconOut.csv");
-    assertEquals(0,
-        testController.getMainView().getFrontEndCellGrid().get(7).get(7).getCellState());
+    assertEquals("0xffffffff",
+        testController.getMainView().getFrontEndCellGrid().get(7).get(7).getCellColor());
     testController.handleKeyInput(KeyCode.S);
-    testController.getMainView().viewStep(testController.getMainModel().getGridOfCells());
-    assertEquals(1,
-        testController.getMainView().getFrontEndCellGrid().get(7).get(7).getCellState());
+    testController.gameStep();
+    assertEquals("0x000000ff",
+        testController.getMainView().getFrontEndCellGrid().get(7).get(7).getCellColor());
   }
 
   @Test
@@ -54,11 +39,10 @@ public class ViewTest extends DukeApplicationTest {
     testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
         "Test/ConwayStatesBlinkerOut.csv");
     View testView = testController.getMainView();
-    Model testModel = testController.getMainModel();
-    assertEquals(1, testView.getFrontEndCellGrid().get(7).get(8).getCellState());
+    assertEquals("0x000000ff", testView.getFrontEndCellGrid().get(7).get(8).getCellColor());
     testController.handleKeyInput(KeyCode.S);
-    testView.viewStep(testModel.getGridOfCells());
-    assertEquals(0, testView.getFrontEndCellGrid().get(7).get(8).getCellState());
+    testController.gameStep();
+    assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(7).get(8).getCellColor());
   }
 
   @Test
@@ -67,11 +51,10 @@ public class ViewTest extends DukeApplicationTest {
     testController.initializeSimulation("Test/ConwayStatesBlock.csv", "GameOfLife",
         "Test/ConwayStatesBlockOut.csv");
     View testView = testController.getMainView();
-    Model testModel = testController.getMainModel();
-    assertEquals(1, testView.getFrontEndCellGrid().get(9).get(13).getCellState());
+    assertEquals("0x000000ff", testView.getFrontEndCellGrid().get(9).get(13).getCellColor());
     testController.handleKeyInput(KeyCode.S);
-    testView.viewStep(testModel.getGridOfCells());
-    assertEquals(1, testView.getFrontEndCellGrid().get(9).get(13).getCellState());
+    testController.gameStep();
+    assertEquals("0x000000ff", testView.getFrontEndCellGrid().get(9).get(13).getCellColor());
   }
 
   @Test
@@ -81,11 +64,10 @@ public class ViewTest extends DukeApplicationTest {
     testController.initializeSimulation("Test/ConwayStatesToad.csv", "GameOfLife",
         "Test/ConwayStatesToadOut.csv");
     View testView = testController.getMainView();
-    Model testModel = testController.getMainModel();
-    assertEquals(0, testView.getFrontEndCellGrid().get(9).get(10).getCellState());
+    assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(9).get(10).getCellColor());
     testController.handleKeyInput(KeyCode.S);
-    testView.viewStep(testModel.getGridOfCells());
-    assertEquals(1, testView.getFrontEndCellGrid().get(9).get(10).getCellState());
+    testController.gameStep();
+    assertEquals("0x000000ff", testView.getFrontEndCellGrid().get(9).get(10).getCellColor());
 
   }
 

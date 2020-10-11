@@ -45,7 +45,6 @@ public class View {
       frontEndCellGrid.add(frontEndCellRow);
       y += yOffset;
     }
-    System.out.println("hi");
   }
 
   private void addFrontEndCellToScene(int row, int column, double x, double y, double xOffset,

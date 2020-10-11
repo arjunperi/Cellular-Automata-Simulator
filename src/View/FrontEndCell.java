@@ -31,7 +31,7 @@ public class FrontEndCell extends Shape {
     return this.cellShape;
   }
 
-  public String getCellStateColor() {
+  public String getCellColor() {
     return this.cellStateColor.toString();
   }
 }
