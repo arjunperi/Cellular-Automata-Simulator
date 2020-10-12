@@ -5,15 +5,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import Model.Model;
 import View.FrontEndCell;
 import View.View;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
 
 public class ControllerTest extends DukeApplicationTest {
 
+  private Button buttonTest;
+
   @Test
   public void testPauseConwayPulsar() {
     Controller testController = new Controller();
+    testController.startSimulation("GameOfLife","ConwayStatesPulsar");
     testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife",
         "Test/ConwayStatesPulsarOut.csv");
     testController.handleKeyInput(KeyCode.P);
@@ -30,6 +34,7 @@ public class ControllerTest extends DukeApplicationTest {
   @Test
   public void testStepConwayPulsar() {
     Controller testController = new Controller();
+    testController.startSimulation("GameOfLife","ConwayStatesPulsar");
     testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife",
         "Test/ConwayStatesPulsarOut.csv");
     View testView = testController.getMainView();
@@ -48,6 +53,7 @@ public class ControllerTest extends DukeApplicationTest {
   @Test
   public void testPauseConwayBlinker() {
     Controller testController = new Controller();
+    testController.startSimulation("GameOfLife","ConwayStatesBlinker");
     testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
         "Test/ConwayStatesBlinkerOut.csv");
     View testView = testController.getMainView();
@@ -64,6 +70,7 @@ public class ControllerTest extends DukeApplicationTest {
   @Test
   public void testStepConwayBlinker() {
     Controller testController = new Controller();
+    testController.startSimulation("GameOfLife","ConwayStatesBlinker");
     testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
         "Test/ConwayStatesBlinkerOut.csv");
     View testView = testController.getMainView();
