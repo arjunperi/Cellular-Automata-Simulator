@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PercolationCell extends Cell {
@@ -28,4 +30,8 @@ public class PercolationCell extends Cell {
     return POSSIBLE_NEIGHBORS_PERCOLATION;
   }
 
+  @Override
+  public void initializePossibleStates() {
+    this.setPossibleStates(new ArrayList<>(Arrays.asList(0,1,2)));
+  }
 }

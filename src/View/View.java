@@ -5,6 +5,7 @@ import cellsociety.Simulation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.event.Event;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 
@@ -48,14 +49,15 @@ public class View {
   }
 
     private void addFrontEndCellToScene ( int row, int column, double x, double y, double xOffset,
-    double yOffset, List<FrontEndCell > frontEndCellRow){
+    double yOffset, List<FrontEndCell> frontEndCellRow){
       String stateString = this.frontEndCellColors.get(row).get(column);
-      FrontEndCell currentFrontEndCell = new FrontEndCell(stateString, x, y, xOffset, yOffset);
+      FrontEndCell currentFrontEndCell = new FrontEndCell(stateString, x, y, xOffset, yOffset, row , column);
       frontEndCellRow.add(currentFrontEndCell);
-      root.getChildren().add(currentFrontEndCell.getCellShape());
+      currentFrontEndCell.setId("cell" + row * frontEndCellRow.size() + column);
+      root.getChildren().add(currentFrontEndCell);
     }
 
-    private void updateFrontEndCells (List < List < String >> frontEndCellColors) {
+    private void updateFrontEndCells (List<List<String>> frontEndCellColors) {
       this.frontEndCellColors = frontEndCellColors;
       for (int row = 0; row < this.frontEndCellColors.size(); row++) {
         for (int column = 0; column < this.frontEndCellColors.get(0).size(); column++) {
@@ -73,3 +75,4 @@ public class View {
       return this.root;
     }
   }
+

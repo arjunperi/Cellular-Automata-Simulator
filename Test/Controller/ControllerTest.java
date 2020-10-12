@@ -127,4 +127,13 @@ public class ControllerTest extends DukeApplicationTest {
     }
     assertEquals(testSlowDownCell.getCellColor(), currentNormalCell.getCellColor());
   }
+
+  @Test
+  public void testChangeCellState() {
+    Controller testController = new Controller();
+    testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
+        "Test/ConwayStatesBlinkerOut.csv");
+    FrontEndCell currentNormalCell = testController.getMainView().getFrontEndCellGrid().get(0).get(0);
+    FrontEndCell currentNormalCellID;
+  }
 }
