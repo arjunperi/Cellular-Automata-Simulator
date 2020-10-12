@@ -49,11 +49,13 @@ public class Controller {
   //on button press
   public void initializeSimulation(String fileName, String modelType, String fileOut) {
     frontEndCellColors = new ArrayList<>();
+    stateColorMapping.clear();
     this.mainModel = new Model(fileName, modelType, fileOut);
     this.frontEndCellColors = updateFrontEndCellColors();
     mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
         mainModel.getNumberOfColumns(), frontEndCellColors);
     simIsSet = true;
+    mainView.getRoot().setTop(homeButton);
   }
 
   public void gameStep() {
@@ -95,11 +97,12 @@ public class Controller {
   public void initializeButtonMenu() {
     mainView.getRoot().getChildren().clear();
     HBox result = new HBox();
-    homeButton = makeButton("Home", event -> goHome());
+    homeButton = makeButton("Home", event -> initializeButtonMenu());
     result.getChildren().add(homeButton);
     ComboBox comboBoxGameOfLife = new ComboBox(FXCollections.observableArrayList(
             "ConwayStatesPulsar", "ConwayStatesBlinker", "ConwayStatesBlock", "ConwayStatesToad",
             "ConwayStatesBeacon"));
+    comboBoxGameOfLife.setId("GameOfLife");
     comboBoxGameOfLife
             .setOnAction(event -> displayInfo("GameOfLife", comboBoxGameOfLife.getValue().toString()));
     comboBoxGameOfLife.setPromptText("GameOfLife");
@@ -123,15 +126,11 @@ public class Controller {
     mainView.getRoot().setTop(result);
   }
 
-  private void goHome(){
-    initializeButtonMenu();
-  }
 
   public void displayInfo(String token, String fileName){
     mainView.getRoot().getChildren().clear();
     HBox result = new HBox();
     Button startButton = makeButton(fileName, event -> startSimulation(token, fileName));
-    startButton.setId(fileName);
     result.getChildren().add(homeButton);
     result.getChildren().add(startButton);
     mainView.getRoot().setTop(result);
@@ -147,6 +146,7 @@ public class Controller {
 
   private Button makeButton (String property, EventHandler<ActionEvent> handler) {
     Button result = new Button();
+    result.setId(property);
     result.setText(property);
     result.setOnAction(handler);
     result.setId(property);
