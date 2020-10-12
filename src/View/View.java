@@ -8,16 +8,20 @@ import java.util.List;
 import javafx.event.Event;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 
 
 public class View {
 
-  private final Group root;
+  //private final Group root;
+  private final BorderPane root;
   private List<List<FrontEndCell>> frontEndCellGrid;
   private List<List<String>> frontEndCellColors;
 
   public View() {
-    root = new Group();
+    //root = new Group();
+    root = new BorderPane();
   }
 
   public Scene setupScene() {
@@ -53,7 +57,7 @@ public class View {
       String stateString = this.frontEndCellColors.get(row).get(column);
       FrontEndCell currentFrontEndCell = new FrontEndCell(stateString, x, y, xOffset, yOffset, row , column);
       frontEndCellRow.add(currentFrontEndCell);
-      currentFrontEndCell.setId("cell" + row * frontEndCellRow.size() + column);
+      currentFrontEndCell.setId("cell" + row + column);
       root.getChildren().add(currentFrontEndCell);
     }
 
@@ -71,8 +75,12 @@ public class View {
       return frontEndCellGrid;
     }
 
-    public Group getRoot () {
-      return this.root;
-    }
+//    public Group getRoot () {
+//      return this.root;
+//    }
+
+  public BorderPane  getRoot () {
+    return this.root;
+  }
   }
 

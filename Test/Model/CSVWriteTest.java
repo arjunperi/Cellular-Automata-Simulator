@@ -7,12 +7,14 @@ import View.View;
 import View.FrontEndCell;
 import javafx.scene.input.KeyCode;
 import org.junit.jupiter.api.Test;
+import util.DukeApplicationTest;
 
-public class CSVWriteTest {
+public class CSVWriteTest extends DukeApplicationTest {
 
   @Test
   public void testWriteConwayToad() {
     Controller testController = new Controller();
+    testController.startSimulation("GameOfLife","ConwayStatesToad");
     testController.initializeSimulation("Test/ConwayStatesToad.csv", "GameOfLife", "Test/ConwayStatesToadOut.csv");
     View testView = testController.getMainView();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(7).get(10);
@@ -27,6 +29,7 @@ public class CSVWriteTest {
   @Test
   public void testWriteConwayPulsar() {
     Controller testController = new Controller();
+    testController.startSimulation("GameOfLife","ConwayStatesPulsar");
     testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife", "Test/ConwayStatesPulsarOut.csv");
     View testView = testController.getMainView();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(4).get(5);
@@ -37,4 +40,6 @@ public class CSVWriteTest {
     currentCell = testViewOut.getFrontEndCellGrid().get(4).get(5);
     assertEquals("0xffffffff", currentCell.getCellColor());
   }
+
+
 }
