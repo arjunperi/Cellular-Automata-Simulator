@@ -2,7 +2,6 @@ package Controller;
 
 import Model.Model;
 import View.View;
-import Model.Grid;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,10 +11,15 @@ import java.util.Properties;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+
 
 public class Controller {
 
@@ -31,7 +35,9 @@ public class Controller {
   private final ResourceBundle myResources;
   private final Map<Integer, String> stateColorMapping = new HashMap<>();
   private List<List<String>> frontEndCellColors;
-  private String simulationName;
+  private String currentFileName;
+
+  private Button homeButton;
 
 
   public Controller() {
@@ -42,14 +48,14 @@ public class Controller {
 
   //on button press
   public void initializeSimulation(String fileName, String modelType, String fileOut) {
-    this.simulationName=modelType;
     frontEndCellColors = new ArrayList<>();
+    stateColorMapping.clear();
     this.mainModel = new Model(fileName, modelType, fileOut);
-
     this.frontEndCellColors = updateFrontEndCellColors();
     mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
         mainModel.getNumberOfColumns(), frontEndCellColors);
     simIsSet = true;
+    mainView.getRoot().setTop(homeButton);
   }
 
   public void gameStep() {
@@ -88,41 +94,67 @@ public class Controller {
     return mainView;
   }
 
-
   public void initializeButtonMenu() {
+    mainView.getRoot().getChildren().clear();
     HBox result = new HBox();
+    homeButton = makeButton("Home", event -> initializeButtonMenu());
+    result.getChildren().add(homeButton);
     ComboBox comboBoxGameOfLife = new ComboBox(FXCollections.observableArrayList(
             "ConwayStatesPulsar", "ConwayStatesBlinker", "ConwayStatesBlock", "ConwayStatesToad",
             "ConwayStatesBeacon"));
+    comboBoxGameOfLife.setId("GameOfLife");
     comboBoxGameOfLife
-            .setOnAction(event -> transition("GameOfLife", comboBoxGameOfLife.getValue().toString()));
+            .setOnAction(event -> displayInfo("GameOfLife", comboBoxGameOfLife.getValue().toString()));
     comboBoxGameOfLife.setPromptText("GameOfLife");
     ComboBox comboBoxPercolation = new ComboBox(
             FXCollections.observableArrayList("PercolationExample"));
     comboBoxPercolation
-            .setOnAction(event -> transition("Percolation", comboBoxPercolation.getValue().toString()));
+            .setOnAction(event -> displayInfo("Percolation", comboBoxPercolation.getValue().toString()));
     comboBoxPercolation.setPromptText("Percolation");
     ComboBox comboBoxRPS = new ComboBox(FXCollections.observableArrayList("RPSExample"));
-    comboBoxRPS.setOnAction(event -> transition("RPS", comboBoxRPS.getValue().toString()));
+    comboBoxRPS.setOnAction(event -> displayInfo("RPS", comboBoxRPS.getValue().toString()));
     comboBoxRPS.setPromptText("RPS");
     ComboBox comboBoxSpreadingFire = new ComboBox(
             FXCollections.observableArrayList("SpreadingFire20"));
     comboBoxSpreadingFire.setOnAction(
-            event -> transition("SpreadingFire", comboBoxSpreadingFire.getValue().toString()));
+            event -> displayInfo("SpreadingFire", comboBoxSpreadingFire.getValue().toString()));
     comboBoxSpreadingFire.setPromptText("SpreadingFire");
-    mainView.getRoot().getChildren().add(comboBoxGameOfLife);
-    mainView.getRoot().getChildren().add(comboBoxPercolation);
-    mainView.getRoot().getChildren().add(comboBoxRPS);
-    mainView.getRoot().getChildren().add(comboBoxSpreadingFire);
     result.getChildren().add(comboBoxGameOfLife);
     result.getChildren().add(comboBoxPercolation);
     result.getChildren().add(comboBoxRPS);
     result.getChildren().add(comboBoxSpreadingFire);
-    mainView.getRoot().getChildren().add(result);
+    mainView.getRoot().setTop(result);
   }
 
 
-  public void transition(String token, String fileName) {
+  public void displayInfo(String token, String fileName){
+    mainView.getRoot().getChildren().clear();
+    HBox result = new HBox();
+    Button startButton = makeButton(fileName, event -> startSimulation(token, fileName));
+    result.getChildren().add(homeButton);
+    result.getChildren().add(startButton);
+    mainView.getRoot().setTop(result);
+    Text startupText = new Text();
+    Properties propertyFile  = getPropertyFile(fileName);
+    String type = propertyFile.getProperty("Type");
+    String title = propertyFile.getProperty("Title");
+    String author = propertyFile.getProperty("Author");
+    String description = propertyFile.getProperty("Description");
+    startupText.setText(type+ "\n" + title + "\n" + author + "\n" + description);
+    mainView.getRoot().setCenter(startupText);
+  }
+
+  private Button makeButton (String property, EventHandler<ActionEvent> handler) {
+    Button result = new Button();
+    result.setId(property);
+    result.setText(property);
+    result.setOnAction(handler);
+    result.setId(property);
+    return result;
+  }
+
+  public void startSimulation(String token, String fileName) {
+    currentFileName = fileName;
     try {
       initializeSimulation(fileName + ".csv", token, fileName + "Out.csv");
     } catch (Exception e) {
@@ -131,19 +163,24 @@ public class Controller {
   }
 
   public void initializeColorMapping(int state) {
-    String result = "";
-    String propertyFileName = simulationName + ".properties";
+    Properties propertyFile = getPropertyFile(currentFileName);
+    String color = propertyFile.getProperty(String.valueOf(state));
+    if (!stateColorMapping.containsKey(state)) {
+      stateColorMapping.put(state, color);
+    }
+  }
+
+
+  private Properties getPropertyFile(String fileName) {
+    Properties propertyFile = new Properties();
     try {
-      Properties prop = new Properties();
-      prop.load(Controller.class.getClassLoader().getResourceAsStream(propertyFileName));
-      result = prop.getProperty(String.valueOf(state));
-      if(!stateColorMapping.containsKey(state)) {
-        stateColorMapping.put(state,result);
-      }
+      propertyFile.load(Controller.class.getClassLoader().getResourceAsStream(fileName + ".properties"));
     } catch (IOException e) {
       System.out.println("error");
     }
+    return propertyFile;
   }
+
 
   public void handleKeyInput(KeyCode code) {
     switch (code) {

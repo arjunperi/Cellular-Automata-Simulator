@@ -14,6 +14,7 @@ public class ViewTest extends DukeApplicationTest {
   @Test
   public void testInitializeFrontendCells() {
     Controller testController = new Controller();
+    testController.startSimulation("GameOfLife","ConwayStatesPulsar");
     testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife",
         "Test/ConwayStatesPulsarOut.csv");
     View testView = testController.getMainView();
@@ -23,6 +24,7 @@ public class ViewTest extends DukeApplicationTest {
   @Test
   public void testViewStepBeacon() {
     Controller testController = new Controller();
+    testController.startSimulation("GameOfLife","ConwayStatesBeacon");
     testController.initializeSimulation("Test/ConwayStatesBeacon.csv", "GameOfLife",
         "Test/ConwayStatesBeaconOut.csv");
     assertEquals("0xffffffff",
@@ -36,6 +38,7 @@ public class ViewTest extends DukeApplicationTest {
   @Test
   public void testViewStepBlinker() {
     Controller testController = new Controller();
+    testController.startSimulation("GameOfLife","ConwayStatesBlinker");
     testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
         "Test/ConwayStatesBlinkerOut.csv");
     View testView = testController.getMainView();
@@ -48,6 +51,7 @@ public class ViewTest extends DukeApplicationTest {
   @Test
   public void testViewStepBlock() {
     Controller testController = new Controller();
+    testController.startSimulation("GameOfLife","ConwayStatesBlock");
     testController.initializeSimulation("Test/ConwayStatesBlock.csv", "GameOfLife",
         "Test/ConwayStatesBlockOut.csv");
     View testView = testController.getMainView();
@@ -61,6 +65,7 @@ public class ViewTest extends DukeApplicationTest {
   public void testViewStepToad() {
     Controller testController = new Controller();
     testController.setupScene();
+    testController.startSimulation("GameOfLife","ConwayStatesToad");
     testController.initializeSimulation("Test/ConwayStatesToad.csv", "GameOfLife",
         "Test/ConwayStatesToadOut.csv");
     View testView = testController.getMainView();
