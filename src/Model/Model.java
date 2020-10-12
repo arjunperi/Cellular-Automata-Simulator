@@ -26,10 +26,14 @@ public class Model {
     boolean isUpdate = checkTimeElapsed();
     if ((!isPaused && isUpdate) || isStep) {
       cycles = 0;
-      gridOfCells.updateCells();
+      updateCells();
       gridOfCells.toNextState();
       writeToCSV();
     }
+  }
+
+  public void updateCells() {
+    gridOfCells.updateCells();
   }
 
   private void writeToCSV() {

@@ -5,6 +5,7 @@ import View.View;
 import Model.Grid;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,12 +45,16 @@ public class Controller {
   public void initializeSimulation(String fileName, String modelType, String fileOut) {
     this.simulationName=modelType;
     frontEndCellColors = new ArrayList<>();
-    this.mainModel = new Model(fileName, modelType, fileOut);
-
-    this.frontEndCellColors = updateFrontEndCellColors();
-    mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
-        mainModel.getNumberOfColumns(), frontEndCellColors);
-    simIsSet = true;
+    try {
+      Class<?> cl = Class.forName("Model." + modelType + "Model");
+      this.mainModel = (Model) cl.getConstructor(String.class,String.class,String.class).newInstance(fileName, modelType, fileOut);
+      this.frontEndCellColors = updateFrontEndCellColors();
+      mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
+          mainModel.getNumberOfColumns(), frontEndCellColors);
+      simIsSet = true;
+    } catch (IllegalAccessException | InstantiationException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException e) {
+      e.printStackTrace();
+    }
   }
 
   public void gameStep() {
@@ -102,22 +107,34 @@ public class Controller {
     comboBoxPercolation
             .setOnAction(event -> transition("Percolation", comboBoxPercolation.getValue().toString()));
     comboBoxPercolation.setPromptText("Percolation");
-    ComboBox comboBoxRPS = new ComboBox(FXCollections.observableArrayList("RPSExample"));
+    ComboBox comboBoxRPS = new ComboBox(FXCollections.observableArrayList("RPS50"));
     comboBoxRPS.setOnAction(event -> transition("RPS", comboBoxRPS.getValue().toString()));
     comboBoxRPS.setPromptText("RPS");
+    ComboBox comboBoxSegregation = new ComboBox(FXCollections.observableArrayList("SegregationExample"));
+    comboBoxSegregation.setOnAction(event -> transition("Segregation", comboBoxSegregation.getValue().toString()));
+    comboBoxSegregation.setPromptText("Segregation");
     ComboBox comboBoxSpreadingFire = new ComboBox(
             FXCollections.observableArrayList("SpreadingFire20"));
     comboBoxSpreadingFire.setOnAction(
             event -> transition("SpreadingFire", comboBoxSpreadingFire.getValue().toString()));
     comboBoxSpreadingFire.setPromptText("SpreadingFire");
+    ComboBox comboBoxWaTor = new ComboBox(
+        FXCollections.observableArrayList("WaTorExample"));
+    comboBoxWaTor.setOnAction(
+        event -> transition("WaTor", comboBoxWaTor.getValue().toString()));
+    comboBoxWaTor.setPromptText("WaTor");
     mainView.getRoot().getChildren().add(comboBoxGameOfLife);
     mainView.getRoot().getChildren().add(comboBoxPercolation);
     mainView.getRoot().getChildren().add(comboBoxRPS);
     mainView.getRoot().getChildren().add(comboBoxSpreadingFire);
+    mainView.getRoot().getChildren().add(comboBoxSegregation);
+    mainView.getRoot().getChildren().add(comboBoxWaTor);
     result.getChildren().add(comboBoxGameOfLife);
     result.getChildren().add(comboBoxPercolation);
     result.getChildren().add(comboBoxRPS);
     result.getChildren().add(comboBoxSpreadingFire);
+    result.getChildren().add(comboBoxSegregation);
+    result.getChildren().add(comboBoxWaTor);
     mainView.getRoot().getChildren().add(result);
   }
 
