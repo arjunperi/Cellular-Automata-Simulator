@@ -33,7 +33,6 @@ public class Simulation extends Application {
 
   public static final Paint BACKGROUND = Color.AZURE;
   public static final double FRAMES_PER_SECOND = 60;
-  public static final double FRAMES_PER_MODEL_UPDATE = 10;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   public static final double SCENE_WIDTH = 800;
   public static final double SCENE_HEIGHT = 800;

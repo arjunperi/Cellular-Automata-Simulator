@@ -1,10 +1,13 @@
 package Model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class SpreadingFireCell extends Cell {
 
+  public static final List<Integer> POSSIBLE_STATES = new ArrayList<>(Arrays.asList(0,1,2));
   public static final int[][] POSSIBLE_NEIGHBORS_SPREADING_FIRE = new int[][]{{-1, 0}, {0, 1},
       {1, 0},
       {0, -1}};
@@ -42,4 +45,10 @@ public class SpreadingFireCell extends Cell {
   public int[][] getPossibleNeighbors() {
     return POSSIBLE_NEIGHBORS_SPREADING_FIRE;
   }
+
+  @Override
+  public void initializePossibleStates() {
+    this.setPossibleStates(new ArrayList<>(Arrays.asList(0,1,2)));
+  }
+
 }
