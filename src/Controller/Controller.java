@@ -2,6 +2,8 @@ package Controller;
 
 import Model.Model;
 import View.View;
+import View.FrontEndCell;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,8 +13,11 @@ import java.util.Properties;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
+
+import javafx.event.Event;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -55,6 +60,7 @@ public class Controller {
     mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
         mainModel.getNumberOfColumns(), frontEndCellColors);
     simIsSet = true;
+    addCellEventHandlers();
     mainView.getRoot().setTop(homeButton);
   }
 
@@ -189,6 +195,24 @@ public class Controller {
       case RIGHT -> mainModel.speedUp();
       case LEFT-> mainModel.slowDown();
     }
+  }
+
+  public void addCellEventHandlers() {
+    List<List<FrontEndCell>> frontEndCells = this.mainView.getFrontEndCellGrid();
+    for(List<FrontEndCell> cellRow : frontEndCells){
+      for(FrontEndCell cell : cellRow){
+        cell.setOnMouseClicked(event -> changeClickedCellState(event));
+      }
+    }
+  }
+
+
+  public void changeClickedCellState(Event event){
+    EventTarget clickedEvent = event.getTarget();
+    FrontEndCell clickedCell = (FrontEndCell) clickedEvent;
+    int clickedCellRow = clickedCell.getRow();
+    int clickedCellColumn = clickedCell.getColumn();
+    mainModel.getGridOfCells().getCell(clickedCellRow, clickedCellColumn).cycleNextState();
   }
 }
 

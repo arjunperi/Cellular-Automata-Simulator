@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +9,7 @@ import java.util.Random;
 
 public class RPSCell extends Cell {
 
+  public static final List<Integer> POSSIBLE_STATES = new ArrayList<>(Arrays.asList(0,1,2,3,4,5));
   public static final int[][] POSSIBLE_NEIGHBORS_RPS = new int[][]{{-1, 0}, {-1, 1}, {0, 1}, {1, 1},
       {1, 0}, {1, -1},
       {0, -1}, {-1, -1}};
@@ -45,5 +48,10 @@ public class RPSCell extends Cell {
   @Override
   public int[][] getPossibleNeighbors() {
     return POSSIBLE_NEIGHBORS_RPS;
+  }
+
+  @Override
+  public void initializePossibleStates() {
+    this.setPossibleStates(new ArrayList<>(Arrays.asList(0,1,2,3,4)));
   }
 }
