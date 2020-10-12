@@ -6,6 +6,9 @@ import cellsociety.Simulation;
 
 public class Model {
 
+  private static final int ANIMATION_RATE_CHANGE = 5;
+
+  public double framesPerModelUpdate = 60;
   private final String fileOut;
   protected final Grid gridOfCells;
   private boolean isPaused = false;
@@ -23,8 +26,7 @@ public class Model {
   }
 
   public void modelStep() {
-    boolean isUpdate = checkTimeElapsed();
-    if ((!isPaused && isUpdate) || isStep) {
+    if ((!isPaused && checkTimeElapsed()) || isStep) {
       cycles = 0;
       gridOfCells.updateCells();
       gridOfCells.toNextState();
@@ -40,7 +42,7 @@ public class Model {
 
   private boolean checkTimeElapsed() {
     cycles += 1;
-    return cycles % Simulation.FRAMES_PER_MODEL_UPDATE == 0;
+    return cycles % this.framesPerModelUpdate == 0;
   }
 
   public void switchPause() {
@@ -68,5 +70,13 @@ public class Model {
 
   public int getNumberOfColumns() {
     return (int) gridOfCells.getCellsPerRow();
+  }
+
+  public void speedUp(){
+    this.framesPerModelUpdate = Math.max(10,framesPerModelUpdate - ANIMATION_RATE_CHANGE);
+  }
+  public void slowDown(){
+    this.framesPerModelUpdate = Math.min(100,framesPerModelUpdate + ANIMATION_RATE_CHANGE);
+
   }
 }
