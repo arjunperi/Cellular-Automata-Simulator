@@ -2,24 +2,28 @@ package Controller;
 
 import Model.Model;
 import View.View;
+import View.FrontEndCell;
 
+
+import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
+
 import javafx.collections.FXCollections;
+
+import javafx.event.Event;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.apache.commons.lang3.concurrent.ConcurrentRuntimeException;
+
+import javax.swing.*;
 
 
 public class Controller {
@@ -40,23 +44,28 @@ public class Controller {
 
   private Button homeButton;
 
-
   public Controller() {
     this.mainView = new View();
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "English");
     initializeButtonMenu();
   }
 
-  //on button press
   public void initializeSimulation(String fileName, String modelType, String fileOut) {
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
-    this.mainModel = new Model(fileName, modelType, fileOut);
+    try{
+      this.mainModel = new Model(fileName, modelType, fileOut);
+    }
+    catch (Exception e){
+      throw new ControllerException("Invalid Simulation Type", e);
+    }
     this.frontEndCellColors = updateFrontEndCellColors();
     mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
         mainModel.getNumberOfColumns(), frontEndCellColors);
     simIsSet = true;
+    addCellEventHandlers();
     mainView.getRoot().setTop(homeButton);
+
   }
 
   public void gameStep() {
@@ -97,38 +106,27 @@ public class Controller {
 
   public void initializeButtonMenu() {
     mainView.getRoot().getChildren().clear();
-    HBox result = new HBox();
-    homeButton = makeButton("Home", event -> initializeButtonMenu());
-    result.getChildren().add(homeButton);
-    ComboBox comboBoxGameOfLife = new ComboBox(FXCollections.observableArrayList(
-            "ConwayStatesPulsar", "ConwayStatesBlinker", "ConwayStatesBlock", "ConwayStatesToad",
-            "ConwayStatesBeacon"));
-    comboBoxGameOfLife.setId("GameOfLife");
-    comboBoxGameOfLife
-            .setOnAction(event -> displayInfo("GameOfLife", comboBoxGameOfLife.getValue().toString()));
-    comboBoxGameOfLife.setPromptText("GameOfLife");
-    ComboBox comboBoxPercolation = new ComboBox(
-            FXCollections.observableArrayList("PercolationExample"));
-    comboBoxPercolation
-            .setOnAction(event -> displayInfo("Percolation", comboBoxPercolation.getValue().toString()));
-    comboBoxPercolation.setPromptText("Percolation");
-    ComboBox comboBoxRPS = new ComboBox(FXCollections.observableArrayList("RPSExample"));
-    comboBoxRPS.setOnAction(event -> displayInfo("RPS", comboBoxRPS.getValue().toString()));
-    comboBoxRPS.setPromptText("RPS");
-    ComboBox comboBoxSpreadingFire = new ComboBox(
-            FXCollections.observableArrayList("SpreadingFire20"));
-    comboBoxSpreadingFire.setOnAction(
-            event -> displayInfo("SpreadingFire", comboBoxSpreadingFire.getValue().toString()));
-    comboBoxSpreadingFire.setPromptText("SpreadingFire");
-    result.getChildren().add(comboBoxGameOfLife);
-    result.getChildren().add(comboBoxPercolation);
-    result.getChildren().add(comboBoxRPS);
-    result.getChildren().add(comboBoxSpreadingFire);
-    mainView.getRoot().setTop(result);
+    VBox result = new VBox();
+    TextField inputText = new TextField();
+    EventHandler<ActionEvent> event = e -> {
+      String fileChosen = inputText.getText();
+      try{
+        Properties propertyFile = getPropertyFile(fileChosen);
+        displayInfo(propertyFile.getProperty("Type"), fileChosen);
+      }
+      catch (ControllerException c){
+        showError(c.getMessage());
+      }
+    };
+    inputText.setOnAction(event);
+    Label inputLabel = new Label("Enter Simulation Name and Press Enter");
+    result.getChildren().add(inputLabel);
+    result.getChildren().add(inputText);
+    mainView.getRoot().setCenter(result);
   }
 
-
   public void displayInfo(String token, String fileName){
+    homeButton = makeButton("Home", event -> initializeButtonMenu());
     mainView.getRoot().getChildren().clear();
     HBox result = new HBox();
     Button startButton = makeButton(fileName, event -> startSimulation(token, fileName));
@@ -169,12 +167,14 @@ public class Controller {
 
   public void startSimulation(String token, String fileName) {
     currentFileName = fileName;
-    try {
-      initializeSimulation(fileName + ".csv", token, fileName + "Out.csv");
-    } catch (Exception e) {
-      throw new UnsupportedOperationException(String.format("Unrecognized command: %s", token));
-    }
+    initializeSimulation(fileName + ".csv", token, fileName + "Out.csv");
   }
+//    try {
+//      initializeSimulation(fileName + ".csv", token, fileName + "Out.csv");
+//    } catch (Exception e) {
+//      throw new ControllerException()
+//    }
+//  }
 
   public void initializeColorMapping(int state) {
     Properties propertyFile = getPropertyFile(currentFileName);
@@ -203,6 +203,23 @@ public class Controller {
       case RIGHT -> mainModel.speedUp();
       case LEFT-> mainModel.slowDown();
     }
+  }
+
+  public void addCellEventHandlers() {
+    List<List<FrontEndCell>> frontEndCells = this.mainView.getFrontEndCellGrid();
+    for(List<FrontEndCell> cellRow : frontEndCells){
+      for(FrontEndCell cell : cellRow){
+        cell.setOnMouseClicked(event -> changeClickedCellState(event));
+      }
+    }
+  }
+
+  public void changeClickedCellState(Event event){
+    EventTarget clickedEvent = event.getTarget();
+    FrontEndCell clickedCell = (FrontEndCell) clickedEvent;
+    int clickedCellRow = clickedCell.getRow();
+    int clickedCellColumn = clickedCell.getColumn();
+    mainModel.getGridOfCells().getCell(clickedCellRow, clickedCellColumn).cycleNextState();
   }
 }
 

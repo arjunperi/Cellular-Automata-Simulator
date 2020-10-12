@@ -10,6 +10,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
+import org.testfx.service.query.NodeQuery;
 import util.DukeApplicationTest;
 
 public class ControllerTest extends DukeApplicationTest {
@@ -146,6 +147,20 @@ public class ControllerTest extends DukeApplicationTest {
       testSlowDownController.gameStep();
     }
     assertEquals(testSlowDownCell.getCellColor(), currentNormalCell.getCellColor());
+  }
+
+  @Test
+  public void testChangeCellState() {
+    javafxRun(() -> mainController.displayInfo("GameOfLife", "ConwayStatesBeacon"));
+    buttonTest = lookup("#ConwayStatesBeacon").queryButton();
+    clickOn(buttonTest);
+    assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(5).getCellColor());
+    FrontEndCell testCell = lookup("#cell04").query();
+    assertEquals("0xffffffff", testCell.getCellColor());
+    clickOn("#cell04");
+    javafxRun(() -> mainController.gameStep());
+    assertEquals("0x000000ff", testCell.getCellColor());
+
   }
 
   @Test
