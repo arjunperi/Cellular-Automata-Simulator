@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
@@ -135,14 +136,27 @@ public class Controller {
     result.getChildren().add(startButton);
     mainView.getRoot().setTop(result);
     Text startupText = new Text();
-    Properties propertyFile  = getPropertyFile(fileName);
-    String type = propertyFile.getProperty("Type");
-    String title = propertyFile.getProperty("Title");
-    String author = propertyFile.getProperty("Author");
-    String description = propertyFile.getProperty("Description");
-    startupText.setText(type+ "\n" + title + "\n" + author + "\n" + description);
+    try{
+      Properties propertyFile  = getPropertyFile(fileName);
+      String type = propertyFile.getProperty("Type");
+      String title = propertyFile.getProperty("Title");
+      String author = propertyFile.getProperty("Author");
+      String description = propertyFile.getProperty("Description");
+      startupText.setText(type+ "\n" + title + "\n" + author + "\n" + description);
+    }
+    catch (ControllerException e){
+      showError(e.getMessage());
+    }
     mainView.getRoot().setCenter(startupText);
   }
+
+  private void showError(String message){
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Controller Error");
+    alert.setContentText(message);
+    alert.showAndWait();
+  }
+
 
   private Button makeButton (String property, EventHandler<ActionEvent> handler) {
     Button result = new Button();
@@ -175,8 +189,8 @@ public class Controller {
     Properties propertyFile = new Properties();
     try {
       propertyFile.load(Controller.class.getClassLoader().getResourceAsStream(fileName + ".properties"));
-    } catch (IOException e) {
-      System.out.println("error");
+    } catch (Exception e) {
+      throw new ControllerException("Invalid Property File Name", e);
     }
     return propertyFile;
   }
@@ -191,6 +205,8 @@ public class Controller {
     }
   }
 }
+
+
 
 
 
