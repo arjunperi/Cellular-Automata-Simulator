@@ -186,6 +186,8 @@ public class Controller {
     switch (code) {
       case P -> mainModel.switchPause();
       case S -> mainModel.step();
+      case RIGHT -> mainModel.speedUp();
+      case LEFT-> mainModel.slowDown();
     }
   }
 }
