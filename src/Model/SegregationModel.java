@@ -15,6 +15,12 @@ public class SegregationModel extends Model{
     initializeEmptyCellQueue();
   }
 
+  public SegregationModel(String fileName, String modelType) {
+    super(fileName,modelType);
+    mainGrid=this.getGridOfCells();
+    initializeEmptyCellQueue();
+  }
+
   @Override
   public void updateCells() {
     for (int row = 0; row < mainGrid.getCellsPerColumn(); row++) {

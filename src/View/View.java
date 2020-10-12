@@ -14,13 +14,11 @@ import javafx.scene.layout.BorderPane;
 
 public class View {
 
-  //private final Group root;
   private final BorderPane root;
   private List<List<FrontEndCell>> frontEndCellGrid;
   private List<List<String>> frontEndCellColors;
 
   public View() {
-    //root = new Group();
     root = new BorderPane();
   }
 

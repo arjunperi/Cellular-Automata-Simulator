@@ -91,13 +91,6 @@ public class WaTorCell extends Cell{
   public void setStepsAfterEatingFuture(int stepsAfterEating) {
     this.stepsAfterEatingFuture=stepsAfterEating;
   }
-  public int getStepsAfterEatingFuture() {
-    return this.stepsAfterEatingFuture;
-  }
-
-  public int getStepsAlive() {
-    return stepsAlive;
-  }
 
   @Override
   public void toNextState() {

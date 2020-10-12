@@ -103,10 +103,6 @@ public class Grid {
     return gridOfCells.get(row).get(column);
   }
 
-  public void updateSpecificCell(int row, int column) {
-    gridOfCells.get(row).get(column).toNextState();
-  }
-
   public double getCellsPerRow() {
     return cellsPerRow;
   }
