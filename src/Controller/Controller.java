@@ -237,9 +237,31 @@ public class Controller {
   public void initializeSimulationMenu(){
     HBox test = new HBox();
     test.getChildren().add(homeButton);
+    test.getChildren().add(makeButton("Change Colors", event -> changeColorsPopUp()));
     mainView.getTopGroup().getChildren().add(test);
   }
 
+  public void changeColorsPopUp(){
+    mainModel.setPaused();
+    JTextField state = new JTextField();
+    JTextField color = new JTextField();
+    Object[] message = {"State",state,
+                        "Color",color};
+    JOptionPane.showConfirmDialog(null,message,"Enter new state color mapping", JOptionPane.OK_CANCEL_OPTION);
+    updateColorStateMapping(state.getText(),color.getText());
+    mainModel.switchPause();
+  }
+
+  public void updateColorStateMapping(String state, String color){
+    try{
+      int stateInt = Integer.parseInt(state);
+      if(!this.stateColorMapping.containsKey(stateInt)) throw new IllegalArgumentException();
+      Paint.valueOf(color);
+      this.stateColorMapping.put(stateInt,color);
+    }catch(Exception e){
+      showError("Please enter a valid color state mapping");
+    }
+  }
 
 }
 
