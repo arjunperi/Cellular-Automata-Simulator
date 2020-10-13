@@ -161,6 +161,7 @@ public class ControllerTest extends DukeApplicationTest {
     FrontEndCell testCell = lookup("#cell04").query();
     assertEquals("0xffffffff", testCell.getCellColor());
     clickOn("#cell04");
+    sleep(1000);
     javafxRun(() -> mainController.gameStep());
     assertEquals("0x000000ff", testCell.getCellColor());
 

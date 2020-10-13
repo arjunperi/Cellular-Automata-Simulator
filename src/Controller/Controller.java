@@ -7,7 +7,7 @@ import View.FrontEndCell;
 
 
 import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +48,9 @@ public class Controller {
   private List<List<String>> frontEndCellColors;
   private String currentFileName;
 
-  private Button homeButton;
+  private Button homeButton = makeButton("Home", event -> initializeButtonMenu());
+  private TextField inputText;
+  private Map<String, String> saveList = new HashMap<>();
 
   public Controller() {
     this.mainView = new View();
@@ -67,12 +69,51 @@ public class Controller {
           mainModel.getNumberOfColumns(), frontEndCellColors);
       simIsSet = true;
       addCellEventHandlers();
-      mainView.getRoot().setTop(homeButton);
+      //mainView.getRoot().setTop(homeButton);
+      VBox result = new VBox();
+      Button saveButton = makeButton("Save", event -> getSaveInputs());
+      result.getChildren().add(homeButton);
+      result.getChildren().add(saveButton);
+      //result.getChildren().add(inputText);
+      mainView.getRoot().setTop(result);
+      //mainView.getRoot().setBottom();
+
     }
     catch (NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException| ModelException e) {
         showError("Invalid Model Type");
     }
   }
+
+  private void getSaveInputs(){
+    JTextField Title = new JTextField();
+    JTextField Author = new JTextField();
+    JTextField Description = new JTextField();
+    Object[] message = {
+            "Title:", Title,
+            "Author:", Author,
+            "Description", Description
+    };
+    JOptionPane.showConfirmDialog(null, message, "Enter Save File Details", JOptionPane.OK_CANCEL_OPTION);
+    saveList.put("Title", Title.getText());
+    saveList.put("Author", Author.getText());
+    saveList.put("Description", Description.getText());
+    writeToPropertyFile();
+  }
+
+  private void writeToPropertyFile(){
+    try (OutputStream output = new FileOutputStream("Properties/" + saveList.get("Title") + ".properties")) {
+      Properties prop = new Properties();
+      prop.setProperty("Title", saveList.get("Title"));
+      prop.setProperty("Author", saveList.get("Author"));
+      prop.setProperty("Description", saveList.get("Description"));
+      prop.store(output, null);
+      System.out.println(saveList);
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
+    initializeButtonMenu();
+  }
+
 
   public void gameStep() {
     if (simIsSet) {
@@ -113,7 +154,7 @@ public class Controller {
   public void initializeButtonMenu() {
     mainView.getRoot().getChildren().clear();
     VBox result = new VBox();
-    TextField inputText = new TextField();
+    inputText = new TextField();
     inputText.setId("inputTextBox");
     EventHandler<ActionEvent> event = e -> {
       String fileChosen = inputText.getText();
@@ -132,8 +173,10 @@ public class Controller {
     mainView.getRoot().setCenter(result);
   }
 
+
+
   public void displayInfo(String token, String fileName){
-    homeButton = makeButton("Home", event -> initializeButtonMenu());
+//    homeButton = makeButton("Home", event -> initializeButtonMenu());
     mainView.getRoot().getChildren().clear();
     HBox result = new HBox();
     Button startButton = makeButton(fileName, event -> startSimulation(token, fileName));
@@ -176,12 +219,6 @@ public class Controller {
     currentFileName = fileName;
     initializeSimulation(fileName + ".csv", token, fileName + "Out.csv");
   }
-//    try {
-//      initializeSimulation(fileName + ".csv", token, fileName + "Out.csv");
-//    } catch (Exception e) {
-//      throw new ControllerException()
-//    }
-//  }
 
   public void initializeColorMapping(int state) {
     Properties propertyFile = getPropertyFile(currentFileName);
