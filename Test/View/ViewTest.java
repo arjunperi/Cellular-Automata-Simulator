@@ -73,6 +73,5 @@ public class ViewTest extends DukeApplicationTest {
     testController.handleKeyInput(KeyCode.S);
     testController.gameStep();
     assertEquals("0x000000ff", testView.getFrontEndCellGrid().get(9).get(10).getCellColor());
-
   }
 }

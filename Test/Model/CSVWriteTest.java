@@ -40,6 +40,4 @@ public class CSVWriteTest extends DukeApplicationTest {
     currentCell = testViewOut.getFrontEndCellGrid().get(4).get(5);
     assertEquals("0xffffffff", currentCell.getCellColor());
   }
-
-
 }

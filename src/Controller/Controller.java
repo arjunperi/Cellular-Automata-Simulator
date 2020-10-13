@@ -1,14 +1,20 @@
 package Controller;
 
 import Model.Model;
+import Model.ModelException;
 import View.View;
 import View.FrontEndCell;
 
 
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.*;
-
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
+import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 
 import javafx.event.Event;
@@ -53,19 +59,19 @@ public class Controller {
   public void initializeSimulation(String fileName, String modelType, String fileOut) {
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
-    try{
-      this.mainModel = new Model(fileName, modelType, fileOut);
+    try {
+      Class<?> cl = Class.forName("Model." + modelType + "Model");
+      this.mainModel = (Model) cl.getConstructor(String.class,String.class,String.class).newInstance(fileName, modelType, fileOut);
+      this.frontEndCellColors = updateFrontEndCellColors();
+      mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
+          mainModel.getNumberOfColumns(), frontEndCellColors);
+      simIsSet = true;
+      addCellEventHandlers();
+      mainView.getRoot().setTop(homeButton);
     }
-    catch (Exception e){
-      throw new ControllerException("Invalid Simulation Type", e);
+    catch (NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException| ModelException e) {
+        showError("Invalid Model Type");
     }
-    this.frontEndCellColors = updateFrontEndCellColors();
-    mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
-        mainModel.getNumberOfColumns(), frontEndCellColors);
-    simIsSet = true;
-    addCellEventHandlers();
-    mainView.getRoot().setTop(homeButton);
-
   }
 
   public void gameStep() {
@@ -108,6 +114,7 @@ public class Controller {
     mainView.getRoot().getChildren().clear();
     VBox result = new VBox();
     TextField inputText = new TextField();
+    inputText.setId("inputTextBox");
     EventHandler<ActionEvent> event = e -> {
       String fileChosen = inputText.getText();
       try{
@@ -133,19 +140,19 @@ public class Controller {
     result.getChildren().add(homeButton);
     result.getChildren().add(startButton);
     mainView.getRoot().setTop(result);
-    Text startupText = new Text();
     try{
-      Properties propertyFile  = getPropertyFile(fileName);
-      String type = propertyFile.getProperty("Type");
-      String title = propertyFile.getProperty("Title");
-      String author = propertyFile.getProperty("Author");
-      String description = propertyFile.getProperty("Description");
-      startupText.setText(type+ "\n" + title + "\n" + author + "\n" + description);
+        Text startupText = new Text();
+        Properties propertyFile  = getPropertyFile(fileName);
+        String type = propertyFile.getProperty("Type");
+        String title = propertyFile.getProperty("Title");
+        String author = propertyFile.getProperty("Author");
+        String description = propertyFile.getProperty("Description");
+        startupText.setText(type+ "\n" + title + "\n" + author + "\n" + description);
+        mainView.getRoot().setCenter(startupText);
     }
     catch (ControllerException e){
       showError(e.getMessage());
     }
-    mainView.getRoot().setCenter(startupText);
   }
 
   private void showError(String message){
@@ -185,12 +192,12 @@ public class Controller {
   }
 
 
-  private Properties getPropertyFile(String fileName) {
+  public Properties getPropertyFile(String fileName) {
     Properties propertyFile = new Properties();
     try {
       propertyFile.load(Controller.class.getClassLoader().getResourceAsStream(fileName + ".properties"));
     } catch (Exception e) {
-      throw new ControllerException("Invalid Property File Name", e);
+      throw new ControllerException("Invalid File Name", e);
     }
     return propertyFile;
   }

@@ -1,22 +1,25 @@
 package Controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import Model.Model;
 import View.FrontEndCell;
 import View.View;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
-import org.testfx.service.query.NodeQuery;
 import util.DukeApplicationTest;
+
+import java.util.Properties;
 
 public class ControllerTest extends DukeApplicationTest {
 
   private Button buttonTest;
   private Controller mainController;
+  private TextField inputTest;
 
   public void start(final Stage stage) {
     mainController = new Controller();
@@ -254,6 +257,24 @@ public class ControllerTest extends DukeApplicationTest {
   }
 
   @Test
+  public void testSegregationExampleStartButton(){
+    javafxRun(() -> mainController.displayInfo("Segregation", "SegregationExample"));
+    buttonTest = lookup("#SegregationExample").queryButton();
+    clickOn(buttonTest);
+    assertEquals("0x008000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+    assertEquals("0x000000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(1).getCellColor());
+  }
+
+  @Test
+  public void testWaTorExampleStartButton(){
+    javafxRun(() -> mainController.displayInfo("WaTor", "WaTorExample"));
+    buttonTest = lookup("#WaTorExample").queryButton();
+    clickOn(buttonTest);
+    assertEquals("0x0000ffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+    assertEquals("0x008000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(1).getCellColor());
+  }
+
+  @Test
   public void testHomeButton(){
     javafxRun(() -> mainController.displayInfo("SpreadingFire", "SpreadingFire100"));
     buttonTest = lookup("#SpreadingFire100").queryButton();
@@ -266,4 +287,39 @@ public class ControllerTest extends DukeApplicationTest {
     assertEquals("0x008000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
     assertEquals("0x008000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(1).getCellColor());
   }
+
+  @Test
+  public void testDialogInput(){
+    javafxRun(() -> mainController.initializeButtonMenu());
+    inputTest = lookup("#inputTextBox").query();
+    inputTest.setText("ConwayStatesBlinker");
+    press(KeyCode.ENTER);
+    buttonTest = lookup("#ConwayStatesBlinker").queryButton();
+    clickOn(buttonTest);
+    assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+    assertEquals("0x000000ff", mainController.getMainView().getFrontEndCellGrid().get(7).get(8).getCellColor());
+  }
+
+
+  @Test
+  public void testInvalidModelType(){
+    javafxRun(() -> mainController.initializeButtonMenu());
+    inputTest = lookup("#inputTextBox").query();
+    inputTest.setText("Test");
+    Properties propertyFile = mainController.getPropertyFile(inputTest.getText());
+    assertThrows(IllegalStateException.class, () -> mainController.displayInfo(propertyFile.getProperty("Type"), inputTest.getText()));
+  }
+
+  @Test
+  public void testInvalidFileName(){
+    Controller testController = new Controller();
+    assertThrows(ControllerException.class, () -> testController.getPropertyFile("nonexistent"));
+  }
+
+  @Test
+  public void testInvalidCsvDimensions(){
+  }
+
+  @Test
+  public void testKeyNotFound(){}
 }

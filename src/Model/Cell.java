@@ -8,8 +8,8 @@ import java.util.List;
 public abstract class Cell {
 
   private List<Integer> possibleStates;
-  private int currentState;
-  private int futureState;
+  protected int currentState;
+  protected int futureState;
 
   public Cell(int state) {
     this.currentState = state;
@@ -38,6 +38,10 @@ public abstract class Cell {
 
   public int getCurrentState() {
     return currentState;
+  }
+
+  public int getFutureState() {
+    return futureState;
   }
 
   public abstract void updateState(List<Cell> neighbors);
