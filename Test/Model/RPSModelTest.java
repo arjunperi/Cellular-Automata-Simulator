@@ -28,12 +28,12 @@ public class RPSModelTest extends DukeApplicationTest {
     testModel.step();
     assertEquals(1, testModel.getCellState(0,3));
   }
-
-  @Test
-  public void testStepRPS100() {
-    Model testModel = new RPSModel("RPS100.csv", "RPS");
-    assertEquals(3, testModel.getCellState(1,2));
-    testModel.step();
-    assertEquals(3, testModel.getCellState(1,2));
-  }
+//
+//  @Test
+//  public void testStepRPS100() {
+//    Model testModel = new RPSModel("RPS100.csv", "RPS");
+//    assertEquals(3, testModel.getCellState(1,2));
+//    testModel.step();
+//    assertEquals(3, testModel.getCellState(1,2));
+//  }
 }

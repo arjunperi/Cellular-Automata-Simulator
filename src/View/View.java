@@ -1,6 +1,5 @@
 package View;
 
-import Model.Grid;
 import cellsociety.Simulation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

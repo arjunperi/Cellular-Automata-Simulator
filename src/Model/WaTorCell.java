@@ -24,37 +24,45 @@ public class WaTorCell extends Cell{
   public void updateState(List<Cell> neighbors) {
     Collections.shuffle(neighbors);
     if(this.getCurrentState() == FISH && this.getFutureState() == FISH) {
-      for(Cell neighbor:neighbors) {
-        WaTorCell waTorNeighbor = (WaTorCell)neighbor;
-        if(waTorNeighbor.getFutureState()==WATER) {
-          this.setFutureState(WATER);
-          setFutureStats(waTorNeighbor, this.getCurrentState(), this.stepsAlive+1);
-          break;
-        }
-      }
-      for(Cell neighbor:neighbors) {
-        WaTorCell waTorNeighbor = (WaTorCell)neighbor;
-        if(stepsAlive%FISH_BREEDING==0 && waTorNeighbor.getFutureState()==WATER) {
-          setFutureStats(waTorNeighbor, this.getCurrentState(), 1);
-          break;
-        }
-      }
+      moveIfCellIsFish(neighbors);
     } else if(this.getCurrentState() == SHARK) {
-      if(stepsAfterEating%SHARK_STARVE==0) {
-        setFutureSharkStats(this, WATER, 1,1);
+      moveIfCellIsShark(neighbors);
+    }
+  }
+
+  private void moveIfCellIsFish(List<Cell> neighbors) {
+    for(Cell neighbor:neighbors) {
+      WaTorCell waTorNeighbor = (WaTorCell)neighbor;
+      if(waTorNeighbor.getFutureState()==WATER) {
+        this.setFutureState(WATER);
+        setFutureStats(waTorNeighbor, this.getCurrentState(), this.stepsAlive+1);
+        break;
+      }
+    }
+    for(Cell neighbor:neighbors) {
+      WaTorCell waTorNeighbor = (WaTorCell)neighbor;
+      if(stepsAlive%FISH_BREEDING==0 && waTorNeighbor.getFutureState()==WATER) {
+        setFutureStats(waTorNeighbor, this.getCurrentState(), 1);
+        break;
+      }
+    }
+  }
+
+  private void moveIfCellIsShark(List<Cell> neighbors) {
+    if(stepsAfterEating%SHARK_STARVE==0) {
+      setFutureSharkStats(this, WATER, 1,1);
+      return;
+    }
+    for(Cell neighbor:neighbors) {
+      WaTorCell waTorNeighbor = (WaTorCell)neighbor;
+      if(sharkMoveIntoWaterOrEatFish(waTorNeighbor, FISH, 1)) {
         return;
       }
-      for(Cell neighbor:neighbors) {
-        WaTorCell waTorNeighbor = (WaTorCell)neighbor;
-        if(sharkMoveIntoWaterOrEatFish(waTorNeighbor, FISH, 1)) {
-          return;
-        }
-      }
-      for(Cell neighbor:neighbors) {
-        WaTorCell waTorNeighbor = (WaTorCell)neighbor;
-        if(sharkMoveIntoWaterOrEatFish(waTorNeighbor, WATER, this.stepsAfterEating+1)) {
-          return;
-        }
+    }
+    for(Cell neighbor:neighbors) {
+      WaTorCell waTorNeighbor = (WaTorCell)neighbor;
+      if(sharkMoveIntoWaterOrEatFish(waTorNeighbor, WATER, this.stepsAfterEating+1)) {
+        return;
       }
     }
   }

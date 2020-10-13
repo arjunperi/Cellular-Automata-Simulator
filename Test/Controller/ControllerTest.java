@@ -215,14 +215,14 @@ public class ControllerTest extends DukeApplicationTest {
     assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(3).get(1).getCellColor());
   }
 
-  @Test
-  public void testRPS100StartButton(){
-    javafxRun(() -> mainController.displayInfo("RPS", "RPS100"));
-    buttonTest = lookup("#RPS100").queryButton();
-    clickOn(buttonTest);
-    assertEquals("0xffff00ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
-    assertEquals("0x000000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(1).getCellColor());
-  }
+//  @Test
+//  public void testRPS100StartButton(){
+//    javafxRun(() -> mainController.displayInfo("RPS", "RPS100"));
+//    buttonTest = lookup("#RPS100").queryButton();
+//    clickOn(buttonTest);
+//    assertEquals("0xffff00ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+//    assertEquals("0x000000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(1).getCellColor());
+//  }
 
   @Test
   public void testRPSExampleStartButton(){

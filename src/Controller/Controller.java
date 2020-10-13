@@ -119,23 +119,23 @@ public class Controller {
             .setOnAction(event -> displayInfo("GameOfLife", comboBoxGameOfLife.getValue().toString()));
     comboBoxGameOfLife.setPromptText("GameOfLife");
     ComboBox comboBoxPercolation = new ComboBox(
-            FXCollections.observableArrayList("PercolationExample"));
+            FXCollections.observableArrayList("PercolationExample", "Percolation10", "Percolation10Example2"));
     comboBoxPercolation
             .setOnAction(event -> displayInfo("Percolation", comboBoxPercolation.getValue().toString()));
     comboBoxPercolation.setPromptText("Percolation");
-    ComboBox comboBoxRPS = new ComboBox(FXCollections.observableArrayList("RPS50"));
+    ComboBox comboBoxRPS = new ComboBox(FXCollections.observableArrayList("RPSExample", "RPS50", "RPS100"));
     comboBoxRPS.setOnAction(event -> displayInfo("RPS", comboBoxRPS.getValue().toString()));
     comboBoxRPS.setPromptText("RPS");
-    ComboBox comboBoxSegregation = new ComboBox(FXCollections.observableArrayList("SegregationExample"));
+    ComboBox comboBoxSegregation = new ComboBox(FXCollections.observableArrayList("SegregationExample", "Segregation10Example2", "Segregation20Example2"));
     comboBoxSegregation.setOnAction(event -> displayInfo("Segregation", comboBoxSegregation.getValue().toString()));
     comboBoxSegregation.setPromptText("Segregation");
     ComboBox comboBoxSpreadingFire = new ComboBox(
-            FXCollections.observableArrayList("SpreadingFire20"));
+            FXCollections.observableArrayList("SpreadingFire10", "SpreadingFire20", "SpreadingFire100"));
     comboBoxSpreadingFire.setOnAction(
             event -> displayInfo("SpreadingFire", comboBoxSpreadingFire.getValue().toString()));
     comboBoxSpreadingFire.setPromptText("SpreadingFire");
     ComboBox comboBoxWaTor = new ComboBox(
-        FXCollections.observableArrayList("WaTorExample"));
+        FXCollections.observableArrayList("WaTorExample", "WaTor50", "Wator100"));
     comboBoxWaTor.setOnAction(
         event -> displayInfo("WaTor", comboBoxWaTor.getValue().toString()));
     comboBoxWaTor.setPromptText("WaTor");
@@ -223,7 +223,7 @@ public class Controller {
     List<List<FrontEndCell>> frontEndCells = this.mainView.getFrontEndCellGrid();
     for(List<FrontEndCell> cellRow : frontEndCells){
       for(FrontEndCell cell : cellRow){
-        cell.setOnMouseClicked(event -> changeClickedCellState(event));
+        cell.setOnMouseClicked(this::changeClickedCellState);
       }
     }
   }
