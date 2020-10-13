@@ -242,20 +242,17 @@ public class Controller {
   public void initializeSimulationMenu(){
     HBox test = new HBox();
     test.getChildren().add(homeButton);
-
     test.getChildren().add(makeButton("changeColors", event -> changeColorsPopUp()));
     mainView.getTopGroup().getChildren().add(test);
   }
 
   public void changeColorsPopUp(){
     mainModel.setPaused();
-
     Dialog colorBox = new TextInputDialog();
     TextField colorInput = new TextField();
     colorInput.setId("colorInput");
     TextField stateInput = new TextField();
     colorInput.setId("stateInput");
-
     GridPane grid = new GridPane();
     colorInput.setPromptText("New Color");
     stateInput.setPromptText("State to Change");
@@ -263,13 +260,8 @@ public class Controller {
     grid.getChildren().add(stateInput);
     GridPane.setConstraints(colorInput,0,1);
     grid.getChildren().add(colorInput);
-
     colorBox.getDialogPane().setContent(grid);
-
     colorBox.showAndWait();
-
-
-
     updateColorStateMapping(stateInput.getText(),colorInput.getText());
     mainModel.switchPause();
   }
