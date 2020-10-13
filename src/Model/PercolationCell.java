@@ -29,9 +29,4 @@ public class PercolationCell extends Cell {
   public int[][] getPossibleNeighbors() {
     return POSSIBLE_NEIGHBORS_PERCOLATION;
   }
-
-  @Override
-  public void initializePossibleStates() {
-    this.setPossibleStates(new ArrayList<>(Arrays.asList(0,1,2)));
-  }
 }
