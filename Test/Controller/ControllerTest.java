@@ -322,4 +322,16 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testKeyNotFound(){}
+
+  @Test
+  public void testupdateColorStateMapping(){
+    javafxRun(() -> mainController.displayInfo("SpreadingFire", "SpreadingFire100"));
+    buttonTest = lookup("#SpreadingFire100").queryButton();
+    clickOn(buttonTest);
+    assertEquals("0x008000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+    javafxRun(() -> mainController.updateColorStateMapping("1", "PINK"));
+    javafxRun(() -> mainController.gameStep());
+    assertEquals("0xffc0cbff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+  }
+
 }

@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -24,13 +25,15 @@ import javafx.event.EventTarget;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
+
 import org.apache.commons.lang3.concurrent.ConcurrentRuntimeException;
 
-import javax.swing.*;
+
 
 
 public class Controller {
@@ -237,18 +240,35 @@ public class Controller {
   public void initializeSimulationMenu(){
     HBox test = new HBox();
     test.getChildren().add(homeButton);
-    test.getChildren().add(makeButton("Change Colors", event -> changeColorsPopUp()));
+
+    test.getChildren().add(makeButton("changeColors", event -> changeColorsPopUp()));
     mainView.getTopGroup().getChildren().add(test);
   }
 
   public void changeColorsPopUp(){
     mainModel.setPaused();
-    JTextField state = new JTextField();
-    JTextField color = new JTextField();
-    Object[] message = {"State",state,
-                        "Color",color};
-    JOptionPane.showConfirmDialog(null,message,"Enter new state color mapping", JOptionPane.OK_CANCEL_OPTION);
-    updateColorStateMapping(state.getText(),color.getText());
+
+    Dialog colorBox = new TextInputDialog();
+    TextField colorInput = new TextField();
+    colorInput.setId("colorInput");
+    TextField stateInput = new TextField();
+    colorInput.setId("stateInput");
+
+    GridPane grid = new GridPane();
+    colorInput.setPromptText("New Color");
+    stateInput.setPromptText("State to Change");
+    GridPane.setConstraints(stateInput,0,0);
+    grid.getChildren().add(stateInput);
+    GridPane.setConstraints(colorInput,0,1);
+    grid.getChildren().add(colorInput);
+
+    colorBox.getDialogPane().setContent(grid);
+
+    colorBox.showAndWait();
+
+
+
+    updateColorStateMapping(stateInput.getText(),colorInput.getText());
     mainModel.switchPause();
   }
 
