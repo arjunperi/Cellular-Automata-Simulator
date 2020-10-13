@@ -1,10 +1,12 @@
 package Controller;
 
 import Model.Model;
+import Model.ModelException;
 import View.View;
 import View.FrontEndCell;
 
 
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -20,11 +22,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.apache.commons.lang3.concurrent.ConcurrentRuntimeException;
+
+import javax.swing.*;
 
 
 public class Controller {
@@ -45,14 +50,12 @@ public class Controller {
 
   private Button homeButton;
 
-
   public Controller() {
     this.mainView = new View();
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "English");
     initializeButtonMenu();
   }
 
-  //on button press
   public void initializeSimulation(String fileName, String modelType, String fileOut) {
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
@@ -65,8 +68,9 @@ public class Controller {
       simIsSet = true;
       addCellEventHandlers();
       mainView.getRoot().setTop(homeButton);
-    } catch (IllegalAccessException | InstantiationException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException e) {
-      e.printStackTrace();
+    }
+    catch (NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException| ModelException e) {
+        showError("Invalid Model Type");
     }
   }
 
@@ -108,69 +112,56 @@ public class Controller {
 
   public void initializeButtonMenu() {
     mainView.getRoot().getChildren().clear();
-    HBox result = new HBox();
-    homeButton = makeButton("Home", event -> initializeButtonMenu());
-    result.getChildren().add(homeButton);
-    ComboBox comboBoxGameOfLife = new ComboBox(FXCollections.observableArrayList(
-            "ConwayStatesPulsar", "ConwayStatesBlinker", "ConwayStatesBlock", "ConwayStatesToad",
-            "ConwayStatesBeacon"));
-    comboBoxGameOfLife.setId("GameOfLife");
-    comboBoxGameOfLife
-            .setOnAction(event -> displayInfo("GameOfLife", comboBoxGameOfLife.getValue().toString()));
-    comboBoxGameOfLife.setPromptText("GameOfLife");
-    ComboBox comboBoxPercolation = new ComboBox(
-            FXCollections.observableArrayList("PercolationExample"));
-    comboBoxPercolation
-            .setOnAction(event -> displayInfo("Percolation", comboBoxPercolation.getValue().toString()));
-    comboBoxPercolation.setPromptText("Percolation");
-    ComboBox comboBoxRPS = new ComboBox(FXCollections.observableArrayList("RPS50"));
-    comboBoxRPS.setOnAction(event -> displayInfo("RPS", comboBoxRPS.getValue().toString()));
-    comboBoxRPS.setPromptText("RPS");
-    ComboBox comboBoxSegregation = new ComboBox(FXCollections.observableArrayList("SegregationExample"));
-    comboBoxSegregation.setOnAction(event -> displayInfo("Segregation", comboBoxSegregation.getValue().toString()));
-    comboBoxSegregation.setPromptText("Segregation");
-    ComboBox comboBoxSpreadingFire = new ComboBox(
-            FXCollections.observableArrayList("SpreadingFire20"));
-    comboBoxSpreadingFire.setOnAction(
-            event -> displayInfo("SpreadingFire", comboBoxSpreadingFire.getValue().toString()));
-    comboBoxSpreadingFire.setPromptText("SpreadingFire");
-    ComboBox comboBoxWaTor = new ComboBox(
-        FXCollections.observableArrayList("WaTorExample"));
-    comboBoxWaTor.setOnAction(
-        event -> displayInfo("WaTor", comboBoxWaTor.getValue().toString()));
-    comboBoxWaTor.setPromptText("WaTor");
-    mainView.getRoot().getChildren().add(comboBoxGameOfLife);
-    mainView.getRoot().getChildren().add(comboBoxPercolation);
-    mainView.getRoot().getChildren().add(comboBoxRPS);
-    mainView.getRoot().getChildren().add(comboBoxSpreadingFire);
-    mainView.getRoot().getChildren().add(comboBoxSegregation);
-    mainView.getRoot().getChildren().add(comboBoxWaTor);
-    result.getChildren().add(comboBoxGameOfLife);
-    result.getChildren().add(comboBoxPercolation);
-    result.getChildren().add(comboBoxRPS);
-    result.getChildren().add(comboBoxSpreadingFire);
-    result.getChildren().add(comboBoxSegregation);
-    result.getChildren().add(comboBoxWaTor);
-    mainView.getRoot().setTop(result);
+    VBox result = new VBox();
+    TextField inputText = new TextField();
+    inputText.setId("inputTextBox");
+    EventHandler<ActionEvent> event = e -> {
+      String fileChosen = inputText.getText();
+      try{
+        Properties propertyFile = getPropertyFile(fileChosen);
+        displayInfo(propertyFile.getProperty("Type"), fileChosen);
+      }
+      catch (ControllerException c){
+        showError(c.getMessage());
+      }
+    };
+    inputText.setOnAction(event);
+    Label inputLabel = new Label("Enter Simulation Name and Press Enter");
+    result.getChildren().add(inputLabel);
+    result.getChildren().add(inputText);
+    mainView.getRoot().setCenter(result);
   }
 
-
   public void displayInfo(String token, String fileName){
+    homeButton = makeButton("Home", event -> initializeButtonMenu());
     mainView.getRoot().getChildren().clear();
     HBox result = new HBox();
     Button startButton = makeButton(fileName, event -> startSimulation(token, fileName));
     result.getChildren().add(homeButton);
     result.getChildren().add(startButton);
     mainView.getRoot().setTop(result);
-    Text startupText = new Text();
-    Properties propertyFile  = getPropertyFile(fileName);
-    String type = propertyFile.getProperty("Type");
-    String title = propertyFile.getProperty("Title");
-    String author = propertyFile.getProperty("Author");
-    String description = propertyFile.getProperty("Description");
-    startupText.setText(type+ "\n" + title + "\n" + author + "\n" + description);
-    mainView.getRoot().setCenter(startupText);
+    try{
+        Text startupText = new Text();
+        Properties propertyFile  = getPropertyFile(fileName);
+        String type = propertyFile.getProperty("Type");
+        String title = propertyFile.getProperty("Title");
+        String author = propertyFile.getProperty("Author");
+        String description = propertyFile.getProperty("Description");
+        startupText.setText(type+ "\n" + title + "\n" + author + "\n" + description);
+        mainView.getRoot().setCenter(startupText);
+    }
+    catch (ControllerException e){
+      showError(e.getMessage());
+    }
   }
+
+  private void showError(String message){
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Controller Error");
+    alert.setContentText(message);
+    alert.showAndWait();
+  }
+
 
   private Button makeButton (String property, EventHandler<ActionEvent> handler) {
     Button result = new Button();
@@ -183,12 +174,14 @@ public class Controller {
 
   public void startSimulation(String token, String fileName) {
     currentFileName = fileName;
-    try {
-      initializeSimulation(fileName + ".csv", token, fileName + "Out.csv");
-    } catch (Exception e) {
-      throw new UnsupportedOperationException(String.format("Unrecognized command: %s", token));
-    }
+    initializeSimulation(fileName + ".csv", token, fileName + "Out.csv");
   }
+//    try {
+//      initializeSimulation(fileName + ".csv", token, fileName + "Out.csv");
+//    } catch (Exception e) {
+//      throw new ControllerException()
+//    }
+//  }
 
   public void initializeColorMapping(int state) {
     Properties propertyFile = getPropertyFile(currentFileName);
@@ -199,12 +192,12 @@ public class Controller {
   }
 
 
-  private Properties getPropertyFile(String fileName) {
+  public Properties getPropertyFile(String fileName) {
     Properties propertyFile = new Properties();
     try {
       propertyFile.load(Controller.class.getClassLoader().getResourceAsStream(fileName + ".properties"));
-    } catch (IOException e) {
-      System.out.println("error");
+    } catch (Exception e) {
+      throw new ControllerException("Invalid File Name", e);
     }
     return propertyFile;
   }
@@ -228,7 +221,6 @@ public class Controller {
     }
   }
 
-
   public void changeClickedCellState(Event event){
     EventTarget clickedEvent = event.getTarget();
     FrontEndCell clickedCell = (FrontEndCell) clickedEvent;
@@ -237,6 +229,8 @@ public class Controller {
     mainModel.getGridOfCells().getCell(clickedCellRow, clickedCellColumn).cycleNextState();
   }
 }
+
+
 
 
 

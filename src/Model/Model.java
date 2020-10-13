@@ -2,6 +2,7 @@ package Model;
 
 
 import cellsociety.Simulation;
+import org.assertj.core.internal.bytebuddy.matcher.StringMatcher;
 
 
 public class Model {
@@ -20,7 +21,7 @@ public class Model {
     this.fileOut = null;
   }
 
-  public Model(String fileName, String modelType, String fileOut) {
+  public Model(String fileName, String modelType, String fileOut){
     gridOfCells = new Grid(fileName, modelType);
     this.fileOut = fileOut;
   }

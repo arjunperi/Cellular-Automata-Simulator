@@ -3,6 +3,7 @@ package Model;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
+import javafx.scene.control.Alert;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -24,7 +25,9 @@ public class Grid {
     String[] firstRow = cellStates.get(0);
     cellsPerRow = Double.parseDouble(firstRow[0]);
     cellsPerColumn = Double.parseDouble(firstRow[1]);
+    checkCSVDimensions(cellStates.size() - 1, cellStates.get(1).length);
     try {
+      //checkCSVDimensions(cellStates.size() - 1, cellStates.get(1).length);
       for (int i = 1; i < cellStates.size(); i++) {
         String[] row = cellStates.get(i);
         List<Cell> cellRow = new ArrayList<>();
@@ -36,8 +39,22 @@ public class Grid {
         }
         gridOfCells.add(cellRow);
       }
-    } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-      e.printStackTrace();
+    } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException| ModelException e) {
+      showError(e.getMessage());
+    }
+  }
+
+  private void showError(String message){
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Controller Error");
+    alert.setContentText(message);
+    alert.showAndWait();
+  }
+
+  private void checkCSVDimensions(int columnCheck, int rowCheck){
+    if (!(columnCheck == cellsPerColumn && rowCheck == cellsPerRow)){
+      showError("Invalid CSV Dimensions");
+      throw new ModelException("Invalid CSV");
     }
   }
 
