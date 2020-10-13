@@ -11,6 +11,7 @@ import org.assertj.core.internal.bytebuddy.matcher.StringMatcher;
 public class Model {
 
   private static final int ANIMATION_RATE_CHANGE = 5;
+  private static final boolean PAUSED = true;
 
   public double framesPerModelUpdate = 60;
   private final String fileOut;
@@ -57,6 +58,7 @@ public class Model {
   public void switchPause() {
     isPaused = !isPaused;
   }
+  public void setPaused(){isPaused = PAUSED;}
 
   public void step() {
     isPaused = true;
