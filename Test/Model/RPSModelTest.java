@@ -9,7 +9,7 @@ public class RPSModelTest extends DukeApplicationTest {
   @Test
   public void testConstructorRPS() {
     Model testModel = new RPSModel("RPSExample.csv", "RPS");
-    assertEquals(2, testModel.getCellState(0,0));
+    assertEquals(3, testModel.getCellState(0,0));
     assertEquals(1, testModel.getCellState(0,1));
   }
 

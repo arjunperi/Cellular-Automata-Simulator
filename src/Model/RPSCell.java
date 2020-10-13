@@ -78,9 +78,4 @@ public class RPSCell extends Cell {
   public int[][] getPossibleNeighbors() {
     return POSSIBLE_NEIGHBORS_RPS;
   }
-
-  @Override
-  public void initializePossibleStates() {
-    this.setPossibleStates(new ArrayList<>(Arrays.asList(0,1,2,3,4)));
-  }
 }

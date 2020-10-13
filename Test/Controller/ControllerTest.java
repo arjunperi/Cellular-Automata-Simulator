@@ -114,7 +114,7 @@ public class ControllerTest extends DukeApplicationTest {
     View testSpeedUpView = testSpeedUpController.getMainView();
     FrontEndCell testSpeedUpCell = testSpeedUpView.getFrontEndCellGrid().get(6).get(9);
     for(int i = 0; i < 6; i ++){
-      testSpeedUpController.handleKeyInput(KeyCode.RIGHT);
+      testSpeedUpController.handleKeyInput(KeyCode.W);
     }
     assertEquals(testSpeedUpCell.getCellColor(), currentStepCell.getCellColor());
     for(int i = 0; i < 60; i ++){
@@ -140,7 +140,7 @@ public class ControllerTest extends DukeApplicationTest {
     View testSlowDownView = testSlowDownController.getMainView();
     FrontEndCell testSlowDownCell = testSlowDownView.getFrontEndCellGrid().get(6).get(9);
     for(int i = 0; i < 6; i ++){
-      testSlowDownController.handleKeyInput(KeyCode.LEFT);
+      testSlowDownController.handleKeyInput(KeyCode.Q);
     }
     assertEquals(testSlowDownCell.getCellColor(), currentNormalCell.getCellColor());
     for(int i = 0; i < 60; i ++){
@@ -220,22 +220,22 @@ public class ControllerTest extends DukeApplicationTest {
     assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(3).get(1).getCellColor());
   }
 
-//  @Test
-//  public void testRPS100StartButton(){
-//    javafxRun(() -> mainController.displayInfo("RPS", "RPS100"));
-//    buttonTest = lookup("#RPS100").queryButton();
-//    clickOn(buttonTest);
-//    assertEquals("0xffff00ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
-//    assertEquals("0x000000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(1).getCellColor());
-//  }
+  @Test
+  public void testRPS100StartButton(){
+    javafxRun(() -> mainController.displayInfo("RPS", "RPS100"));
+    buttonTest = lookup("#RPS100").queryButton();
+    clickOn(buttonTest);
+    assertEquals("0xff00ffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+    assertEquals("0xe6e6faff", mainController.getMainView().getFrontEndCellGrid().get(0).get(1).getCellColor());
+  }
 
   @Test
   public void testRPSExampleStartButton(){
     javafxRun(() -> mainController.displayInfo("RPS", "RPSExample"));
     buttonTest = lookup("#RPSExample").queryButton();
     clickOn(buttonTest);
-    assertEquals("0xff0000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
-    assertEquals("0x008000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(1).getCellColor());
+    assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+    assertEquals("0x00ffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(1).getCellColor());
   }
 
   @Test
@@ -252,8 +252,8 @@ public class ControllerTest extends DukeApplicationTest {
     javafxRun(() -> mainController.displayInfo("SpreadingFire", "SpreadingFire100"));
     buttonTest = lookup("#SpreadingFire100").queryButton();
     clickOn(buttonTest);
-    assertEquals("0x008000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
-    assertEquals("0x008000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(1).getCellColor());
+    assertEquals("0xff0000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+    assertEquals("0xff0000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(1).getCellColor());
   }
 
   @Test

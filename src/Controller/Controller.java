@@ -62,6 +62,8 @@ public class Controller {
     try {
       Class<?> cl = Class.forName("Model." + modelType + "Model");
       this.mainModel = (Model) cl.getConstructor(String.class,String.class,String.class).newInstance(fileName, modelType, fileOut);
+      Properties propertyFile = getPropertyFile(currentFileName);
+      mainModel.initializeAllStates(propertyFile.getProperty("States"));
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
           mainModel.getNumberOfColumns(), frontEndCellColors);
@@ -69,7 +71,7 @@ public class Controller {
       addCellEventHandlers();
       mainView.getRoot().setTop(homeButton);
     }
-    catch (NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException| ModelException e) {
+    catch (NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException | ModelException e) {
         showError("Invalid Model Type");
     }
   }
@@ -142,7 +144,7 @@ public class Controller {
     mainView.getRoot().setTop(result);
     try{
         Text startupText = new Text();
-        Properties propertyFile  = getPropertyFile(fileName);
+        Properties propertyFile = getPropertyFile(fileName);
         String type = propertyFile.getProperty("Type");
         String title = propertyFile.getProperty("Title");
         String author = propertyFile.getProperty("Author");
@@ -207,8 +209,8 @@ public class Controller {
     switch (code) {
       case P -> mainModel.switchPause();
       case S -> mainModel.step();
-      case RIGHT -> mainModel.speedUp();
-      case LEFT-> mainModel.slowDown();
+      case W -> mainModel.speedUp();
+      case Q-> mainModel.slowDown();
     }
   }
 
@@ -226,7 +228,7 @@ public class Controller {
     FrontEndCell clickedCell = (FrontEndCell) clickedEvent;
     int clickedCellRow = clickedCell.getRow();
     int clickedCellColumn = clickedCell.getColumn();
-    mainModel.getGridOfCells().getCell(clickedCellRow, clickedCellColumn).cycleNextState();
+    mainModel.cycleState(clickedCellRow, clickedCellColumn);
   }
 }
 
