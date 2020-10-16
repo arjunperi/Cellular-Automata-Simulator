@@ -79,7 +79,10 @@ public class Controller {
       //mainView.getRoot().setBottom();
 
     }
-    catch (NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException| ModelException e) {
+    catch (InvocationTargetException e){
+      showError((e.getTargetException().getMessage()));
+    }
+    catch (NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
         showError("Invalid Model Type");
     }
   }
