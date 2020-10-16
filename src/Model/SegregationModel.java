@@ -25,16 +25,20 @@ public class SegregationModel extends Model{
   public void updateCells() {
     for (int row = 0; row < mainGrid.getCellsPerColumn(); row++) {
       for (int column = 0; column < mainGrid.getCellsPerRow(); column++) {
-        Cell currentCell = mainGrid.getCell(row,column);
-        List<Cell> cellNeighbors = mainGrid.getNeighbors(row, column, currentCell);
-        currentCell.updateState(cellNeighbors);
-        if(currentCell.getCurrentState()!=currentCell.getFutureState() && currentCell.getCurrentState()!=0) {
-          emptyCellQueue.add(new int[] {row,column});
-          if(!emptyCellQueue.isEmpty()) {
-            int[] cellToMoveTo = emptyCellQueue.poll();
-            mainGrid.getCell(cellToMoveTo[0],cellToMoveTo[1]).setFutureState(currentCell.getCurrentState());
-          }
-        }
+        updateCellState(row,column);
+      }
+    }
+  }
+
+  private void updateCellState(int row, int column) {
+    Cell currentCell = mainGrid.getCell(row,column);
+    List<Cell> cellNeighbors = mainGrid.getNeighbors(row, column, currentCell);
+    currentCell.updateState(cellNeighbors);
+    if(currentCell.getCurrentState()!=currentCell.getFutureState() && currentCell.getCurrentState()!=0) {
+      emptyCellQueue.add(new int[] {row,column});
+      if(!emptyCellQueue.isEmpty()) {
+        int[] cellToMoveTo = emptyCellQueue.poll();
+        mainGrid.getCell(cellToMoveTo[0],cellToMoveTo[1]).setFutureState(currentCell.getCurrentState());
       }
     }
   }

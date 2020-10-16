@@ -20,4 +20,20 @@ public class SegregationModelTest extends DukeApplicationTest {
     testModel.step();
     assertEquals(2, testModel.getCellState(0,2));
   }
+
+  @Test
+  public void testStepSegregation10Example2() {
+    Model testModel = new SegregationModel("Segregation10Example2.csv", "Segregation");
+    assertEquals(1, testModel.getCellState(0,2));
+    testModel.step();
+    assertEquals(2, testModel.getCellState(0,2));
+  }
+
+  @Test
+  public void testStepSegregation20Example2() {
+    Model testModel = new SegregationModel("Segregation20Example2.csv", "Segregation");
+    assertEquals(1, testModel.getCellState(0,8));
+    testModel.step();
+    assertEquals(1, testModel.getCellState(0,8));
+  }
 }

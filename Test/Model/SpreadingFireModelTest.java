@@ -20,4 +20,20 @@ public class SpreadingFireModelTest extends DukeApplicationTest {
     testModel.step();
     assertEquals(0, testModel.getCellState(8,8));
   }
+
+  @Test
+  public void testStepSpreadingFireExample10() {
+    Model testModel = new SpreadingFireModel("SpreadingFire10.csv", "SpreadingFire");
+    assertEquals(0, testModel.getCellState(0,0));
+    testModel.step();
+    assertEquals(0, testModel.getCellState(0,0));
+  }
+
+  @Test
+  public void testStepSpreadingFireExample100() {
+    Model testModel = new SpreadingFireModel("SpreadingFire100.csv", "SpreadingFire");
+    assertEquals(2, testModel.getCellState(0,0));
+    testModel.step();
+    assertEquals(0, testModel.getCellState(0,0));
+  }
 }

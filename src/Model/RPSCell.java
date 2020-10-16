@@ -1,11 +1,14 @@
 package Model;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import org.assertj.core.data.MapEntry;
 
 public class RPSCell extends Cell {
 
@@ -14,12 +17,29 @@ public class RPSCell extends Cell {
       {1, 0}, {1, -1},
       {0, -1}, {-1, -1}};
   public static final int THRESHOLD = 2;
+//  Map<Integer, List<Integer>> RPSMap = Map.ofEntries(
+//      new AbstractMap.SimpleEntry<>( 0, List.of(1,2,3,4,5,6,7)),
+//      new AbstractMap.SimpleEntry<>( 1, List.of(2,3,4,5,6,7,8)),
+//      new AbstractMap.SimpleEntry<>( 2, List.of(3,4,5,6,7,8,9)),
+//      new AbstractMap.SimpleEntry<>( 3, List.of(4,5,6,7,8,9,10)),
+//      new AbstractMap.SimpleEntry<>( 4, List.of(5,6,7,8,9,10,11)),
+//      new AbstractMap.SimpleEntry<>( 5, List.of(6,7,8,9,10,11,12)),
+//      new AbstractMap.SimpleEntry<>( 6, List.of(7,8,9,10,11,12,13)),
+//      new AbstractMap.SimpleEntry<>( 7, List.of(8,9,10,11,12,13,14)),
+//      new AbstractMap.SimpleEntry<>( 8, List.of(9,10,11,12,13,14,0)),
+//      new AbstractMap.SimpleEntry<>( 9, List.of(10,11,12,13,14,0,1)),
+//      new AbstractMap.SimpleEntry<>( 10, List.of(11,12,13,14,0,1,2)),
+//      new AbstractMap.SimpleEntry<>( 11, List.of(12,13,14,0,1,2,3)),
+//      new AbstractMap.SimpleEntry<>( 12, List.of(13,14,0,1,2,3,4)),
+//      new AbstractMap.SimpleEntry<>( 13, List.of(14,0,1,2,3,4,5)),
+//      new AbstractMap.SimpleEntry<>( 14, List.of(0,1,2,3,4,5,6)));
+
   Map<Integer, List<Integer>> RPSMap = Map.of(
-      0, List.of(2,4),
-      1, List.of(0,3),
-      2, List.of(1,4),
-      3, List.of(2,0),
-      4, List.of(3,1));
+      0, List.of(1,2),
+      1, List.of(2,3),
+      2, List.of(3,4),
+      3, List.of(4,0),
+      4, List.of(0,1));
 
 
   public RPSCell(int state) {
@@ -57,10 +77,5 @@ public class RPSCell extends Cell {
   @Override
   public int[][] getPossibleNeighbors() {
     return POSSIBLE_NEIGHBORS_RPS;
-  }
-
-  @Override
-  public void initializePossibleStates() {
-    this.setPossibleStates(new ArrayList<>(Arrays.asList(0,1,2,3,4)));
   }
 }

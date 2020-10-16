@@ -2,12 +2,16 @@ package Model;
 
 
 import cellsociety.Simulation;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.assertj.core.internal.bytebuddy.matcher.StringMatcher;
 
 
 public class Model {
 
   private static final int ANIMATION_RATE_CHANGE = 5;
+  private static final boolean PAUSED = true;
 
   public double framesPerModelUpdate = 60;
   private final String fileOut;
@@ -15,6 +19,7 @@ public class Model {
   private boolean isPaused = false;
   private boolean isStep = false;
   private double cycles = 0;
+  private List<Integer> allStates;
 
   public Model(String fileName, String modelType) {
     gridOfCells = new Grid(fileName, modelType);
@@ -53,6 +58,7 @@ public class Model {
   public void switchPause() {
     isPaused = !isPaused;
   }
+  public void setPaused(){isPaused = PAUSED;}
 
   public void step() {
     isPaused = true;
@@ -63,6 +69,22 @@ public class Model {
 
   public int getCellState(int row, int column) {
     return gridOfCells.getCell(row, column).getCurrentState();
+  }
+
+  public Cell getCell(int row, int column) {
+    return gridOfCells.getCell(row, column);
+  }
+
+  public void initializeAllStates(String allStates) {
+    this.allStates = new ArrayList<>();
+    String[] allStatesString = allStates.split(",");
+    for(String stateString:allStatesString) {
+      this.allStates.add(Integer.parseInt(stateString));
+    }
+  }
+
+  public void cycleState(int row, int column) {
+    getCell(row, column).cycleNextState(allStates);
   }
 
   public Grid getGridOfCells() {
@@ -82,6 +104,5 @@ public class Model {
   }
   public void slowDown(){
     this.framesPerModelUpdate = Math.min(100,framesPerModelUpdate + ANIMATION_RATE_CHANGE);
-
   }
 }

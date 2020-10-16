@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -24,9 +25,12 @@ import javafx.event.EventTarget;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
+
 import org.apache.commons.lang3.concurrent.ConcurrentRuntimeException;
 
 import javax.swing.*;
@@ -59,11 +63,15 @@ public class Controller {
   }
 
   public void initializeSimulation(String fileName, String modelType, String fileOut) {
+    mainView.getCenterGroup().getChildren().clear();
+    mainView.getTopGroup().getChildren().clear();
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
     try {
       Class<?> cl = Class.forName("Model." + modelType + "Model");
       this.mainModel = (Model) cl.getConstructor(String.class,String.class,String.class).newInstance(fileName, modelType, fileOut);
+      Properties propertyFile = getPropertyFile(currentFileName);
+      mainModel.initializeAllStates(propertyFile.getProperty("States"));
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
           mainModel.getNumberOfColumns(), frontEndCellColors);
@@ -155,7 +163,8 @@ public class Controller {
   }
 
   public void initializeButtonMenu() {
-    mainView.getRoot().getChildren().clear();
+    mainView.getCenterGroup().getChildren().clear();
+    mainView.getTopGroup().getChildren().clear();
     VBox result = new VBox();
     inputText = new TextField();
     inputText.setId("inputTextBox");
@@ -173,28 +182,27 @@ public class Controller {
     Label inputLabel = new Label("Enter Simulation Name and Press Enter");
     result.getChildren().add(inputLabel);
     result.getChildren().add(inputText);
-    mainView.getRoot().setCenter(result);
+    mainView.getCenterGroup().getChildren().add(result);
   }
 
 
 
   public void displayInfo(String token, String fileName){
-//    homeButton = makeButton("Home", event -> initializeButtonMenu());
-    mainView.getRoot().getChildren().clear();
+    mainView.getCenterGroup().getChildren().clear();
     HBox result = new HBox();
     Button startButton = makeButton(fileName, event -> startSimulation(token, fileName));
     result.getChildren().add(homeButton);
     result.getChildren().add(startButton);
-    mainView.getRoot().setTop(result);
+    mainView.getTopGroup().getChildren().add(result);
     try{
         Text startupText = new Text();
-        Properties propertyFile  = getPropertyFile(fileName);
+        Properties propertyFile = getPropertyFile(fileName);
         String type = propertyFile.getProperty("Type");
         String title = propertyFile.getProperty("Title");
         String author = propertyFile.getProperty("Author");
         String description = propertyFile.getProperty("Description");
         startupText.setText(type+ "\n" + title + "\n" + author + "\n" + description);
-        mainView.getRoot().setCenter(startupText);
+        mainView.getCenterGroup().getChildren().add(startupText);
     }
     catch (ControllerException e){
       showError(e.getMessage());
@@ -219,6 +227,8 @@ public class Controller {
   }
 
   public void startSimulation(String token, String fileName) {
+    mainView.getTopGroup().getChildren().clear();
+    mainView.getCenterGroup().getChildren().clear();
     currentFileName = fileName;
     initializeSimulation(fileName + ".csv", token, fileName + "Out.csv");
   }
@@ -247,8 +257,8 @@ public class Controller {
     switch (code) {
       case P -> mainModel.switchPause();
       case S -> mainModel.step();
-      case RIGHT -> mainModel.speedUp();
-      case LEFT-> mainModel.slowDown();
+      case W -> mainModel.speedUp();
+      case Q-> mainModel.slowDown();
     }
   }
 
@@ -256,7 +266,7 @@ public class Controller {
     List<List<FrontEndCell>> frontEndCells = this.mainView.getFrontEndCellGrid();
     for(List<FrontEndCell> cellRow : frontEndCells){
       for(FrontEndCell cell : cellRow){
-        cell.setOnMouseClicked(event -> changeClickedCellState(event));
+        cell.setOnMouseClicked(this::changeClickedCellState);
       }
     }
   }
@@ -266,8 +276,47 @@ public class Controller {
     FrontEndCell clickedCell = (FrontEndCell) clickedEvent;
     int clickedCellRow = clickedCell.getRow();
     int clickedCellColumn = clickedCell.getColumn();
-    mainModel.getGridOfCells().getCell(clickedCellRow, clickedCellColumn).cycleNextState();
+    mainModel.cycleState(clickedCellRow, clickedCellColumn);
   }
+
+  public void initializeSimulationMenu(){
+    HBox test = new HBox();
+    test.getChildren().add(homeButton);
+    test.getChildren().add(makeButton("changeColors", event -> changeColorsPopUp()));
+    mainView.getTopGroup().getChildren().add(test);
+  }
+
+  public void changeColorsPopUp(){
+    mainModel.setPaused();
+    Dialog colorBox = new TextInputDialog();
+    TextField colorInput = new TextField();
+    colorInput.setId("colorInput");
+    TextField stateInput = new TextField();
+    colorInput.setId("stateInput");
+    GridPane grid = new GridPane();
+    colorInput.setPromptText("New Color");
+    stateInput.setPromptText("State to Change");
+    GridPane.setConstraints(stateInput,0,0);
+    grid.getChildren().add(stateInput);
+    GridPane.setConstraints(colorInput,0,1);
+    grid.getChildren().add(colorInput);
+    colorBox.getDialogPane().setContent(grid);
+    colorBox.showAndWait();
+    updateColorStateMapping(stateInput.getText(),colorInput.getText());
+    mainModel.switchPause();
+  }
+
+  public void updateColorStateMapping(String state, String color){
+    try{
+      int stateInt = Integer.parseInt(state);
+      if(!this.stateColorMapping.containsKey(stateInt)) throw new IllegalArgumentException();
+      Paint.valueOf(color);
+      this.stateColorMapping.put(stateInt,color);
+    }catch(Exception e){
+      showError("Please enter a valid color state mapping");
+    }
+  }
+
 }
 
 
