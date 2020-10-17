@@ -41,6 +41,7 @@ public class Controller {
   private Model mainModel;
   private final View mainView;
   private boolean simIsSet = false;
+  private String modelType;
 
   private static final String RESOURCES = "Resources/";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES.replace("/", ".");
@@ -62,7 +63,55 @@ public class Controller {
     initializeButtonMenu();
   }
 
-  public void initializeSimulation(String fileName, String modelType, String fileOut) {
+  public void initializeButtonMenu() {
+    mainView.getCenterGroup().getChildren().clear();
+    mainView.getTopGroup().getChildren().clear();
+    VBox result = new VBox();
+    inputText = new TextField();
+    inputText.setId("inputTextBox");
+    EventHandler<ActionEvent> event = e -> {
+      String fileChosen = inputText.getText();
+      try{
+        Properties propertyFile = getPropertyFile(fileChosen);
+        modelType = propertyFile.getProperty("Type");
+        System.out.println(modelType);
+        displayInfo(fileChosen);
+      }
+      catch (ControllerException c){
+        showError(c.getMessage());
+      }
+    };
+    inputText.setOnAction(event);
+    Label inputLabel = new Label("Enter Simulation Name and Press Enter");
+    result.getChildren().add(inputLabel);
+    result.getChildren().add(inputText);
+    mainView.getCenterGroup().getChildren().add(result);
+  }
+
+  public void displayInfo(String fileName){
+    mainView.getCenterGroup().getChildren().clear();
+    HBox result = new HBox();
+    currentFileName = fileName;
+    Button startButton = makeButton(fileName, event -> initializeSimulation(fileName + ".csv", fileName + "Out.csv"));
+    result.getChildren().add(startButton);
+    result.getChildren().add(homeButton);
+    mainView.getTopGroup().getChildren().add(result);
+    try{
+      Text startupText = new Text();
+      Properties propertyFile = getPropertyFile(fileName);
+      String type = propertyFile.getProperty("Type");
+      String title = propertyFile.getProperty("Title");
+      String author = propertyFile.getProperty("Author");
+      String description = propertyFile.getProperty("Description");
+      startupText.setText(type+ "\n" + title + "\n" + author + "\n" + description);
+      mainView.getCenterGroup().getChildren().add(startupText);
+    }
+    catch (ControllerException e){
+      showError(e.getMessage());
+    }
+  }
+
+  public void initializeSimulation(String fileName, String fileOut) {
     mainView.getCenterGroup().getChildren().clear();
     mainView.getTopGroup().getChildren().clear();
     frontEndCellColors = new ArrayList<>();
@@ -77,15 +126,12 @@ public class Controller {
           mainModel.getNumberOfColumns(), frontEndCellColors);
       simIsSet = true;
       addCellEventHandlers();
-      //mainView.getRoot().setTop(homeButton);
-      VBox result = new VBox();
-      Button saveButton = makeButton("Save", event -> getSaveInputs());
-      result.getChildren().add(homeButton);
-      result.getChildren().add(saveButton);
-      //result.getChildren().add(inputText);
-      mainView.getRoot().setTop(result);
-      //mainView.getRoot().setBottom();
-
+      initializeSimulationMenu();
+//      VBox result = new VBox();
+//      Button saveButton = makeButton("Save", event -> getSaveInputs());
+//      result.getChildren().add(homeButton);
+//      result.getChildren().add(saveButton);
+//      mainView.getRoot().setTop(result);
     }
     catch (InvocationTargetException e){
       showError((e.getTargetException().getMessage()));
@@ -104,16 +150,20 @@ public class Controller {
             "Author:", Author,
             "Description", Description
     };
-    JOptionPane.showConfirmDialog(null, message, "Enter Save File Details", JOptionPane.OK_CANCEL_OPTION);
+    int n = JOptionPane.showConfirmDialog(null, message, "Enter Save File Details", JOptionPane.OK_CANCEL_OPTION);
     saveList.put("Title", Title.getText());
     saveList.put("Author", Author.getText());
     saveList.put("Description", Description.getText());
-    writeToPropertyFile();
+    if (n != JOptionPane.CLOSED_OPTION && n != JOptionPane.CANCEL_OPTION){
+      writeToPropertyFile();
+      mainModel.writeToCSV(saveList.get("Title") + ".csv");
+    }
   }
 
   private void writeToPropertyFile(){
     try (OutputStream output = new FileOutputStream("Properties/" + saveList.get("Title") + ".properties")) {
       Properties prop = new Properties();
+      prop.setProperty("Type", modelType);
       prop.setProperty("Title", saveList.get("Title"));
       prop.setProperty("Author", saveList.get("Author"));
       prop.setProperty("Description", saveList.get("Description"));
@@ -124,7 +174,6 @@ public class Controller {
     }
     initializeButtonMenu();
   }
-
 
   public void gameStep() {
     if (simIsSet) {
@@ -162,52 +211,6 @@ public class Controller {
     return mainView;
   }
 
-  public void initializeButtonMenu() {
-    mainView.getCenterGroup().getChildren().clear();
-    mainView.getTopGroup().getChildren().clear();
-    VBox result = new VBox();
-    inputText = new TextField();
-    inputText.setId("inputTextBox");
-    EventHandler<ActionEvent> event = e -> {
-      String fileChosen = inputText.getText();
-      try{
-        Properties propertyFile = getPropertyFile(fileChosen);
-        displayInfo(propertyFile.getProperty("Type"), fileChosen);
-      }
-      catch (ControllerException c){
-        showError(c.getMessage());
-      }
-    };
-    inputText.setOnAction(event);
-    Label inputLabel = new Label("Enter Simulation Name and Press Enter");
-    result.getChildren().add(inputLabel);
-    result.getChildren().add(inputText);
-    mainView.getCenterGroup().getChildren().add(result);
-  }
-
-
-
-  public void displayInfo(String token, String fileName){
-    mainView.getCenterGroup().getChildren().clear();
-    HBox result = new HBox();
-    Button startButton = makeButton(fileName, event -> startSimulation(token, fileName));
-    result.getChildren().add(homeButton);
-    result.getChildren().add(startButton);
-    mainView.getTopGroup().getChildren().add(result);
-    try{
-        Text startupText = new Text();
-        Properties propertyFile = getPropertyFile(fileName);
-        String type = propertyFile.getProperty("Type");
-        String title = propertyFile.getProperty("Title");
-        String author = propertyFile.getProperty("Author");
-        String description = propertyFile.getProperty("Description");
-        startupText.setText(type+ "\n" + title + "\n" + author + "\n" + description);
-        mainView.getCenterGroup().getChildren().add(startupText);
-    }
-    catch (ControllerException e){
-      showError(e.getMessage());
-    }
-  }
 
   private void showError(String message){
     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -222,15 +225,7 @@ public class Controller {
     result.setId(property);
     result.setText(property);
     result.setOnAction(handler);
-    result.setId(property);
     return result;
-  }
-
-  public void startSimulation(String token, String fileName) {
-    mainView.getTopGroup().getChildren().clear();
-    mainView.getCenterGroup().getChildren().clear();
-    currentFileName = fileName;
-    initializeSimulation(fileName + ".csv", token, fileName + "Out.csv");
   }
 
   public void initializeColorMapping(int state) {
@@ -281,6 +276,8 @@ public class Controller {
 
   public void initializeSimulationMenu(){
     HBox test = new HBox();
+    Button saveButton = makeButton("Save", event -> getSaveInputs());
+    test.getChildren().add(saveButton);
     test.getChildren().add(homeButton);
     test.getChildren().add(makeButton("changeColors", event -> changeColorsPopUp()));
     mainView.getTopGroup().getChildren().add(test);
@@ -315,6 +312,10 @@ public class Controller {
     }catch(Exception e){
       showError("Please enter a valid color state mapping");
     }
+  }
+
+  public String getModelType(){
+    return modelType;
   }
 
 }

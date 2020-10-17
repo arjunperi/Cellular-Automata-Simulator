@@ -14,7 +14,7 @@ public class Model {
   private static final boolean PAUSED = true;
 
   public double framesPerModelUpdate = 60;
-  private final String fileOut;
+  private String fileOut;
   protected final Grid gridOfCells;
   private boolean isPaused = false;
   private boolean isStep = false;
@@ -36,7 +36,7 @@ public class Model {
       cycles = 0;
       updateCells();
       gridOfCells.toNextState();
-      writeToCSV();
+      writeToCSV(fileOut);
     }
   }
 
@@ -44,7 +44,7 @@ public class Model {
     gridOfCells.updateCells();
   }
 
-  private void writeToCSV() {
+  public void writeToCSV(String fileOut) {
     if (fileOut != null) {
       gridOfCells.writeToCSV(fileOut);
     }
