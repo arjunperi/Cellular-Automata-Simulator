@@ -9,6 +9,7 @@ import View.View;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
@@ -20,11 +21,13 @@ public class ControllerTest extends DukeApplicationTest {
   private Button buttonTest;
   private Controller mainController;
   private TextField inputTest;
+  private Stage stage;
 
   public void start(final Stage stage) {
     mainController = new Controller();
-    stage.setScene(mainController.setupScene());
-    stage.show();
+    this.stage = stage;
+    this.stage.setScene(mainController.setupScene());
+    this.stage.show();
   }
 
   @Test
@@ -422,4 +425,31 @@ public class ControllerTest extends DukeApplicationTest {
     assertEquals("0xffc0cbff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
   }
 
+//  @Test
+//  public void testSaveSimulationProperties(){
+//    javafxRun(() -> mainController.initializeButtonMenu());
+//    inputTest = lookup("#inputTextBox").query();
+//    inputTest.setText("ConwayStatesPulsar");
+//    press(KeyCode.ENTER);
+//    javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
+//    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv",
+//            "Test/ConwayStatesPulsarOut.csv"));
+//    buttonTest = lookup("#Save").queryButton();
+//    clickOn(buttonTest);
+//    TextField titleTest = lookup("#titleInput").query();
+//    TextField authorTest = lookup("#authorInput").query();
+//    TextField descriptionTest = lookup("#descriptionInput").query();
+//    titleTest.setText("TestPulsarSave");
+//    authorTest.setText("TestPulsarAuthorSave");
+//    descriptionTest.setText("TestPulsarDescriptionSave");
+//    Button okTest = lookup("#SaveOK").queryButton();
+//    clickOn(okTest);
+//    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv",
+//            "Test/ConwayStatesPulsarOut.csv"));
+//    buttonTest = lookup("#Home").queryButton();
+//    javafxRun(() -> stage.close());
+//    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv",
+//            "Test/ConwayStatesPulsarOut.csv"));
+//    assertEquals("TestPulsarDescriptionSave", mainController.getPropertyFile("TestPulsarSave").getProperty("Description"));
+//  }
 }

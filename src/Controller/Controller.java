@@ -138,29 +138,43 @@ public class Controller {
     }
     catch (NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
         showError("Invalid Model Type");
+        initializeButtonMenu();
     }
   }
 
-  private void getSaveInputs(){
-    JTextField Title = new JTextField();
-    JTextField Author = new JTextField();
-    JTextField Description = new JTextField();
-    Object[] message = {
-            "Title:", Title,
-            "Author:", Author,
-            "Description", Description
-    };
-    int n = JOptionPane.showConfirmDialog(null, message, "Enter Save File Details", JOptionPane.OK_CANCEL_OPTION);
-    saveList.put("Title", Title.getText());
-    saveList.put("Author", Author.getText());
-    saveList.put("Description", Description.getText());
-    if (n != JOptionPane.CLOSED_OPTION && n != JOptionPane.CANCEL_OPTION){
+  public void getSaveInputs(){
+    mainModel.setPaused();
+    Dialog saveBox = new TextInputDialog();
+    saveBox.getDialogPane().lookupButton(ButtonType.OK).setId("SaveOK");
+    TextField titleInput = new TextField();
+    titleInput.setId("titleInput");
+    TextField authorInput = new TextField();
+    authorInput.setId("authorInput");
+    TextField descriptionInput = new TextField();
+    descriptionInput.setId("descriptionInput");
+    GridPane grid = new GridPane();
+    titleInput.setPromptText("Title: ");
+    authorInput.setPromptText("Author: ");
+    descriptionInput.setPromptText("Description: ");
+    GridPane.setConstraints(titleInput,0,0);
+    grid.getChildren().add(titleInput);
+    GridPane.setConstraints(authorInput,0,1);
+    grid.getChildren().add(authorInput);
+    GridPane.setConstraints(descriptionInput,0,2);
+    grid.getChildren().add(descriptionInput);
+    saveBox.getDialogPane().setContent(grid);
+    Optional<String> result = saveBox.showAndWait();
+    saveList.put("Title", titleInput.getText());
+    saveList.put("Author", authorInput.getText());
+    saveList.put("Description", descriptionInput.getText());
+    if (result.isPresent()){
       writeToPropertyFile();
       mainModel.writeToCSV(saveList.get("Title") + ".csv");
     }
+    mainModel.switchPause();
   }
 
-  private void writeToPropertyFile(){
+  public void writeToPropertyFile(){
     try (OutputStream output = new FileOutputStream("Properties/" + saveList.get("Title") + ".properties")) {
       Properties prop = new Properties();
       prop.setProperty("Type", modelType);
@@ -168,7 +182,6 @@ public class Controller {
       prop.setProperty("Author", saveList.get("Author"));
       prop.setProperty("Description", saveList.get("Description"));
       prop.store(output, null);
-      System.out.println(saveList);
     } catch (IOException ex) {
       ex.printStackTrace();
     }
@@ -312,10 +325,6 @@ public class Controller {
     }catch(Exception e){
       showError("Please enter a valid color state mapping");
     }
-  }
-
-  public String getModelType(){
-    return modelType;
   }
 
 }
