@@ -6,6 +6,7 @@ import View.View;
 import View.FrontEndCell;
 
 
+import cellsociety.Simulation;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -23,14 +24,20 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
+import javafx.stage.Stage;
 import org.apache.commons.lang3.concurrent.ConcurrentRuntimeException;
 
 
@@ -41,6 +48,10 @@ public class Controller {
   private Model mainModel;
   private final View mainView;
   private boolean simIsSet = false;
+
+  private Map<Integer, XYChart.Series> stateSeries = new HashMap<>();
+  private Map<Integer, Integer> stateCountsMap = new HashMap<>();
+  private int graphCount = 0;
 
   private static final String RESOURCES = "Resources/";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES.replace("/", ".");
@@ -88,6 +99,7 @@ public class Controller {
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.viewStep(this.frontEndCellColors);
     }
+    if(stateCountsMap.size() > 0) updateGraph();
   }
 
   private List<List<String>> updateFrontEndCellColors() {
@@ -243,6 +255,7 @@ public class Controller {
     HBox test = new HBox();
     test.getChildren().add(homeButton);
     test.getChildren().add(makeButton("changeColors", event -> changeColorsPopUp()));
+    test.getChildren().add(makeButton("test", event -> testGraph()));
     mainView.getTopGroup().getChildren().add(test);
   }
 
@@ -276,6 +289,69 @@ public class Controller {
       showError("Please enter a valid color state mapping");
     }
   }
+
+  public void testGraph(){
+    this.stateCountsMap = new HashMap<>();
+    this.stateSeries = new HashMap<>();
+    graphCount = 0;
+    initializeStateCounts();
+    initializeStateSeries();
+
+    Stage test = new Stage();
+
+    final NumberAxis xAxis = new NumberAxis();
+    final NumberAxis yAxis = new NumberAxis();
+    final LineChart<Number,Number> lineChart =
+        new LineChart<Number,Number>(xAxis,yAxis);
+
+    lineChart.setTitle("Test");
+
+    for(XYChart.Series series:this.stateSeries.values()){
+      lineChart.getData().add(series);
+    }
+
+    Scene test2 = new Scene(lineChart, Simulation.SCENE_WIDTH, Simulation.SCENE_HEIGHT, Simulation.BACKGROUND);
+    test.setScene(test2);
+    test.show();
+  }
+
+  public void updateGraph(){
+    updateStateCounts();
+    for(int currentState : this.stateCountsMap.keySet()){
+      int currentStateCount = this.stateCountsMap.get(currentState);
+      System.out.print(currentStateCount);
+      XYChart.Series currentStateSeries = this.stateSeries.get(currentState);
+      currentStateSeries.getData().add(new XYChart.Data(graphCount,currentStateCount));
+    }
+  }
+  public void updateStateCounts(){
+    graphCount ++;
+    initializeStateCounts();
+    for(int row=0; row<mainModel.getNumberOfRows();row++) {
+      for(int column=0; column< mainModel.getNumberOfColumns(); column++) {
+        int currentState = mainModel.getCellState(row,column);
+        this.stateCountsMap.put(currentState, this.stateCountsMap.getOrDefault(currentState,0) + 1);
+      }
+    }
+  }
+
+
+  public void initializeStateCounts(){
+    Properties propertyFile = getPropertyFile(currentFileName);
+    String currentStates = propertyFile.getProperty("States");
+    for(String stateString:currentStates.split(",")){
+      this.stateCountsMap.put(Integer.parseInt(stateString),0);
+    }
+  }
+
+  public void initializeStateSeries(){
+    for(Integer state:this.stateCountsMap.keySet()){
+      XYChart.Series currentSeries = new Series();
+      currentSeries.setName("State:" + state);
+      this.stateSeries.put(state, currentSeries);
+    }
+  }
+
 
 }
 
