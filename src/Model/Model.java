@@ -31,13 +31,15 @@ public class Model {
     this.fileOut = fileOut;
   }
 
-  public void modelStep() {
+  public boolean modelStep() {
     if ((!isPaused && checkTimeElapsed()) || isStep) {
       cycles = 0;
       updateCells();
       gridOfCells.toNextState();
       writeToCSV();
+      return true;
     }
+    return false;
   }
 
   public void updateCells() {

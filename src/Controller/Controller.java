@@ -17,12 +17,14 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javafx.collections.FXCollections;
 
 import javafx.event.Event;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -34,6 +36,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
@@ -48,10 +51,13 @@ public class Controller {
   private Model mainModel;
   private final View mainView;
   private boolean simIsSet = false;
+  private boolean graphShowing = false;
 
   private Map<Integer, XYChart.Series> stateSeries = new HashMap<>();
   private Map<Integer, Integer> stateCountsMap = new HashMap<>();
   private int graphCount = 0;
+  private Scene graphScene;
+  private LineChart<Number,Number> lineChart;
 
   private static final String RESOURCES = "Resources/";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES.replace("/", ".");
@@ -95,11 +101,12 @@ public class Controller {
 
   public void gameStep() {
     if (simIsSet) {
-      mainModel.modelStep();
+      if(mainModel.modelStep() && graphShowing){
+        updateGraph();
+      }
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.viewStep(this.frontEndCellColors);
     }
-    if(stateCountsMap.size() > 0) updateGraph();
   }
 
   private List<List<String>> updateFrontEndCellColors() {
@@ -297,34 +304,36 @@ public class Controller {
     initializeStateCounts();
     initializeStateSeries();
 
+    graphShowing = true;
     Stage test = new Stage();
 
     final NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
-    final LineChart<Number,Number> lineChart =
-        new LineChart<Number,Number>(xAxis,yAxis);
+    this.lineChart =
+        new LineChart<>(xAxis,yAxis);
 
-    lineChart.setTitle("Test");
+    lineChart.setTitle("Graph");
 
     for(XYChart.Series series:this.stateSeries.values()){
       lineChart.getData().add(series);
     }
 
-    Scene test2 = new Scene(lineChart, Simulation.SCENE_WIDTH, Simulation.SCENE_HEIGHT, Simulation.BACKGROUND);
-    test.setScene(test2);
+    this.graphScene = new Scene(lineChart, Simulation.SCENE_WIDTH, Simulation.SCENE_HEIGHT, Simulation.BACKGROUND);
+    test.setScene(graphScene);
     test.show();
+    test.setOnCloseRequest(event -> graphShowing = false);
   }
 
   public void updateGraph(){
     updateStateCounts();
     for(int currentState : this.stateCountsMap.keySet()){
       int currentStateCount = this.stateCountsMap.get(currentState);
-      System.out.print(currentStateCount);
       XYChart.Series currentStateSeries = this.stateSeries.get(currentState);
       currentStateSeries.getData().add(new XYChart.Data(graphCount,currentStateCount));
     }
   }
   public void updateStateCounts(){
+    setSeriesColor();
     graphCount ++;
     initializeStateCounts();
     for(int row=0; row<mainModel.getNumberOfRows();row++) {
@@ -347,10 +356,25 @@ public class Controller {
   public void initializeStateSeries(){
     for(Integer state:this.stateCountsMap.keySet()){
       XYChart.Series currentSeries = new Series();
-      currentSeries.setName("State:" + state);
+      currentSeries.setName("state: "+state);
       this.stateSeries.put(state, currentSeries);
     }
   }
+
+  public void setSeriesColor(){
+    for(int currentState : this.stateSeries.keySet()){
+      Set<Node> nodes = this.lineChart.lookupAll(".series"+currentState);
+      for(Node node:nodes){
+        StringBuilder style = new StringBuilder();
+        //style.append("-fx-stroke: #e9967a; ");
+        //style.append("-fx-background-color: #e9967a, white");
+        style.append("-fx-stroke: #" + Color.web(stateColorMapping.get(currentState)).toString().substring(2, 8)  +"; ");
+        style.append("-fx-background-color: #" + Color.web(stateColorMapping.get(currentState)).toString().substring(2, 8)+ ", white");
+        node.setStyle(style.toString());
+      }
+    }
+  }
+
 
 
 }
