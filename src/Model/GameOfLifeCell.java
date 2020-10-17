@@ -3,6 +3,7 @@ package Model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Queue;
 
 public class GameOfLifeCell extends Cell {
 
@@ -10,8 +11,8 @@ public class GameOfLifeCell extends Cell {
       {0, 1}, {1, 1}, {1, 0}, {1, -1},
       {0, -1}, {-1, -1}};
 
-  public GameOfLifeCell(int state) {
-    super(state);
+  public GameOfLifeCell(int state, Queue<Cell> emptyQueue) {
+    super(state, emptyQueue);
   }
 
   @Override

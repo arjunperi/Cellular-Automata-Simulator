@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Random;
 import org.assertj.core.data.MapEntry;
 
@@ -34,6 +35,8 @@ public class RPSCell extends Cell {
 //      new AbstractMap.SimpleEntry<>( 13, List.of(14,0,1,2,3,4,5)),
 //      new AbstractMap.SimpleEntry<>( 14, List.of(0,1,2,3,4,5,6)));
 
+
+  //DEFINE IN PROPERTIES FILES
   Map<Integer, List<Integer>> RPSMap = Map.of(
       0, List.of(1,2),
       1, List.of(2,3),
@@ -42,8 +45,8 @@ public class RPSCell extends Cell {
       4, List.of(0,1));
 
 
-  public RPSCell(int state) {
-    super(state);
+  public RPSCell(int state, Queue<Cell> emptyQueue) {
+    super(state, emptyQueue);
   }
 
   @Override

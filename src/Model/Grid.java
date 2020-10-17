@@ -3,6 +3,7 @@ package Model;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
+import java.util.Queue;
 import javafx.scene.control.Alert;
 
 import java.io.*;
@@ -19,7 +20,7 @@ public class Grid {
   private final double cellsPerColumn;
 
 
-  public Grid(String fileName, String modelType) {
+  public Grid(String fileName, String modelType, Queue<Cell> emptyQueue) {
     List<String[]> cellStates = readAll(fileName);
     String fullModelClassName = "Model." + modelType + "Cell";
     String[] firstRow = cellStates.get(0);
@@ -34,7 +35,7 @@ public class Grid {
         for (String stateString : row) {
           int state = Integer.parseInt(stateString);
           Class<?> cl = Class.forName(fullModelClassName);
-          Cell cellToAdd = (Cell) cl.getConstructor(int.class).newInstance(state);
+          Cell cellToAdd = (Cell) cl.getConstructor(int.class, Queue.class).newInstance(state, emptyQueue);
           cellRow.add(cellToAdd);
         }
         gridOfCells.add(cellRow);
@@ -73,10 +74,16 @@ public class Grid {
     return neighbors;
   }
 
+  //make neighborhoods and have cells have access to neighborhood
+  //use interface to get neighborhood, egt empty cells throughout the grid.
+  //cast the grid to the interface, pass it into the cell.
+    //this interface will define neighborhood, as well as the list/way to get empty cells.
+
   protected void updateCells() {
     for (int row = 0; row < gridOfCells.size(); row++) {
       for (int column = 0; column < gridOfCells.get(0).size(); column++) {
         List<Cell> cellNeighbors = getNeighbors(row, column, gridOfCells.get(row).get(column));
+
         getCell(row, column).updateState(cellNeighbors);
       }
     }

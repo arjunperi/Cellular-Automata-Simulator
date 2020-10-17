@@ -3,6 +3,7 @@ package Model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 
 public class SpreadingFireCell extends Cell {
@@ -17,8 +18,8 @@ public class SpreadingFireCell extends Cell {
   public static final double PROB_CATCH_FIRE = .5;
   public static final Random RANDOM_NUMBER_GEN = new Random();
 
-  public SpreadingFireCell(int state) {
-    super(state);
+  public SpreadingFireCell(int state, Queue<Cell> emptyQueue) {
+    super(state, emptyQueue);
   }
 
   /**

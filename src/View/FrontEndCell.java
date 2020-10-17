@@ -8,8 +8,8 @@ import javafx.scene.shape.Rectangle;
 public class FrontEndCell extends Rectangle{
 
   private Paint cellStateColor;
-  private int row;
-  private int column;
+  private final int row;
+  private final int column;
 
   public FrontEndCell(String cellStateColor, double x, double y, double width, double height, int row, int col) {
     super(x, y, width, height);

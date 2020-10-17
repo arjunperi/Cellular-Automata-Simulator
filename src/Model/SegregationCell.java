@@ -1,6 +1,9 @@
 package Model;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class SegregationCell extends Cell{
   public static final int[][] POSSIBLE_NEIGHBORS_SEGREGATION = new int[][]{{-1, 0}, {-1, 1},
@@ -8,9 +11,11 @@ public class SegregationCell extends Cell{
       {0, -1}, {-1, -1}};
   public static final int EMPTY = 0;
   public static final double PERCENT_SIMILAR = .5;
+  private final Queue<Cell> emptyQueue;
 
-  public SegregationCell(int state) {
-    super(state);
+  public SegregationCell(int state, Queue<Cell> emptyQueue) {
+    super(state, emptyQueue);
+    this.emptyQueue=emptyQueue;
   }
 
   @Override
@@ -18,7 +23,11 @@ public class SegregationCell extends Cell{
     if (this.getCurrentState() != EMPTY) {
       double percentSimilarInNeighborhood = getPercentageSimilar(neighbors);
       if(percentSimilarInNeighborhood<=PERCENT_SIMILAR) {
-        this.setFutureState(EMPTY);
+        if(!emptyQueue.isEmpty()) {
+          emptyQueue.poll().setFutureState(this.getCurrentState());
+          this.setFutureState(EMPTY);
+          emptyQueue.add(this);
+        }
       }
     }
   }

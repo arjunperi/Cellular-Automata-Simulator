@@ -4,7 +4,9 @@ package Model;
 import cellsociety.Simulation;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import org.assertj.core.internal.bytebuddy.matcher.StringMatcher;
 
 
@@ -15,18 +17,19 @@ public class Model {
   public double framesPerModelUpdate = 60;
   private final String fileOut;
   protected final Grid gridOfCells;
+  protected final Queue<Cell> emptyQueue = new LinkedList<>();
   private boolean isPaused = false;
   private boolean isStep = false;
   private double cycles = 0;
   private List<Integer> allStates;
 
   public Model(String fileName, String modelType) {
-    gridOfCells = new Grid(fileName, modelType);
+    gridOfCells = new Grid(fileName, modelType, emptyQueue);
     this.fileOut = null;
   }
 
   public Model(String fileName, String modelType, String fileOut){
-    gridOfCells = new Grid(fileName, modelType);
+    gridOfCells = new Grid(fileName, modelType, emptyQueue);
     this.fileOut = fileOut;
   }
 
@@ -43,7 +46,7 @@ public class Model {
     gridOfCells.updateCells();
   }
 
-  private void writeToCSV() {
+  public void writeToCSV() {
     if (fileOut != null) {
       gridOfCells.writeToCSV(fileOut);
     }
@@ -85,16 +88,16 @@ public class Model {
     getCell(row, column).cycleNextState(allStates);
   }
 
-  public Grid getGridOfCells() {
-    return gridOfCells;
-  }
-
   public int getNumberOfRows() {
     return (int) gridOfCells.getCellsPerColumn();
   }
 
   public int getNumberOfColumns() {
     return (int) gridOfCells.getCellsPerRow();
+  }
+
+  public Queue<Cell> getQueue() {
+    return emptyQueue;
   }
 
   public void speedUp(){

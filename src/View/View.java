@@ -54,7 +54,7 @@ public class View {
       String stateString = this.frontEndCellColors.get(row).get(column);
       FrontEndCell currentFrontEndCell = new FrontEndCell(stateString, x, y, xOffset, yOffset, row , column);
       frontEndCellRow.add(currentFrontEndCell);
-      currentFrontEndCell.setId("cell" + row + column);
+      currentFrontEndCell.setId("cell" + row*frontEndCellColors.get(0).size() + column);
       root.getChildren().add(currentFrontEndCell);
     }
 

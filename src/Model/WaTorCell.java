@@ -2,6 +2,7 @@ package Model;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Queue;
 
 public class WaTorCell extends Cell{
   public static final int[][] POSSIBLE_NEIGHBORS_SEGREGATION = new int[][]{{-1, 0}, {0, 1},  {1, 0}, {0, -1}};
@@ -16,8 +17,8 @@ public class WaTorCell extends Cell{
   public static final int SHARK_BREEDING = 15;
   public static final int SHARK_STARVE = 10;
 
-  public WaTorCell(int state) {
-    super(state);
+  public WaTorCell(int state, Queue<Cell> emptyQueue) {
+    super(state, emptyQueue);
   }
 
   @Override
