@@ -403,13 +403,18 @@ public class ControllerTest extends DukeApplicationTest {
     assertThrows(ControllerException.class, () -> testController.getPropertyFile("nonexistent"));
   }
 
-//  @Test
-//  public void testInvalidCsvDimensions(){
-//  }
+  @Test
+  public void testInvalidCsvDimensions(){
+    javafxRun(() -> mainController.initializeButtonMenu());
+    inputTest = lookup("#inputTextBox").query();
+    inputTest.setText("ConwayStatesBeacon");
+    press(KeyCode.ENTER);
+    javafxRun(() ->  mainController.displayInfo("ConwayStatesBeacon"));
+    assertThrows(IllegalStateException.class, () ->  mainController.initializeSimulation("Test/ConwayStatesBeaconError.csv",
+            "Test/ConwayStatesBeaconErrorOut.csv"));
+  }
 
-//  @Test
-//  public void testKeyNotFound(){}
-//
+
   @Test
   public void testupdateColorStateMapping(){
     javafxRun(() -> mainController.initializeButtonMenu());
@@ -452,4 +457,8 @@ public class ControllerTest extends DukeApplicationTest {
 //            "Test/ConwayStatesPulsarOut.csv"));
 //    assertEquals("TestPulsarDescriptionSave", mainController.getPropertyFile("TestPulsarSave").getProperty("Description"));
 //  }
+
+  //  @Test
+//  public void testDefaultKeyPlacement(){}
+//
 }

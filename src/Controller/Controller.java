@@ -57,6 +57,11 @@ public class Controller {
   private TextField inputText;
   private Map<String, String> saveList = new HashMap<>();
 
+  private OutputStream propertiesPath;
+  private FileWriter writer;
+
+  private Map<String, String> propertyFills = new HashMap<>();
+
   public Controller() {
     this.mainView = new View();
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "English");
@@ -71,13 +76,11 @@ public class Controller {
     inputText.setId("inputTextBox");
     EventHandler<ActionEvent> event = e -> {
       String fileChosen = inputText.getText();
-      try{
+      try {
         Properties propertyFile = getPropertyFile(fileChosen);
         modelType = propertyFile.getProperty("Type");
-        System.out.println(modelType);
         displayInfo(fileChosen);
-      }
-      catch (ControllerException c){
+      } catch (ControllerException c) {
         showError(c.getMessage());
       }
     };
@@ -88,7 +91,7 @@ public class Controller {
     mainView.getCenterGroup().getChildren().add(result);
   }
 
-  public void displayInfo(String fileName){
+  public void displayInfo(String fileName) {
     mainView.getCenterGroup().getChildren().clear();
     HBox result = new HBox();
     currentFileName = fileName;
@@ -96,17 +99,16 @@ public class Controller {
     result.getChildren().add(startButton);
     result.getChildren().add(homeButton);
     mainView.getTopGroup().getChildren().add(result);
-    try{
+    try {
       Text startupText = new Text();
       Properties propertyFile = getPropertyFile(fileName);
       String type = propertyFile.getProperty("Type");
       String title = propertyFile.getProperty("Title");
       String author = propertyFile.getProperty("Author");
       String description = propertyFile.getProperty("Description");
-      startupText.setText(type+ "\n" + title + "\n" + author + "\n" + description);
+      startupText.setText(type + "\n" + title + "\n" + author + "\n" + description);
       mainView.getCenterGroup().getChildren().add(startupText);
-    }
-    catch (ControllerException e){
+    } catch (ControllerException e) {
       showError(e.getMessage());
     }
   }
@@ -118,31 +120,42 @@ public class Controller {
     stateColorMapping.clear();
     try {
       Class<?> cl = Class.forName("Model." + modelType + "Model");
-      this.mainModel = (Model) cl.getConstructor(String.class,String.class,String.class).newInstance(fileName, modelType, fileOut);
+      this.mainModel = (Model) cl.getConstructor(String.class, String.class, String.class).newInstance(fileName, modelType, fileOut);
       Properties propertyFile = getPropertyFile(currentFileName);
+
+
+//      fileName = fileName.replace(".csv", "");
+      //propertiesPath = new FileOutputStream("Properties/" + fileName + ".properties");
+     // writer = new FileWriter("Properties/" + fileName + ".properties", true);
+//
+//      if (!propertyFile.containsKey("States") || propertyFile.getProperty("States") == null) {
+//        Properties defaultFile = getPropertyFile(modelType + "Default");
+//        String defaultStates = defaultFile.getProperty("States");
+//        propertyFills.putIfAbsent("States", defaultStates);
+//        updateProperties(propertyFile, writer);
+//      }
+
       mainModel.initializeAllStates(propertyFile.getProperty("States"));
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
-          mainModel.getNumberOfColumns(), frontEndCellColors);
+              mainModel.getNumberOfColumns(), frontEndCellColors);
       simIsSet = true;
       addCellEventHandlers();
       initializeSimulationMenu();
-//      VBox result = new VBox();
-//      Button saveButton = makeButton("Save", event -> getSaveInputs());
-//      result.getChildren().add(homeButton);
-//      result.getChildren().add(saveButton);
-//      mainView.getRoot().setTop(result);
-    }
-    catch (InvocationTargetException e){
+    } catch (InvocationTargetException e) {
       showError((e.getTargetException().getMessage()));
+    } catch (NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+      showError("Invalid Model Type");
+      initializeButtonMenu();
     }
-    catch (NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-        showError("Invalid Model Type");
-        initializeButtonMenu();
-    }
+//    catch (FileNotFoundException e) {
+//      e.printStackTrace();
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
   }
 
-  public void getSaveInputs(){
+  public void getSaveInputs() {
     mainModel.setPaused();
     Dialog saveBox = new TextInputDialog();
     saveBox.getDialogPane().lookupButton(ButtonType.OK).setId("SaveOK");
@@ -156,32 +169,31 @@ public class Controller {
     titleInput.setPromptText("Title: ");
     authorInput.setPromptText("Author: ");
     descriptionInput.setPromptText("Description: ");
-    GridPane.setConstraints(titleInput,0,0);
+    GridPane.setConstraints(titleInput, 0, 0);
     grid.getChildren().add(titleInput);
-    GridPane.setConstraints(authorInput,0,1);
+    GridPane.setConstraints(authorInput, 0, 1);
     grid.getChildren().add(authorInput);
-    GridPane.setConstraints(descriptionInput,0,2);
+    GridPane.setConstraints(descriptionInput, 0, 2);
     grid.getChildren().add(descriptionInput);
     saveBox.getDialogPane().setContent(grid);
     Optional<String> result = saveBox.showAndWait();
-    saveList.put("Title", titleInput.getText());
-    saveList.put("Author", authorInput.getText());
-    saveList.put("Description", descriptionInput.getText());
-    if (result.isPresent()){
+    propertyFills.put("Title", titleInput.getText());
+    propertyFills.put("Author", authorInput.getText());
+    propertyFills.put("Description", descriptionInput.getText());
+    if (result.isPresent()) {
       writeToPropertyFile();
-      mainModel.writeToCSV(saveList.get("Title") + ".csv");
+      mainModel.writeToCSV(propertyFills.get("Title") + ".csv");
     }
     mainModel.switchPause();
   }
 
-  public void writeToPropertyFile(){
-    try (OutputStream output = new FileOutputStream("Properties/" + saveList.get("Title") + ".properties")) {
+  public void writeToPropertyFile() {
+    try {
+      FileWriter writer = new FileWriter("Properties/" + propertyFills.get("Title") + ".properties");
       Properties prop = new Properties();
-      prop.setProperty("Type", modelType);
-      prop.setProperty("Title", saveList.get("Title"));
-      prop.setProperty("Author", saveList.get("Author"));
-      prop.setProperty("Description", saveList.get("Description"));
-      prop.store(output, null);
+      propertyFills.put("Type", modelType);
+      updateProperties(prop, writer);
+      System.out.println("write");
     } catch (IOException ex) {
       ex.printStackTrace();
     }
@@ -198,14 +210,14 @@ public class Controller {
 
   private List<List<String>> updateFrontEndCellColors() {
     List<List<String>> frontEndCellColors = new ArrayList<>();
-    for(int row=0; row<mainModel.getNumberOfRows();row++) {
+    for (int row = 0; row < mainModel.getNumberOfRows(); row++) {
       List<String> colorRow = new ArrayList<>();
-      for(int column=0; column< mainModel.getNumberOfColumns(); column++) {
-        int currentState = mainModel.getCellState(row,column);
-        if(!stateColorMapping.containsKey(currentState)) {
+      for (int column = 0; column < mainModel.getNumberOfColumns(); column++) {
+        int currentState = mainModel.getCellState(row, column);
+        if (!stateColorMapping.containsKey(currentState)) {
           initializeColorMapping(currentState);
         }
-        colorRow.add(stateColorMapping.get(mainModel.getCellState(row,column)));
+        colorRow.add(stateColorMapping.get(mainModel.getCellState(row, column)));
       }
       frontEndCellColors.add(colorRow);
     }
@@ -225,7 +237,7 @@ public class Controller {
   }
 
 
-  private void showError(String message){
+  private void showError(String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle("Controller Error");
     alert.setContentText(message);
@@ -233,7 +245,7 @@ public class Controller {
   }
 
 
-  private Button makeButton (String property, EventHandler<ActionEvent> handler) {
+  private Button makeButton(String property, EventHandler<ActionEvent> handler) {
     Button result = new Button();
     result.setId(property);
     result.setText(property);
@@ -243,6 +255,13 @@ public class Controller {
 
   public void initializeColorMapping(int state) {
     Properties propertyFile = getPropertyFile(currentFileName);
+    
+//    if (!propertyFile.containsKey(String.valueOf(state)) || propertyFile.getProperty(String.valueOf(state)) == null) {
+//      Properties defaultFile = getPropertyFile(modelType + "Default");
+//      String defaultColor = defaultFile.getProperty(String.valueOf(state));
+//      propertyFills.putIfAbsent(String.valueOf(state), defaultColor);
+//      updateProperties(propertyFile,writer);
+//    }
     String color = propertyFile.getProperty(String.valueOf(state));
     if (!stateColorMapping.containsKey(state)) {
       stateColorMapping.put(state, color);
@@ -266,20 +285,20 @@ public class Controller {
       case P -> mainModel.switchPause();
       case S -> mainModel.step();
       case W -> mainModel.speedUp();
-      case Q-> mainModel.slowDown();
+      case Q -> mainModel.slowDown();
     }
   }
 
   public void addCellEventHandlers() {
     List<List<FrontEndCell>> frontEndCells = this.mainView.getFrontEndCellGrid();
-    for(List<FrontEndCell> cellRow : frontEndCells){
-      for(FrontEndCell cell : cellRow){
+    for (List<FrontEndCell> cellRow : frontEndCells) {
+      for (FrontEndCell cell : cellRow) {
         cell.setOnMouseClicked(this::changeClickedCellState);
       }
     }
   }
 
-  public void changeClickedCellState(Event event){
+  public void changeClickedCellState(Event event) {
     EventTarget clickedEvent = event.getTarget();
     FrontEndCell clickedCell = (FrontEndCell) clickedEvent;
     int clickedCellRow = clickedCell.getRow();
@@ -287,7 +306,7 @@ public class Controller {
     mainModel.cycleState(clickedCellRow, clickedCellColumn);
   }
 
-  public void initializeSimulationMenu(){
+  public void initializeSimulationMenu() {
     HBox test = new HBox();
     Button saveButton = makeButton("Save", event -> getSaveInputs());
     test.getChildren().add(saveButton);
@@ -296,7 +315,7 @@ public class Controller {
     mainView.getTopGroup().getChildren().add(test);
   }
 
-  public void changeColorsPopUp(){
+  public void changeColorsPopUp() {
     mainModel.setPaused();
     Dialog colorBox = new TextInputDialog();
     TextField colorInput = new TextField();
@@ -306,27 +325,37 @@ public class Controller {
     GridPane grid = new GridPane();
     colorInput.setPromptText("New Color");
     stateInput.setPromptText("State to Change");
-    GridPane.setConstraints(stateInput,0,0);
+    GridPane.setConstraints(stateInput, 0, 0);
     grid.getChildren().add(stateInput);
-    GridPane.setConstraints(colorInput,0,1);
+    GridPane.setConstraints(colorInput, 0, 1);
     grid.getChildren().add(colorInput);
     colorBox.getDialogPane().setContent(grid);
     colorBox.showAndWait();
-    updateColorStateMapping(stateInput.getText(),colorInput.getText());
+    updateColorStateMapping(stateInput.getText(), colorInput.getText());
     mainModel.switchPause();
   }
 
-  public void updateColorStateMapping(String state, String color){
-    try{
+  public void updateColorStateMapping(String state, String color) {
+    try {
       int stateInt = Integer.parseInt(state);
-      if(!this.stateColorMapping.containsKey(stateInt)) throw new IllegalArgumentException();
+      if (!this.stateColorMapping.containsKey(stateInt)) throw new IllegalArgumentException();
       Paint.valueOf(color);
-      this.stateColorMapping.put(stateInt,color);
-    }catch(Exception e){
+      this.stateColorMapping.put(stateInt, color);
+    } catch (Exception e) {
       showError("Please enter a valid color state mapping");
     }
   }
 
+  private void updateProperties(Properties propertyFile, FileWriter writer) {
+    try {
+      for (String property : propertyFills.keySet()) {
+          propertyFile.setProperty(property, propertyFills.get(property));
+      }
+      propertyFile.store(writer, null);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }
 
 
