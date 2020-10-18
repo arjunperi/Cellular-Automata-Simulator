@@ -53,7 +53,7 @@ public class Grid {
 
   private void checkCSVDimensions(int columnCheck, int rowCheck){
     if (!(columnCheck == cellsPerColumn && rowCheck == cellsPerRow)){
-      showError("Invalid CSV Dimensions");
+      //showError("Invalid CSV Dimensions");
       throw new ModelException("Invalid CSV");
     }
   }

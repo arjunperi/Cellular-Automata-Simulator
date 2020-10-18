@@ -29,7 +29,7 @@ import javafx.util.Duration;
  */
 public class Simulation extends Application {
 
-  public static final String TITLE = "Percolation";
+  public static final String TITLE = "Cellular Automata";
 
   public static final Paint BACKGROUND = Color.AZURE;
   public static final double FRAMES_PER_SECOND = 60;
