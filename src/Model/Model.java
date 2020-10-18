@@ -16,7 +16,7 @@ public class Model {
   private static final boolean PAUSED = true;
 
   public double framesPerModelUpdate = 60;
-  private final String fileOut;
+  private String fileOut;
   protected final Grid gridOfCells;
   protected final Queue<Cell> emptyQueue = new LinkedList<>();
   private boolean isPaused = false;
@@ -39,7 +39,7 @@ public class Model {
       cycles = 0;
       updateCells();
       gridOfCells.toNextState();
-      writeToCSV();
+      writeToCSV(fileOut);
     }
   }
 
@@ -47,7 +47,8 @@ public class Model {
     gridOfCells.updateCells();
   }
 
-  public void writeToCSV() {
+
+  public void writeToCSV(String fileOut) {
     if (fileOut != null) {
       gridOfCells.writeToCSV(fileOut);
     }
