@@ -15,12 +15,12 @@ public class CSVWriteTest extends DukeApplicationTest {
   public void testWriteConwayToad() {
     Controller testController = new Controller();
     testController.startSimulation("GameOfLife","ConwayStatesToad");
-    testController.initializeSimulation("Test/ConwayStatesToad.csv", "GameOfLife", "Test/ConwayStatesToadOut.csv");
+    testController.initializeSimulation("ConwayStatesToad.csv", "GameOfLife", "ConwayStatesToadOut.csv");
     View testView = testController.getMainView();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(7).get(10);
     assertEquals("0x000000ff", currentCell.getCellColor());
     testController.handleKeyInput(KeyCode.S);
-    testController.initializeSimulation("Test/ConwayStatesToadOut.csv", "GameOfLife", "Test/ConwayStatesToadOut.csv");
+    testController.initializeSimulation("ConwayStatesToadOut.csv", "GameOfLife", "ConwayStatesToadOut.csv");
     View testViewOut = testController.getMainView();
     currentCell = testViewOut.getFrontEndCellGrid().get(7).get(10);
     assertEquals("0xffffffff", currentCell.getCellColor());
@@ -30,12 +30,12 @@ public class CSVWriteTest extends DukeApplicationTest {
   public void testWriteConwayPulsar() {
     Controller testController = new Controller();
     testController.startSimulation("GameOfLife","ConwayStatesPulsar");
-    testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife", "Test/ConwayStatesPulsarOut.csv");
+    testController.initializeSimulation("ConwayStatesPulsar.csv", "GameOfLife", "ConwayStatesPulsarOut.csv");
     View testView = testController.getMainView();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(4).get(5);
     assertEquals("0x000000ff", currentCell.getCellColor());
     testController.handleKeyInput(KeyCode.S);
-    testController.initializeSimulation("Test/ConwayStatesPulsarOut.csv", "GameOfLife", "Test/ConwayStatesPulsarOut.csv");
+    testController.initializeSimulation("ConwayStatesPulsarOut.csv", "GameOfLife", "ConwayStatesPulsarOut.csv");
     View testViewOut = testController.getMainView();
     currentCell = testViewOut.getFrontEndCellGrid().get(4).get(5);
     assertEquals("0xffffffff", currentCell.getCellColor());

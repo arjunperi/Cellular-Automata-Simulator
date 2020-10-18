@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Queue;
 
 public class WaTorCell extends Cell{
-  public static final int[][] POSSIBLE_NEIGHBORS_SEGREGATION = new int[][]{{-1, 0}, {0, 1},  {1, 0}, {0, -1}};
   private int stepsAlive=1;
   private int stepsAfterEating=1;
   private int stepsAfterEatingFuture=1;
@@ -106,10 +105,5 @@ public class WaTorCell extends Cell{
     currentState = futureState;
     stepsAlive=stepsAliveFuture;
     stepsAfterEating=stepsAfterEatingFuture;
-  }
-
-  @Override
-  public int[][] getPossibleNeighbors() {
-    return POSSIBLE_NEIGHBORS_SEGREGATION;
   }
 }

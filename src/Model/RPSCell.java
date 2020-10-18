@@ -13,10 +13,6 @@ import org.assertj.core.data.MapEntry;
 
 public class RPSCell extends Cell {
 
-  public static final List<Integer> POSSIBLE_STATES = new ArrayList<>(Arrays.asList(0,1,2,3,4,5));
-  public static final int[][] POSSIBLE_NEIGHBORS_RPS = new int[][]{{-1, 0}, {-1, 1}, {0, 1}, {1, 1},
-      {1, 0}, {1, -1},
-      {0, -1}, {-1, -1}};
   public static final int THRESHOLD = 2;
 //  Map<Integer, List<Integer>> RPSMap = Map.ofEntries(
 //      new AbstractMap.SimpleEntry<>( 0, List.of(1,2,3,4,5,6,7)),
@@ -75,10 +71,5 @@ public class RPSCell extends Cell {
       }
     }
     return mostCommonState;
-  }
-
-  @Override
-  public int[][] getPossibleNeighbors() {
-    return POSSIBLE_NEIGHBORS_RPS;
   }
 }

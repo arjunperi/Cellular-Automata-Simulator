@@ -1,8 +1,12 @@
 package Model;
 
+import Controller.Controller;
+import Controller.ControllerException;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
+import java.util.Arrays;
+import java.util.Properties;
 import java.util.Queue;
 import javafx.scene.control.Alert;
 
@@ -15,12 +19,17 @@ import java.util.List;
 public class Grid {
 
   private final List<List<Cell>> gridOfCells = new ArrayList<>();
+  private static final String TOROIDAL = "TOROIDAL";
+  private static final String FINITE = "FINITE";
+  private static final String OSCILLATING = "OSCILLATING";
   final String PATH = "data/";
   private final double cellsPerRow;
   private final double cellsPerColumn;
+  Properties propertyFile;
 
 
   public Grid(String fileName, String modelType, Queue<Cell> emptyQueue) {
+    this.propertyFile = getPropertyFile(fileName);
     List<String[]> cellStates = readAll(fileName);
     String fullModelClassName = "Model." + modelType + "Cell";
     String[] firstRow = cellStates.get(0);
@@ -59,18 +68,39 @@ public class Grid {
     }
   }
 
-  protected List<Cell> getNeighbors(int x, int y, Cell currentCell) {
-    int[][] allPossibleNeighbors = currentCell.getPossibleNeighbors();
+  protected List<Cell> getNeighbors(int x, int y) {
+    String shapeAndType = propertyFile.getProperty("Shape") + propertyFile.getProperty("NeighborhoodType");
+    int[][] allPossibleNeighbors = neighborhoodTypes.valueOf(shapeAndType).neighborhood;
     List<Cell> neighbors = new ArrayList<>();
-    for (int[] possibleNeighbor : allPossibleNeighbors) {
-      int currentX = x + possibleNeighbor[0];
-      int currentY = y + possibleNeighbor[1];
-      if (currentX < 0 || currentY < 0 || currentX >= getCellsPerColumn()
-          || currentY >= getCellsPerRow()) {
-        continue;
+    if(propertyFile.getProperty("EdgePolicy").equals(TOROIDAL)) {
+      for (int[] possibleNeighbor : allPossibleNeighbors) {
+        int currentX = ((int)getCellsPerRow() + x + possibleNeighbor[0])%(int)getCellsPerRow();
+        int currentY = ((int)getCellsPerRow() + y + possibleNeighbor[1])%(int)getCellsPerColumn();
+        neighbors.add(getCell(currentX, currentY));
       }
-      neighbors.add(getCell(currentX, currentY));
+    } else if(propertyFile.getProperty("EdgePolicy").equals(OSCILLATING)) {
+      for (int[] possibleNeighbor : allPossibleNeighbors) {
+        int currentX = x + possibleNeighbor[0];
+        int currentY = y + possibleNeighbor[1];
+        if (currentX < 0 || currentY < 0 || currentX >= getCellsPerColumn()
+            || currentY >= getCellsPerRow()) {
+          currentX = ((int)getCellsPerRow() + y + possibleNeighbor[1])%(int)getCellsPerColumn();
+          currentY = ((int)getCellsPerRow() + x + possibleNeighbor[0])%(int)getCellsPerRow();
+        }
+        neighbors.add(getCell(currentX, currentY));
+      }
+    } else if(propertyFile.getProperty("EdgePolicy").equals(FINITE)) {
+      for (int[] possibleNeighbor : allPossibleNeighbors) {
+        int currentX = x + possibleNeighbor[0];
+        int currentY = y + possibleNeighbor[1];
+        if (currentX < 0 || currentY < 0 || currentX >= getCellsPerColumn()
+            || currentY >= getCellsPerRow()) {
+          continue;
+        }
+        neighbors.add(getCell(currentX, currentY));
+      }
     }
+
     return neighbors;
   }
 
@@ -82,8 +112,7 @@ public class Grid {
   protected void updateCells() {
     for (int row = 0; row < gridOfCells.size(); row++) {
       for (int column = 0; column < gridOfCells.get(0).size(); column++) {
-        List<Cell> cellNeighbors = getNeighbors(row, column, gridOfCells.get(row).get(column));
-
+        List<Cell> cellNeighbors = getNeighbors(row, column);
         getCell(row, column).updateState(cellNeighbors);
       }
     }
@@ -133,6 +162,53 @@ public class Grid {
 
   public double getCellsPerColumn() {
     return cellsPerColumn;
+  }
+
+  public Properties getPropertyFile(String fileName) {
+    Properties propertyFile = new Properties();
+    try {
+      propertyFile.load(Controller.class.getClassLoader().getResourceAsStream(fileName.replace(".csv","") + ".properties"));
+    } catch (Exception e) {
+      throw new ControllerException("Invalid File Name", e);
+    }
+    return propertyFile;
+  }
+
+  public enum neighborhoodTypes {
+    RECTANGLECARDINAL(new int[][]{{-1, 0},
+        {0, 1}, {1, 0},
+        {0, -1}}),
+    RECTANGLEALL(new int[][]{{-1, 0}, {-1, 1},
+        {0, 1}, {1, 1}, {1, 0}, {1, -1},
+        {0, -1}, {-1, -1}}),
+    RECTANGLECORNER(new int[][]{{-1, 1},
+        {1, 1}, {1, -1},
+        {-1, -1}}),
+    TRIANGLECARDINAL(new int[][]{{-1, 0},
+        {0, 1}, {1, 0},
+        {0, -1}}),
+    TRIANGLECORNER(new int[][]{{-1, 1},
+        {1, 1}, {1, -1},
+        {-1, -1}}),
+    TRIANGLEALL(new int[][]{{-1, 0}, {-1, 1},
+        {0, 1}, {1, 1}, {1, 0}, {1, -1},
+        {0, -1}, {-1, -1}}),
+    HEXAGONALL(new int[][]{{-1, 0}, {-1, 1}, {1, 1}, {1, 0}, {1, -1}, {-1, -1}}),
+    HEXAGONCORNER(new int[][]{{-1, 1},
+        {1, 1}, {1, -1},
+        {-1, -1}}),
+    HEXAGONCARDINAL(new int[][]{{-1, 0}, {-1, 1}, {1, 1}, {1, 0}, {1, -1}, {-1, -1}}),
+    ;
+
+    private final int[][] neighborhood;
+
+    neighborhoodTypes(int[][] neighborhoods) {
+      this.neighborhood= neighborhoods;
+    }
+
+    public int[][] getNeighborhood() {
+      return neighborhood;
+    }
   }
 }
 

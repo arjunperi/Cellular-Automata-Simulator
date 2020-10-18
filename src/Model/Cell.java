@@ -41,8 +41,6 @@ public abstract class Cell {
 
   public abstract void updateState(List<Cell> neighbors);
 
-  public abstract int[][] getPossibleNeighbors();
-
   public void toNextState() {
     currentState = futureState;
   }

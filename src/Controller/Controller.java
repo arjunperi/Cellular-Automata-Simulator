@@ -60,9 +60,7 @@ public class Controller {
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
     try {
-      //Class<?> cl = Class.forName("Model." + modelType + "Model");
       this.mainModel = new Model(fileName, modelType, fileOut);
-//      this.mainModel = (Model) cl.getConstructor(String.class,String.class,String.class).newInstance(fileName, modelType, fileOut);
       Properties propertyFile = getPropertyFile(currentFileName);
       mainModel.initializeAllStates(propertyFile.getProperty("States"));
       this.frontEndCellColors = updateFrontEndCellColors();
@@ -72,7 +70,7 @@ public class Controller {
       addCellEventHandlers();
       mainView.getRoot().setTop(homeButton);
     }
-    catch (/*NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException |*/ ModelException e) {
+    catch (ModelException e) {
         showError("Invalid Model Type");
     }
   }

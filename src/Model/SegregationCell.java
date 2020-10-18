@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Queue;
 
 public class SegregationCell extends Cell{
-  public static final int[][] POSSIBLE_NEIGHBORS_SEGREGATION = new int[][]{{-1, 0}, {-1, 1},
-      {0, 1}, {1, 1}, {1, 0}, {1, -1},
-      {0, -1}, {-1, -1}};
   public static final int EMPTY = 0;
   public static final double PERCENT_SIMILAR = .5;
   private final Queue<Cell> emptyQueue;
@@ -48,10 +45,5 @@ public class SegregationCell extends Cell{
       return (double)countSimilar/(double)(countSimilar+countOther);
     }
     return 0;
-  }
-
-  @Override
-  public int[][] getPossibleNeighbors() {
-    return POSSIBLE_NEIGHBORS_SEGREGATION;
   }
 }

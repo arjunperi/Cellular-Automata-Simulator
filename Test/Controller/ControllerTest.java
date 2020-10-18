@@ -31,8 +31,8 @@ public class ControllerTest extends DukeApplicationTest {
   public void testPauseConwayPulsar() {
     Controller testController = new Controller();
     testController.startSimulation("GameOfLife","ConwayStatesPulsar");
-    testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife",
-        "Test/ConwayStatesPulsarOut.csv");
+    testController.initializeSimulation("ConwayStatesPulsar.csv", "GameOfLife",
+        "ConwayStatesPulsarOut.csv");
     testController.handleKeyInput(KeyCode.P);
     FrontEndCell currentCell;
     String previousCellColor = testController.getMainView().getFrontEndCellGrid().get(4).get(5)
@@ -48,10 +48,9 @@ public class ControllerTest extends DukeApplicationTest {
   public void testStepConwayPulsar() {
     Controller testController = new Controller();
     testController.startSimulation("GameOfLife","ConwayStatesPulsar");
-    testController.initializeSimulation("Test/ConwayStatesPulsar.csv", "GameOfLife",
-        "Test/ConwayStatesPulsarOut.csv");
+    testController.initializeSimulation("ConwayStatesPulsar.csv", "GameOfLife",
+        "ConwayStatesPulsarOut.csv");
     View testView = testController.getMainView();
-    Model testModel = testController.getMainModel();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(5).get(6);
     testController.handleKeyInput(KeyCode.SPACE);
     assertEquals("0xffffffff", currentCell.getCellColor());
@@ -67,8 +66,8 @@ public class ControllerTest extends DukeApplicationTest {
   public void testPauseConwayBlinker() {
     Controller testController = new Controller();
     testController.startSimulation("GameOfLife","ConwayStatesBlinker");
-    testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
-        "Test/ConwayStatesBlinkerOut.csv");
+    testController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
+        "ConwayStatesBlinkerOut.csv");
     View testView = testController.getMainView();
     testController.handleKeyInput(KeyCode.P);
     FrontEndCell currentCell;
@@ -84,8 +83,8 @@ public class ControllerTest extends DukeApplicationTest {
   public void testStepConwayBlinker() {
     Controller testController = new Controller();
     testController.startSimulation("GameOfLife","ConwayStatesBlinker");
-    testController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
-        "Test/ConwayStatesBlinkerOut.csv");
+    testController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
+        "ConwayStatesBlinkerOut.csv");
     View testView = testController.getMainView();
     Model testModel = testController.getMainModel();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(6).get(9);
@@ -103,12 +102,12 @@ public class ControllerTest extends DukeApplicationTest {
   public void testSpeedUpConwayBlinker(){
     Controller testStepController = new Controller();
     testStepController.startSimulation("GameOfLife","ConwayStatesBlinker");
-    testStepController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
-        "Test/ConwayStatesBlinkerOut.csv");
+    testStepController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
+        "ConwayStatesBlinkerOut.csv");
     Controller testSpeedUpController = new Controller();
     testSpeedUpController.startSimulation("GameOfLife","ConwayStatesBlinker");
-    testSpeedUpController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
-        "Test/ConwayStatesBlinkerOut.csv");
+    testSpeedUpController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
+        "ConwayStatesBlinkerOut.csv");
     View testStepView = testStepController.getMainView();
     FrontEndCell currentStepCell = testStepView.getFrontEndCellGrid().get(6).get(9);
     View testSpeedUpView = testSpeedUpController.getMainView();
@@ -129,12 +128,12 @@ public class ControllerTest extends DukeApplicationTest {
   public void testSlowDownConwayBlinker(){
     Controller testNormalController = new Controller();
     testNormalController.startSimulation("GameOfLife","ConwayStatesBlinker");
-    testNormalController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
-        "Test/ConwayStatesBlinkerOut.csv");
+    testNormalController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
+        "ConwayStatesBlinkerOut.csv");
     Controller testSlowDownController = new Controller();
     testSlowDownController.startSimulation("GameOfLife","ConwayStatesBlinker");
-    testSlowDownController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
-        "Test/ConwayStatesBlinkerOut.csv");
+    testSlowDownController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
+        "ConwayStatesBlinkerOut.csv");
     View testNormalView = testNormalController.getMainView();
     FrontEndCell currentNormalCell = testNormalView.getFrontEndCellGrid().get(6).get(9);
     View testSlowDownView = testSlowDownController.getMainView();
