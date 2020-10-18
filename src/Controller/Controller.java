@@ -9,13 +9,8 @@ import View.FrontEndCell;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
+
 import javafx.collections.FXCollections;
 
 import javafx.event.Event;
@@ -122,18 +117,16 @@ public class Controller {
       Class<?> cl = Class.forName("Model." + modelType + "Model");
       this.mainModel = (Model) cl.getConstructor(String.class, String.class, String.class).newInstance(fileName, modelType, fileOut);
       Properties propertyFile = getPropertyFile(currentFileName);
+      System.out.println(currentFileName);
 
-
-//      fileName = fileName.replace(".csv", "");
-      //propertiesPath = new FileOutputStream("Properties/" + fileName + ".properties");
-     // writer = new FileWriter("Properties/" + fileName + ".properties", true);
-//
-//      if (!propertyFile.containsKey("States") || propertyFile.getProperty("States") == null) {
-//        Properties defaultFile = getPropertyFile(modelType + "Default");
-//        String defaultStates = defaultFile.getProperty("States");
-//        propertyFills.putIfAbsent("States", defaultStates);
-//        updateProperties(propertyFile, writer);
-//      }
+      fileName = fileName.replace(".csv", "");
+      writer = new FileWriter("Properties/" + fileName + ".properties", true);
+      if (!propertyFile.containsKey("States") || propertyFile.getProperty("States") == null) {
+        Properties defaultFile = getPropertyFile(modelType + "Default");
+        String defaultStates = defaultFile.getProperty("States");
+        propertyFills.putIfAbsent("States", defaultStates);
+        updateProperties(propertyFile, writer);
+      }
 
       mainModel.initializeAllStates(propertyFile.getProperty("States"));
       this.frontEndCellColors = updateFrontEndCellColors();
@@ -148,11 +141,11 @@ public class Controller {
       showError("Invalid Model Type");
       initializeButtonMenu();
     }
-//    catch (FileNotFoundException e) {
-//      e.printStackTrace();
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
+    catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void getSaveInputs() {
@@ -256,12 +249,12 @@ public class Controller {
   public void initializeColorMapping(int state) {
     Properties propertyFile = getPropertyFile(currentFileName);
     
-//    if (!propertyFile.containsKey(String.valueOf(state)) || propertyFile.getProperty(String.valueOf(state)) == null) {
-//      Properties defaultFile = getPropertyFile(modelType + "Default");
-//      String defaultColor = defaultFile.getProperty(String.valueOf(state));
-//      propertyFills.putIfAbsent(String.valueOf(state), defaultColor);
-//      updateProperties(propertyFile,writer);
-//    }
+    if (!propertyFile.containsKey(String.valueOf(state)) || propertyFile.getProperty(String.valueOf(state)) == null) {
+      Properties defaultFile = getPropertyFile(modelType + "Default");
+      String defaultColor = defaultFile.getProperty(String.valueOf(state));
+      propertyFills.putIfAbsent(String.valueOf(state), defaultColor);
+      updateProperties(propertyFile,writer);
+    }
     String color = propertyFile.getProperty(String.valueOf(state));
     if (!stateColorMapping.containsKey(state)) {
       stateColorMapping.put(state, color);
@@ -349,10 +342,33 @@ public class Controller {
   private void updateProperties(Properties propertyFile, FileWriter writer) {
     try {
       for (String property : propertyFills.keySet()) {
+        Set<String> keys = propertyFile.stringPropertyNames();
+        if (!keys.contains(property)){
           propertyFile.setProperty(property, propertyFills.get(property));
+        }
       }
       propertyFile.store(writer, null);
+      removeDuplicates(propertyFile);
     } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void removeDuplicates(Properties propertyFile){
+    try{
+      Enumeration e1 = propertyFile.propertyNames();
+      List<String> list = new ArrayList<>();
+      while (e1.hasMoreElements()) {
+        String s1 = (String) e1.nextElement();
+        if (list.contains(propertyFile.getProperty(s1))) {
+          propertyFile.remove(s1);
+        }
+        list.add(propertyFile.getProperty(s1));
+      }
+      FileOutputStream fos = new FileOutputStream("Properties/" + currentFileName + ".properties");
+      propertyFile.store(fos, null);
+    }
+    catch (IOException e){
       e.printStackTrace();
     }
   }

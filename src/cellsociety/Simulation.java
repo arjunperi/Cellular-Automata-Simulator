@@ -63,7 +63,7 @@ public class Simulation extends Application {
     mainController.gameStep();
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
 //    try (CSVWriter csvWriter = new CSVWriter(new FileWriter("data/RPSExample.csv"))) {
 //      int size=40;
 //      String[] rowsAndColumns = new String[] {Integer.toString(size), Integer.toString(size)};
