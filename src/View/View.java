@@ -9,16 +9,23 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 
 
 public class View {
 
   private final BorderPane root;
+  private final Group topGroup;
+  private final Group centerGroup;
   private List<List<FrontEndCell>> frontEndCellGrid;
   private List<List<String>> frontEndCellColors;
 
   public View() {
+    topGroup = new Group();
+    centerGroup = new Group();
     root = new BorderPane();
+    root.setCenter(centerGroup);
+    root.setTop(topGroup);
   }
 
   public Scene setupScene() {
@@ -54,8 +61,8 @@ public class View {
       String stateString = this.frontEndCellColors.get(row).get(column);
       FrontEndCell currentFrontEndCell = new FrontEndCell(stateString, x, y, xOffset, yOffset, row , column);
       frontEndCellRow.add(currentFrontEndCell);
-      currentFrontEndCell.setId("cell" + row*frontEndCellColors.get(0).size() + column);
-      root.getChildren().add(currentFrontEndCell);
+      currentFrontEndCell.setId("cell" + row + column);
+      centerGroup.getChildren().add(currentFrontEndCell);
     }
 
     private void updateFrontEndCells (List<List<String>> frontEndCellColors) {
@@ -72,12 +79,10 @@ public class View {
       return frontEndCellGrid;
     }
 
-//    public Group getRoot () {
-//      return this.root;
-//    }
-
-  public BorderPane  getRoot () {
+    public BorderPane  getRoot () {
     return this.root;
   }
+    public Group getCenterGroup (){return this.centerGroup;}
+    public Group getTopGroup () {return this.topGroup;}
   }
 

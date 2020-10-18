@@ -321,4 +321,16 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testKeyNotFound(){}
+
+  @Test
+  public void testupdateColorStateMapping(){
+    javafxRun(() -> mainController.displayInfo("GameOfLife", "ConwayStatesBlinker"));
+    buttonTest = lookup("#ConwayStatesBlinker").queryButton();
+    clickOn(buttonTest);
+    assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+    javafxRun(() -> mainController.updateColorStateMapping("0", "PINK"));
+    javafxRun(() -> mainController.gameStep());
+    assertEquals("0xffc0cbff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+  }
+
 }
