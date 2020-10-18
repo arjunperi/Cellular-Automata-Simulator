@@ -1,15 +1,11 @@
 package View;
 
 import cellsociety.Simulation;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.event.Event;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 
 
 public class View {
