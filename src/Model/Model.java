@@ -27,12 +27,14 @@ public class Model {
     gridOfCells = new Grid(fileName, modelType, emptyQueue);
   }
 
-  public void modelStep() {
+  public boolean modelStep() {
     if ((!isPaused && checkTimeElapsed()) || isStep) {
       cycles = 0;
       updateCells();
       gridOfCells.toNextState();
+      return true;
     }
+    return false;
   }
 
   public void updateCells() {

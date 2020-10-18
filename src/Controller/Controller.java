@@ -1,12 +1,10 @@
 package Controller;
 
 import Model.Model;
-import Model.ModelException;
 import View.View;
 import View.FrontEndCell;
 
 
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -16,13 +14,14 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
 
 import javafx.event.Event;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
@@ -31,16 +30,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
-import org.apache.commons.lang3.concurrent.ConcurrentRuntimeException;
-
-import javax.swing.*;
-
 
 public class Controller {
 
   private Model mainModel;
   private final View mainView;
   private boolean simIsSet = false;
+
+  private boolean graphShowing = false;
+  private final Map<Integer, XYChart.Series> stateSeries = new HashMap<>();
+  private final Map<Integer, Integer> stateCountsMap = new HashMap<>();
+
   private String modelType;
 
   private static final String RESOURCES = "Resources/";
@@ -52,7 +52,7 @@ public class Controller {
   private final Map<Integer, String> stateColorMapping = new HashMap<>();
   private List<List<String>> frontEndCellColors;
   private String currentFileName;
-
+  private GraphController graphController;
   private final Button homeButton = makeButton("Home", event -> initializeButtonMenu());
   private TextField inputText;
   private final Map<String, String> saveList = new HashMap<>();
@@ -69,6 +69,10 @@ public class Controller {
   }
 
   public void initializeButtonMenu() {
+    if(this.graphShowing){
+      this.graphController.closeGraph();
+      this.graphShowing = false;
+    }
     mainView.getCenterGroup().getChildren().clear();
     mainView.getTopGroup().getChildren().clear();
     VBox result = new VBox();
@@ -97,8 +101,8 @@ public class Controller {
     currentFileName = fileName;
     Button startButton = makeButton(fileName,
         event -> initializeSimulation(fileName + ".csv"));
-    result.getChildren().add(startButton);
     result.getChildren().add(homeButton);
+    result.getChildren().add(startButton);
     mainView.getTopGroup().getChildren().add(result);
     try {
       Text startupText = new Text();
@@ -201,7 +205,9 @@ public class Controller {
 
   public void gameStep() {
     if (simIsSet) {
-      mainModel.modelStep();
+      if(mainModel.modelStep() && graphShowing){
+        this.graphShowing = graphController.updateGraph();
+      }
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.viewStep(this.frontEndCellColors);
     }
@@ -309,9 +315,10 @@ public class Controller {
   public void initializeSimulationMenu() {
     HBox test = new HBox();
     Button saveButton = makeButton("Save", event -> getSaveInputs());
-    test.getChildren().add(saveButton);
     test.getChildren().add(homeButton);
+    test.getChildren().add(saveButton);
     test.getChildren().add(makeButton("changeColors", event -> changeColorsPopUp()));
+    test.getChildren().add(makeButton("State Concentration Graph", event -> createGraph()));
     mainView.getTopGroup().getChildren().add(test);
   }
 
@@ -331,7 +338,9 @@ public class Controller {
     grid.getChildren().add(colorInput);
     colorBox.getDialogPane().setContent(grid);
     colorBox.showAndWait();
-    updateColorStateMapping(stateInput.getText(), colorInput.getText());
+    if(stateInput.getText().length() + colorInput.getText().length() > 0){
+      updateColorStateMapping(stateInput.getText(), colorInput.getText());
+    }
     mainModel.switchPause();
   }
 
@@ -346,6 +355,15 @@ public class Controller {
     } catch (Exception e) {
       showError("Please enter a valid color state mapping");
     }
+  }
+
+  public void createGraph(){
+    if(this.graphShowing) {
+      showError("Please close current graph instance");
+      return;
+    }
+    this.graphController = new GraphController(this.mainModel, this.stateColorMapping);
+    this.graphShowing = true;
   }
 
   private void updateProperties(Properties propertyFile, FileWriter writer) {

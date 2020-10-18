@@ -22,18 +22,20 @@ public class WaTorModelTest extends DukeApplicationTest {
   }
 
   @Test
-  public void testStepWaTor50() {
+  public void testStepWaTor50Oscillating() {
     Model testModel = new Model("WaTor50.csv", "WaTor");
-    assertEquals(1, testModel.getCellState(3,2));
+    assertEquals(2, testModel.getCellState(0,4));
+    assertEquals(1, testModel.getCellState(4,49));
     testModel.step();
-    assertEquals(2, testModel.getCellState(3,2));
+    assertEquals(0, testModel.getCellState(0,4));
+    assertEquals(2, testModel.getCellState(4,49));
   }
 
   @Test
-  public void testStepWaTor100() {
+  public void testStepWaTor100Toroidal() {
     Model testModel = new Model("WaTor100.csv", "WaTor");
-    assertEquals(1, testModel.getCellState(0,1));
+    assertEquals(1, testModel.getCellState(0,99));
     testModel.step();
-    assertEquals(2, testModel.getCellState(0,1));
+    assertEquals(2, testModel.getCellState(0,99));
   }
 }
