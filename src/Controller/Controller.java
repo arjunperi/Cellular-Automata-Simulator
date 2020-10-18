@@ -1,13 +1,10 @@
 package Controller;
 
 import Model.Model;
-import Model.ModelException;
 import View.View;
 import View.FrontEndCell;
 
 
-import cellsociety.Simulation;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -17,33 +14,21 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
-import javafx.collections.FXCollections;
 
 import javafx.event.Event;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
-
-import javafx.stage.Stage;
-import org.apache.commons.lang3.concurrent.ConcurrentRuntimeException;
-
-import javax.swing.*;
 
 
 public class Controller {
@@ -71,7 +56,7 @@ public class Controller {
   private List<List<String>> frontEndCellColors;
   private String currentFileName;
 
-  private GraphContoller graphContoller;
+  private GraphController graphController;
 
   private Button homeButton = makeButton("Home", event -> initializeButtonMenu());
   private TextField inputText;
@@ -89,6 +74,10 @@ public class Controller {
   }
 
   public void initializeButtonMenu() {
+    if(this.graphShowing){
+      this.graphController.closeGraph();
+      this.graphShowing = false;
+    }
     mainView.getCenterGroup().getChildren().clear();
     mainView.getTopGroup().getChildren().clear();
     VBox result = new VBox();
@@ -116,8 +105,8 @@ public class Controller {
     HBox result = new HBox();
     currentFileName = fileName;
     Button startButton = makeButton(fileName, event -> initializeSimulation(fileName + ".csv", fileName + "Out.csv"));
-    result.getChildren().add(startButton);
     result.getChildren().add(homeButton);
+    result.getChildren().add(startButton);
     mainView.getTopGroup().getChildren().add(result);
     try {
       Text startupText = new Text();
@@ -223,7 +212,7 @@ public class Controller {
   public void gameStep() {
     if (simIsSet) {
       if(mainModel.modelStep() && graphShowing){
-        this.graphShowing = graphContoller.updateGraph();
+        this.graphShowing = graphController.updateGraph();
       }
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.viewStep(this.frontEndCellColors);
@@ -331,10 +320,10 @@ public class Controller {
   public void initializeSimulationMenu() {
     HBox test = new HBox();
     Button saveButton = makeButton("Save", event -> getSaveInputs());
-    test.getChildren().add(saveButton);
     test.getChildren().add(homeButton);
+    test.getChildren().add(saveButton);
     test.getChildren().add(makeButton("changeColors", event -> changeColorsPopUp()));
-    test.getChildren().add(makeButton("test", event -> createGraph()));
+    test.getChildren().add(makeButton("State Concentration Graph", event -> createGraph()));
     mainView.getTopGroup().getChildren().add(test);
   }
 
@@ -354,7 +343,9 @@ public class Controller {
     grid.getChildren().add(colorInput);
     colorBox.getDialogPane().setContent(grid);
     colorBox.showAndWait();
-    updateColorStateMapping(stateInput.getText(), colorInput.getText());
+    if(stateInput.getText().length() + colorInput.getText().length() > 0){
+      updateColorStateMapping(stateInput.getText(), colorInput.getText());
+    }
     mainModel.switchPause();
   }
 
@@ -370,7 +361,11 @@ public class Controller {
   }
 
   public void createGraph(){
-   this.graphContoller = new GraphContoller(this.mainModel, this.stateColorMapping);
+    if(this.graphShowing) {
+      showError("Please close current graph instance");
+      return;
+    }
+    this.graphController = new GraphController(this.mainModel, this.stateColorMapping);
     this.graphShowing = true;
   }
 
