@@ -11,8 +11,8 @@ public class GameOfLifeCell extends Cell {
       {0, 1}, {1, 1}, {1, 0}, {1, -1},
       {0, -1}, {-1, -1}};
 
-  private static final int ALIVE=1;
-  private static final int DEAD=0;
+  private static final int ALIVE = 1;
+  private static final int DEAD = 0;
 
   public GameOfLifeCell(int state, Queue<Cell> emptyQueue) {
     super(state, emptyQueue);
@@ -21,7 +21,8 @@ public class GameOfLifeCell extends Cell {
   @Override
   public void updateState(List<Cell> neighbors) {
     int countAliveNeighbors = getNumberOfLiveNeighbors(neighbors);
-    if (this.getCurrentState() == ALIVE && (countAliveNeighbors == 2 || countAliveNeighbors == 3) || (
+    if (this.getCurrentState() == ALIVE && (countAliveNeighbors == 2 || countAliveNeighbors == 3)
+        || (
         this.getCurrentState() == DEAD && countAliveNeighbors == 3)) {
       this.setFutureState(ALIVE);
     } else {

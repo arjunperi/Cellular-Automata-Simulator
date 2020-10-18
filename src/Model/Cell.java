@@ -15,12 +15,12 @@ public abstract class Cell {
   public Cell(int state, Queue<Cell> emptyQueue) {
     this.currentState = state;
     this.futureState = currentState;
-    if(state==0) {
+    if (state == 0) {
       emptyQueue.add(this);
     }
   }
 
-  public void cycleNextState(List<Integer> allStates){
+  public void cycleNextState(List<Integer> allStates) {
     int currentStateIndex = allStates.indexOf(currentState);
     int nextIndex = (currentStateIndex + 1) % allStates.size();
     currentState = allStates.get(nextIndex);

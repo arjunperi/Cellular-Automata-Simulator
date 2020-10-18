@@ -53,14 +53,14 @@ public class Controller {
   private List<List<String>> frontEndCellColors;
   private String currentFileName;
 
-  private Button homeButton = makeButton("Home", event -> initializeButtonMenu());
+  private final Button homeButton = makeButton("Home", event -> initializeButtonMenu());
   private TextField inputText;
-  private Map<String, String> saveList = new HashMap<>();
+  private final Map<String, String> saveList = new HashMap<>();
 
   private OutputStream propertiesPath;
   private FileWriter writer;
 
-  private Map<String, String> propertyFills = new HashMap<>();
+  private final Map<String, String> propertyFills = new HashMap<>();
 
   public Controller() {
     this.mainView = new View();
@@ -95,7 +95,8 @@ public class Controller {
     mainView.getCenterGroup().getChildren().clear();
     HBox result = new HBox();
     currentFileName = fileName;
-    Button startButton = makeButton(fileName, event -> initializeSimulation(fileName + ".csv", fileName + "Out.csv"));
+    Button startButton = makeButton(fileName,
+        event -> initializeSimulation(fileName + ".csv"));
     result.getChildren().add(startButton);
     result.getChildren().add(homeButton);
     mainView.getTopGroup().getChildren().add(result);
@@ -113,19 +114,19 @@ public class Controller {
     }
   }
 
-  public void initializeSimulation(String fileName, String fileOut) {
+  public void initializeSimulation(String fileName) {
     mainView.getCenterGroup().getChildren().clear();
     mainView.getTopGroup().getChildren().clear();
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
     try {
-      this.mainModel = new Model(fileName, modelType, fileOut);
       Properties propertyFile = getPropertyFile(currentFileName);
+      this.mainModel = new Model(fileName, modelType);
 
 
 //      fileName = fileName.replace(".csv", "");
       //propertiesPath = new FileOutputStream("Properties/" + fileName + ".properties");
-     // writer = new FileWriter("Properties/" + fileName + ".properties", true);
+      // writer = new FileWriter("Properties/" + fileName + ".properties", true);
 //
 //      if (!propertyFile.containsKey("States") || propertyFile.getProperty("States") == null) {
 //        Properties defaultFile = getPropertyFile(modelType + "Default");
@@ -137,7 +138,7 @@ public class Controller {
       mainModel.initializeAllStates(propertyFile.getProperty("States"));
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
-              mainModel.getNumberOfColumns(), frontEndCellColors);
+          mainModel.getNumberOfColumns(), frontEndCellColors);
       simIsSet = true;
       addCellEventHandlers();
       initializeSimulationMenu();
@@ -186,7 +187,8 @@ public class Controller {
 
   public void writeToPropertyFile() {
     try {
-      FileWriter writer = new FileWriter("Properties/" + propertyFills.get("Title") + ".properties");
+      FileWriter writer = new FileWriter(
+          "Properties/" + propertyFills.get("Title") + ".properties");
       Properties prop = new Properties();
       propertyFills.put("Type", modelType);
       updateProperties(prop, writer);
@@ -252,7 +254,7 @@ public class Controller {
 
   public void initializeColorMapping(int state) {
     Properties propertyFile = getPropertyFile(currentFileName);
-    
+
 //    if (!propertyFile.containsKey(String.valueOf(state)) || propertyFile.getProperty(String.valueOf(state)) == null) {
 //      Properties defaultFile = getPropertyFile(modelType + "Default");
 //      String defaultColor = defaultFile.getProperty(String.valueOf(state));
@@ -269,7 +271,8 @@ public class Controller {
   public Properties getPropertyFile(String fileName) {
     Properties propertyFile = new Properties();
     try {
-      propertyFile.load(Controller.class.getClassLoader().getResourceAsStream(fileName + ".properties"));
+      propertyFile
+          .load(Controller.class.getClassLoader().getResourceAsStream(fileName + ".properties"));
     } catch (Exception e) {
       throw new ControllerException("Invalid File Name", e);
     }
@@ -335,7 +338,9 @@ public class Controller {
   public void updateColorStateMapping(String state, String color) {
     try {
       int stateInt = Integer.parseInt(state);
-      if (!this.stateColorMapping.containsKey(stateInt)) throw new IllegalArgumentException();
+      if (!this.stateColorMapping.containsKey(stateInt)) {
+        throw new IllegalArgumentException();
+      }
       Paint.valueOf(color);
       this.stateColorMapping.put(stateInt, color);
     } catch (Exception e) {
@@ -346,7 +351,7 @@ public class Controller {
   private void updateProperties(Properties propertyFile, FileWriter writer) {
     try {
       for (String property : propertyFills.keySet()) {
-          propertyFile.setProperty(property, propertyFills.get(property));
+        propertyFile.setProperty(property, propertyFills.get(property));
       }
       propertyFile.store(writer, null);
     } catch (IOException e) {

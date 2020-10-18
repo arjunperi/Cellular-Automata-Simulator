@@ -31,8 +31,7 @@ public class CSVWriteTest extends DukeApplicationTest {
       inputTest.setText("ConwayStatesToad");
       press(KeyCode.ENTER);
       javafxRun(() ->  mainController.displayInfo("ConwayStatesToad"));
-      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesToad.csv",
-              "Test/ConwayStatesToadOut.csv"));
+      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesToad.csv"));
       View testView = mainController.getMainView();
       FrontEndCell currentCell = testView.getFrontEndCellGrid().get(7).get(10);
       assertEquals("0x000000ff", currentCell.getCellColor());
@@ -42,8 +41,7 @@ public class CSVWriteTest extends DukeApplicationTest {
       inputTest.setText("ConwayStatesToad");
       press(KeyCode.ENTER);
       javafxRun(() ->  mainController.displayInfo("ConwayStatesToad"));
-      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesToadOut.csv",
-              "Test/ConwayStatesToadOut.csv"));
+      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesToadOut.csv"));
       View testViewOut = mainController.getMainView();
       currentCell = testViewOut.getFrontEndCellGrid().get(7).get(10);
       assertEquals("0xffffffff", currentCell.getCellColor());
@@ -56,8 +54,7 @@ public class CSVWriteTest extends DukeApplicationTest {
       inputTest.setText("ConwayStatesPulsar");
       press(KeyCode.ENTER);
       javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
-      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv",
-              "Test/ConwayStatesPulsarOut.csv"));
+      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv"));
       View testView = mainController.getMainView();
       FrontEndCell currentCell = testView.getFrontEndCellGrid().get(4).get(5);
       assertEquals("0x000000ff", currentCell.getCellColor());
@@ -67,8 +64,7 @@ public class CSVWriteTest extends DukeApplicationTest {
       inputTest.setText("ConwayStatesPulsar");
       press(KeyCode.ENTER);
       javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
-      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsarOut.csv",
-              "Test/ConwayStatesToadOut.csv"));
+      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsarOut.csv"));
       View testViewOut = mainController.getMainView();
       currentCell = testViewOut.getFrontEndCellGrid().get(4).get(5);
       assertEquals("0xffffffff", currentCell.getCellColor());

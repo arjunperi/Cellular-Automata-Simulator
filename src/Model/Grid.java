@@ -44,52 +44,55 @@ public class Grid {
         for (String stateString : row) {
           int state = Integer.parseInt(stateString);
           Class<?> cl = Class.forName(fullModelClassName);
-          Cell cellToAdd = (Cell) cl.getConstructor(int.class, Queue.class).newInstance(state, emptyQueue);
+          Cell cellToAdd = (Cell) cl.getConstructor(int.class, Queue.class)
+              .newInstance(state, emptyQueue);
           cellRow.add(cellToAdd);
         }
         gridOfCells.add(cellRow);
       }
-    } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException| ModelException e) {
+    } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException | ModelException e) {
       showError(e.getMessage());
     }
   }
 
-  private void showError(String message){
+  private void showError(String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle("Controller Error");
     alert.setContentText(message);
     alert.showAndWait();
   }
 
-  private void checkCSVDimensions(int columnCheck, int rowCheck){
-    if (!(columnCheck == cellsPerColumn && rowCheck == cellsPerRow)){
+  private void checkCSVDimensions(int columnCheck, int rowCheck) {
+    if (!(columnCheck == cellsPerColumn && rowCheck == cellsPerRow)) {
       //showError("Invalid CSV Dimensions");
       throw new ModelException("Invalid CSV");
     }
   }
 
   protected List<Cell> getNeighbors(int x, int y) {
-    String shapeAndType = propertyFile.getProperty("Shape") + propertyFile.getProperty("NeighborhoodType");
+    String shapeAndType =
+        propertyFile.getProperty("Shape") + propertyFile.getProperty("NeighborhoodType");
     int[][] allPossibleNeighbors = neighborhoodTypes.valueOf(shapeAndType).neighborhood;
     List<Cell> neighbors = new ArrayList<>();
-    if(propertyFile.getProperty("EdgePolicy").equals(TOROIDAL)) {
+    if (propertyFile.getProperty("EdgePolicy").equals(TOROIDAL)) {
       for (int[] possibleNeighbor : allPossibleNeighbors) {
-        int currentX = ((int)getCellsPerRow() + x + possibleNeighbor[0])%(int)getCellsPerRow();
-        int currentY = ((int)getCellsPerRow() + y + possibleNeighbor[1])%(int)getCellsPerColumn();
+        int currentX = ((int) getCellsPerRow() + x + possibleNeighbor[0]) % (int) getCellsPerRow();
+        int currentY =
+            ((int) getCellsPerRow() + y + possibleNeighbor[1]) % (int) getCellsPerColumn();
         neighbors.add(getCell(currentX, currentY));
       }
-    } else if(propertyFile.getProperty("EdgePolicy").equals(OSCILLATING)) {
+    } else if (propertyFile.getProperty("EdgePolicy").equals(OSCILLATING)) {
       for (int[] possibleNeighbor : allPossibleNeighbors) {
         int currentX = x + possibleNeighbor[0];
         int currentY = y + possibleNeighbor[1];
         if (currentX < 0 || currentY < 0 || currentX >= getCellsPerColumn()
             || currentY >= getCellsPerRow()) {
-          currentX = ((int)getCellsPerRow() + y + possibleNeighbor[1])%(int)getCellsPerColumn();
-          currentY = ((int)getCellsPerRow() + x + possibleNeighbor[0])%(int)getCellsPerRow();
+          currentX = ((int) getCellsPerRow() + y + possibleNeighbor[1]) % (int) getCellsPerColumn();
+          currentY = ((int) getCellsPerRow() + x + possibleNeighbor[0]) % (int) getCellsPerRow();
         }
         neighbors.add(getCell(currentX, currentY));
       }
-    } else if(propertyFile.getProperty("EdgePolicy").equals(FINITE)) {
+    } else if (propertyFile.getProperty("EdgePolicy").equals(FINITE)) {
       for (int[] possibleNeighbor : allPossibleNeighbors) {
         int currentX = x + possibleNeighbor[0];
         int currentY = y + possibleNeighbor[1];
@@ -107,7 +110,7 @@ public class Grid {
   //make neighborhoods and have cells have access to neighborhood
   //use interface to get neighborhood, egt empty cells throughout the grid.
   //cast the grid to the interface, pass it into the cell.
-    //this interface will define neighborhood, as well as the list/way to get empty cells.
+  //this interface will define neighborhood, as well as the list/way to get empty cells.
 
   protected void updateCells() {
     for (int row = 0; row < gridOfCells.size(); row++) {
@@ -166,8 +169,12 @@ public class Grid {
 
   public Properties getPropertyFile(String fileName) {
     Properties propertyFile = new Properties();
+    int lastSlash =fileName.lastIndexOf('/');
+    int csvTrim = fileName.lastIndexOf('.');
+    String trimmedFileName = fileName.substring(lastSlash+1, csvTrim);
     try {
-      propertyFile.load(Controller.class.getClassLoader().getResourceAsStream(fileName.replace(".csv","") + ".properties"));
+      propertyFile.load(Controller.class.getClassLoader()
+          .getResourceAsStream(trimmedFileName + ".properties"));
     } catch (Exception e) {
       throw new ControllerException("Invalid File Name", e);
     }
@@ -203,7 +210,7 @@ public class Grid {
     private final int[][] neighborhood;
 
     neighborhoodTypes(int[][] neighborhoods) {
-      this.neighborhood= neighborhoods;
+      this.neighborhood = neighborhoods;
     }
 
     public int[][] getNeighborhood() {

@@ -7,8 +7,8 @@ import java.util.Queue;
 
 public class PercolationCell extends Cell {
 
-  private static final int FULL=1;
-  private static final int EMPTY=0;
+  private static final int FULL = 1;
+  private static final int EMPTY = 0;
 
   public PercolationCell(int state, Queue<Cell> emptyQueue) {
     super(state, emptyQueue);

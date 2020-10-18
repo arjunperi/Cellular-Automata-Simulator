@@ -16,7 +16,6 @@ public class Model {
   private static final boolean PAUSED = true;
 
   public double framesPerModelUpdate = 60;
-  private String fileOut;
   protected final Grid gridOfCells;
   protected final Queue<Cell> emptyQueue = new LinkedList<>();
   private boolean isPaused = false;
@@ -26,12 +25,6 @@ public class Model {
 
   public Model(String fileName, String modelType) {
     gridOfCells = new Grid(fileName, modelType, emptyQueue);
-    this.fileOut = null;
-  }
-
-  public Model(String fileName, String modelType, String fileOut){
-    gridOfCells = new Grid(fileName, modelType, emptyQueue);
-    this.fileOut = fileOut;
   }
 
   public void modelStep() {
@@ -39,7 +32,6 @@ public class Model {
       cycles = 0;
       updateCells();
       gridOfCells.toNextState();
-      writeToCSV(fileOut);
     }
   }
 
@@ -62,7 +54,10 @@ public class Model {
   public void switchPause() {
     isPaused = !isPaused;
   }
-  public void setPaused(){isPaused = PAUSED;}
+
+  public void setPaused() {
+    isPaused = PAUSED;
+  }
 
   public void step() {
     isPaused = true;
@@ -82,7 +77,7 @@ public class Model {
   public void initializeAllStates(String allStates) {
     this.allStates = new ArrayList<>();
     String[] allStatesString = allStates.split(",");
-    for(String stateString:allStatesString) {
+    for (String stateString : allStatesString) {
       this.allStates.add(Integer.parseInt(stateString));
     }
   }
@@ -103,10 +98,11 @@ public class Model {
     return emptyQueue;
   }
 
-  public void speedUp(){
-    this.framesPerModelUpdate = Math.max(10,framesPerModelUpdate - ANIMATION_RATE_CHANGE);
+  public void speedUp() {
+    this.framesPerModelUpdate = Math.max(10, framesPerModelUpdate - ANIMATION_RATE_CHANGE);
   }
-  public void slowDown(){
-    this.framesPerModelUpdate = Math.min(100,framesPerModelUpdate + ANIMATION_RATE_CHANGE);
+
+  public void slowDown() {
+    this.framesPerModelUpdate = Math.min(100, framesPerModelUpdate + ANIMATION_RATE_CHANGE);
   }
 }

@@ -2,17 +2,17 @@
 /*  -fx-background-color: #DFB951;*/
 /*}*/
 
-#SpreadingFireState0{
+#SpreadingFireState0 {
   -fx-fill: rgb(135, 47, 145);
 }
 
 
-#SpreadingFireState1{
+#SpreadingFireState1 {
   -fx-fill: rgb(57, 145, 47);
 }
 
 
-#SpreadingFireState2{
+#SpreadingFireState2 {
   -fx-fill: rgb(47, 145, 86);
 }
 
@@ -34,6 +34,7 @@
   -fx-border-radius: 20;
   -fx-background-radius: 20;
 }
+
 .combo-box-base:hover {
   -fx-background-color: #3a3a3a;
 }

@@ -34,11 +34,11 @@ public class RPSCell extends Cell {
 
   //DEFINE IN PROPERTIES FILES
   Map<Integer, List<Integer>> RPSMap = Map.of(
-      0, List.of(1,2),
-      1, List.of(2,3),
-      2, List.of(3,4),
-      3, List.of(4,0),
-      4, List.of(0,1));
+      0, List.of(1, 2),
+      1, List.of(2, 3),
+      2, List.of(3, 4),
+      3, List.of(4, 0),
+      4, List.of(0, 1));
 
 
   public RPSCell(int state, Queue<Cell> emptyQueue) {
@@ -52,8 +52,8 @@ public class RPSCell extends Cell {
       int neighborState = currentNeighbor.getCurrentState();
       statesCounts.put(neighborState, statesCounts.getOrDefault(neighborState, 0) + 1);
     }
-    int nextState=getMostCommonMapState(statesCounts, this.getCurrentState());
-    if(RPSMap.get(this.getCurrentState()).contains(nextState)) {
+    int nextState = getMostCommonMapState(statesCounts, this.getCurrentState());
+    if (RPSMap.get(this.getCurrentState()).contains(nextState)) {
       this.setFutureState(nextState);
     }
   }
@@ -65,7 +65,7 @@ public class RPSCell extends Cell {
     int variable = random.nextInt(2);
     for (Map.Entry<Integer, Integer> entry : statesCounts.entrySet()) {
       if (entry.getValue().compareTo(maxValue) > 0
-          && entry.getValue().compareTo(THRESHOLD+variable) > 0 && entry.getKey()!=state) {
+          && entry.getValue().compareTo(THRESHOLD + variable) > 0 && entry.getKey() != state) {
         maxValue = entry.getValue();
         mostCommonState = entry.getKey();
       }

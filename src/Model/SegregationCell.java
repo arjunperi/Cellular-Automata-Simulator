@@ -5,22 +5,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public class SegregationCell extends Cell{
+public class SegregationCell extends Cell {
+
   public static final int EMPTY = 0;
   public static final double PERCENT_SIMILAR = .5;
   private final Queue<Cell> emptyQueue;
 
   public SegregationCell(int state, Queue<Cell> emptyQueue) {
     super(state, emptyQueue);
-    this.emptyQueue=emptyQueue;
+    this.emptyQueue = emptyQueue;
   }
 
   @Override
   public void updateState(List<Cell> neighbors) {
     if (this.getCurrentState() != EMPTY) {
       double percentSimilarInNeighborhood = getPercentageSimilar(neighbors);
-      if(percentSimilarInNeighborhood<=PERCENT_SIMILAR) {
-        if(!emptyQueue.isEmpty()) {
+      if (percentSimilarInNeighborhood <= PERCENT_SIMILAR) {
+        if (!emptyQueue.isEmpty()) {
           emptyQueue.poll().setFutureState(this.getCurrentState());
           this.setFutureState(EMPTY);
           emptyQueue.add(this);
@@ -33,7 +34,7 @@ public class SegregationCell extends Cell{
     int countSimilar = 0;
     int countOther = 0;
     for (Cell neighbor : neighbors) {
-      if(neighbor.getCurrentState()!=EMPTY) {
+      if (neighbor.getCurrentState() != EMPTY) {
         if (neighbor.getCurrentState() == this.getCurrentState()) {
           countSimilar++;
         } else {
@@ -41,8 +42,8 @@ public class SegregationCell extends Cell{
         }
       }
     }
-    if(countSimilar+countOther>0) {
-      return (double)countSimilar/(double)(countSimilar+countOther);
+    if (countSimilar + countOther > 0) {
+      return (double) countSimilar / (double) (countSimilar + countOther);
     }
     return 0;
   }
