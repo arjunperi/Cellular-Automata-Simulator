@@ -273,7 +273,6 @@ public class Controller {
     }
   }
 
-
   public Properties getPropertyFile(String fileName) {
     Properties propertyFile = new Properties();
     try {
@@ -289,7 +288,12 @@ public class Controller {
   public void handleKeyInput(KeyCode code) {
     switch (code) {
       case P -> mainModel.switchPause();
-      case S -> mainModel.step();
+      case S -> {
+        mainModel.step();
+        if(graphController!=null) {
+          graphController.updateGraph();
+        }
+      }
       case W -> mainModel.speedUp();
       case Q -> mainModel.slowDown();
     }

@@ -22,11 +22,13 @@ public class PercolationModelTest extends DukeApplicationTest {
   }
 
   @Test
-  public void testStepPercolation10() {
+  public void testStepPercolation10All() {
     Model testModel = new Model("Percolation10.csv", "Percolation");
     assertEquals(0, testModel.getCellState(1,3));
+    assertEquals(0, testModel.getCellState(1,2));
     testModel.step();
     assertEquals(1, testModel.getCellState(1,3));
+    assertEquals(1, testModel.getCellState(1,2));
   }
 
   @Test

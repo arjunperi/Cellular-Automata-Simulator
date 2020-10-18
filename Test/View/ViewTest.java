@@ -32,7 +32,7 @@ public class ViewTest extends DukeApplicationTest {
       inputTest.setText("ConwayStatesPulsar");
       press(KeyCode.ENTER);
       javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
-      javafxRun(() ->  mainController.initializeSimulation("ConwayStatesPulsar.csv"));
+      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv"));
       View testView = mainController.getMainView();
       assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(0).get(0).getCellColor());
   }
@@ -44,7 +44,7 @@ public class ViewTest extends DukeApplicationTest {
       inputTest.setText("ConwayStatesBeacon");
       press(KeyCode.ENTER);
       javafxRun(() ->  mainController.displayInfo("ConwayStatesBeacon"));
-      javafxRun(() ->  mainController.initializeSimulation("ConwayStatesBeacon.csv"));
+      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBeacon.csv"));
       assertEquals("0xffffffff",
               mainController.getMainView().getFrontEndCellGrid().get(7).get(7).getCellColor());
       mainController.handleKeyInput(KeyCode.S);
@@ -60,7 +60,7 @@ public class ViewTest extends DukeApplicationTest {
       inputTest.setText("ConwayStatesBlinker");
       press(KeyCode.ENTER);
       javafxRun(() ->  mainController.displayInfo("ConwayStatesBlinker"));
-      javafxRun(() ->  mainController.initializeSimulation("ConwayStatesBlinker.csv"));
+      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlinker.csv"));
       View testView = mainController.getMainView();
       assertEquals("0x000000ff", testView.getFrontEndCellGrid().get(7).get(8).getCellColor());
       mainController.handleKeyInput(KeyCode.S);
@@ -75,7 +75,7 @@ public class ViewTest extends DukeApplicationTest {
       inputTest.setText("ConwayStatesBlock");
       press(KeyCode.ENTER);
       javafxRun(() ->  mainController.displayInfo("ConwayStatesBlock"));
-      javafxRun(() ->  mainController.initializeSimulation("ConwayStatesBlock.csv"));
+      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlock.csv"));
       View testView = mainController.getMainView();
       assertEquals("0x000000ff", testView.getFrontEndCellGrid().get(9).get(13).getCellColor());
       mainController.handleKeyInput(KeyCode.S);
@@ -90,7 +90,7 @@ public class ViewTest extends DukeApplicationTest {
       inputTest.setText("ConwayStatesToad");
       press(KeyCode.ENTER);
       javafxRun(() ->  mainController.displayInfo("ConwayStatesToad"));
-      javafxRun(() ->  mainController.initializeSimulation("ConwayStatesToad.csv"));
+      javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesToad.csv"));
       View testView = mainController.getMainView();
       assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(9).get(10).getCellColor());
       mainController.handleKeyInput(KeyCode.S);
