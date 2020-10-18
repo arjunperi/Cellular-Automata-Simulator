@@ -42,7 +42,7 @@ public class GraphController {
 
     this.graphView.createLineChart();
     this.graphView.addLinesToGraph(this.stateSeries.values());
-    this.graphView.showGraph();
+    this.graphView.createGraphWindow();
     this.graphView.setOnGraphClose(event -> graphShowing = GRAPH_NOT_SHOWING);
   }
 
@@ -56,9 +56,10 @@ public class GraphController {
     return graphShowing;
   }
 
-  public void updateStateCounts(){
+  private void updateStateCounts(){
     setSeriesColor();
     graphStepCount++;
+
     initializeStateCounts();
     for(int row=0; row<mainModel.getNumberOfRows();row++) {
       for(int column=0; column< mainModel.getNumberOfColumns(); column++) {
@@ -68,7 +69,7 @@ public class GraphController {
     }
   }
 
-  public void initializeStateSeries(){
+  private void initializeStateSeries(){
     for(Integer state:this.stateCountsMap.keySet()){
       XYChart.Series currentSeries = new Series();
       currentSeries.setName("state: "+state);
@@ -76,13 +77,13 @@ public class GraphController {
     }
   }
 
-  public void initializeStateCounts(){
+  private void initializeStateCounts(){
     for(int state : this.stateColorMap.keySet()){
       this.stateCountsMap.put(state,0);
     }
   }
 
-  public void setSeriesColor(){
+  private void setSeriesColor(){
     for(int currentState : this.stateSeries.keySet()) {
       this.graphView.setLineStyle(currentState);
     }
@@ -91,5 +92,6 @@ public class GraphController {
   public void closeGraph(){
     this.graphView.close();
   }
+  public GraphView getGraphView(){ return this.graphView;}
 
 }

@@ -31,6 +31,7 @@ public class GraphView {
     final NumberAxis yAxis = new NumberAxis();
     this.lineChart = new LineChart<>(xAxis,yAxis);
     lineChart.setTitle("Graph");
+    lineChart.setId("graph");
   }
 
   public void addLinesToGraph(Collection<XYChart.Series> stateSeries){
@@ -39,7 +40,7 @@ public class GraphView {
     }
   }
 
-  public void showGraph(){
+  public void createGraphWindow(){
     this.graphScene = new Scene(lineChart, Simulation.SCENE_WIDTH, Simulation.SCENE_HEIGHT, Simulation.BACKGROUND);
     this.graphStage.setScene(graphScene);
     this.graphStage.show();
@@ -52,6 +53,7 @@ public class GraphView {
   public void addPointToLine(int stepCount, int stateCount,int state, XYChart.Series line){
     XYChart.Data dataPoint = new XYChart.Data(stepCount, stateCount);
     line.getData().add(dataPoint);
+    dataPoint.getNode().setId(state+","+stateCount);
     setPointStyle(state, dataPoint.getNode());
   }
 
@@ -73,4 +75,6 @@ public class GraphView {
   public void close(){
     this.graphStage.close();
   }
+  public Stage getStage(){ return this.graphStage; }
+  public void showGraph(){this.graphStage.show();}
 }
