@@ -66,4 +66,3 @@ item. However, now we have a good list and understanding of items to refactor ov
 
  * Issue chosen: Fix and Alternatives
     * One issue that we noticed in our Controller class was that many methods were passing around a modelType, which is essentially the prefix of the different model classes that we use which is extracted from property files. We realized that for many of these methods, no changes were actually being made to this parameter, and instead it was simply being passed on to the next method in a chain until it was actually used. To fix this, we made the modelType an instance variable and factored out the parts that actually manipulated it into common methods.
-

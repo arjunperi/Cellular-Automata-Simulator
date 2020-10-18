@@ -36,13 +36,10 @@ public class Controller {
   private Model mainModel;
   private final View mainView;
   private boolean simIsSet = false;
-  private boolean graphShowing = false;
 
+  private boolean graphShowing = false;
   private Map<Integer, XYChart.Series> stateSeries = new HashMap<>();
   private Map<Integer, Integer> stateCountsMap = new HashMap<>();
-  private int graphCount = 0;
-  private Scene graphScene;
-  private LineChart<Number,Number> lineChart;
 
   private String modelType;
 
@@ -379,7 +376,6 @@ public class Controller {
       e.printStackTrace();
     }
   }
-
 }
 
 
