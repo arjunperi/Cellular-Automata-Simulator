@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.Queue;
 import javafx.scene.control.Alert;
+import org.hamcrest.Condition;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -26,10 +27,12 @@ public class Grid {
   private final double cellsPerRow;
   private final double cellsPerColumn;
   Properties propertyFile;
+  Properties defaultFile;
 
 
   public Grid(String fileName, String modelType, Queue<Cell> emptyQueue) {
     this.propertyFile = getPropertyFile(fileName);
+    this.defaultFile = getPropertyFile(modelType + "Default");
     List<String[]> cellStates = readAll(fileName);
     String fullModelClassName = "Model." + modelType + "Cell";
     String[] firstRow = cellStates.get(0);
@@ -70,18 +73,21 @@ public class Grid {
   }
 
   protected List<Cell> getNeighbors(int x, int y) {
+    String defaultShape = defaultFile.getProperty("Shape");
+    String defaultNeighborhood = defaultFile.getProperty("NeighborhoodType");
+    String defaultEdge = defaultFile.getProperty("EdgePolicy");
     String shapeAndType =
-        propertyFile.getProperty("Shape") + propertyFile.getProperty("NeighborhoodType");
+            (String) propertyFile.getOrDefault("Shape", defaultShape) + propertyFile.getOrDefault("NeighborhoodType", defaultNeighborhood);
     int[][] allPossibleNeighbors = neighborhoodTypes.valueOf(shapeAndType).neighborhood;
     List<Cell> neighbors = new ArrayList<>();
-    if (propertyFile.getProperty("EdgePolicy").equals(TOROIDAL)) {
+    if (propertyFile.getOrDefault("EdgePolicy", defaultEdge).equals(TOROIDAL)) {
       for (int[] possibleNeighbor : allPossibleNeighbors) {
         int currentX = ((int) getCellsPerRow() + x + possibleNeighbor[0]) % (int) getCellsPerRow();
         int currentY =
             ((int) getCellsPerRow() + y + possibleNeighbor[1]) % (int) getCellsPerColumn();
         neighbors.add(getCell(currentX, currentY));
       }
-    } else if (propertyFile.getProperty("EdgePolicy").equals(OSCILLATING)) {
+    } else if (propertyFile.getOrDefault("EdgePolicy", defaultEdge).equals(OSCILLATING)) {
       for (int[] possibleNeighbor : allPossibleNeighbors) {
         int currentX = x + possibleNeighbor[0];
         int currentY = y + possibleNeighbor[1];
@@ -92,7 +98,7 @@ public class Grid {
         }
         neighbors.add(getCell(currentX, currentY));
       }
-    } else if (propertyFile.getProperty("EdgePolicy").equals(FINITE)) {
+    } else if (propertyFile.getOrDefault("EdgePolicy", defaultEdge).equals(FINITE)) {
       for (int[] possibleNeighbor : allPossibleNeighbors) {
         int currentX = x + possibleNeighbor[0];
         int currentY = y + possibleNeighbor[1];
@@ -169,12 +175,14 @@ public class Grid {
 
   public Properties getPropertyFile(String fileName) {
     Properties propertyFile = new Properties();
-    int lastSlash =fileName.lastIndexOf('/');
-    int csvTrim = fileName.lastIndexOf('.');
-    String trimmedFileName = fileName.substring(lastSlash+1, csvTrim);
+    if (fileName.contains(".csv")){
+      int lastSlash =fileName.lastIndexOf('/');
+      int csvTrim = fileName.lastIndexOf('.');
+      fileName = fileName.substring(lastSlash+1, csvTrim);
+    }
     try {
       propertyFile.load(Controller.class.getClassLoader()
-          .getResourceAsStream(trimmedFileName + ".properties"));
+          .getResourceAsStream(fileName + ".properties"));
     } catch (Exception e) {
       throw new ControllerException("Invalid File Name", e);
     }

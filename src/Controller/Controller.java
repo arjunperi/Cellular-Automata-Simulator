@@ -6,6 +6,7 @@ import View.FrontEndCell;
 
 
 import java.io.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ public class Controller {
   private boolean simIsSet = false;
   private boolean graphShowing = false;
   private String modelType;
+  private Properties defaultFile;
 
   private static final String RESOURCES = "Resources/";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES.replace("/", ".");
@@ -46,12 +48,6 @@ public class Controller {
   private GraphController graphController;
   private Button homeButton;
   private TextField inputText;
-  private final Map<String, String> saveList = new HashMap<>();
-
-  private OutputStream propertiesPath;
-  private FileWriter writer;
-
-  private final Map<String, String> propertyFills = new HashMap<>();
 
   public Controller() {
     this.mainView = new View();
@@ -97,7 +93,9 @@ public class Controller {
     try {
       Properties propertyFile = getPropertyFile(currentFileName);
       this.mainModel = new Model(fileName, modelType);
-      mainModel.initializeAllStates(propertyFile.getProperty("States"));
+      defaultFile = getPropertyFile(modelType + "Default");
+      String defaultStates = defaultFile.getProperty("States");
+      mainModel.initializeAllStates((String) propertyFile.getOrDefault("States", defaultStates));
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
           mainModel.getNumberOfColumns(), frontEndCellColors);
@@ -109,6 +107,7 @@ public class Controller {
       initializeButtonMenu();
     }
   }
+
 
   public void getSaveInputs() {
     mainModel.setPaused();
@@ -132,25 +131,24 @@ public class Controller {
     grid.getChildren().add(descriptionInput);
     saveBox.getDialogPane().setContent(grid);
     Optional<String> result = saveBox.showAndWait();
-    propertyFills.put("Title", titleInput.getText());
-    propertyFills.put("Author", authorInput.getText());
-    propertyFills.put("Description", descriptionInput.getText());
+    Properties savedProperties = new Properties();
+    savedProperties.setProperty("Title", titleInput.getText());
+    savedProperties.setProperty("Author", authorInput.getText());
+    savedProperties.setProperty("Description", descriptionInput.getText());
+    savedProperties.setProperty("Type", modelType);
     if (result.isPresent()) {
-      writeToPropertyFile();
-      mainModel.writeToCSV(propertyFills.get("Title") + ".csv");
+      writeToPropertyFile(savedProperties);
+      mainModel.writeToCSV(savedProperties.getProperty("Title") + ".csv");
     }
     mainModel.switchPause();
   }
 
-  public void writeToPropertyFile() {
+  public void writeToPropertyFile(Properties propertyFile) {
     try {
       FileWriter writer = new FileWriter(
-          "Properties/" + propertyFills.get("Title") + ".properties");
-      Properties prop = new Properties();
-      propertyFills.put("Type", modelType);
-      updateProperties(prop, writer);
-      System.out.println("write");
-    } catch (IOException ex) {
+              "Properties/" + propertyFile.getProperty("Title") + ".properties");
+      propertyFile.store(writer, null);
+    }catch (IOException ex) {
       ex.printStackTrace();
     }
     initializeButtonMenu();
@@ -213,7 +211,8 @@ public class Controller {
 
   public void initializeColorMapping(int state) {
     Properties propertyFile = getPropertyFile(currentFileName);
-    String color = propertyFile.getProperty(String.valueOf(state));
+    String defaultColor = defaultFile.getProperty(String.valueOf(state));
+    String color = (String) propertyFile.getOrDefault(String.valueOf(state), defaultColor);
     if (!stateColorMapping.containsKey(state)) {
       stateColorMapping.put(state, color);
     }
@@ -298,17 +297,6 @@ public class Controller {
     }
     this.graphController = new GraphController(this.mainModel, this.stateColorMapping);
     this.graphShowing = true;
-  }
-
-  private void updateProperties(Properties propertyFile, FileWriter writer) {
-    try {
-      for (String property : propertyFills.keySet()) {
-        propertyFile.setProperty(property, propertyFills.get(property));
-      }
-      propertyFile.store(writer, null);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 }
 

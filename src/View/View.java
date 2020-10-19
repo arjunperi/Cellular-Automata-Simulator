@@ -110,10 +110,10 @@ public class View {
     this.topGroup.getChildren().add(simulationInfoBox);
     try {
       Text startupText = new Text();
-      String type = simulationPropertyFile.getProperty("Type");
-      String title = simulationPropertyFile.getProperty("Title");
-      String author = simulationPropertyFile.getProperty("Author");
-      String description = simulationPropertyFile.getProperty("Description");
+      String type = (String) simulationPropertyFile.getOrDefault("Type", "No Type Specified");
+      String title = (String) simulationPropertyFile.getOrDefault("Title", "No Title specified");
+      String author = (String) simulationPropertyFile.getOrDefault("Author", "No Author Specified");
+      String description = (String) simulationPropertyFile.getOrDefault("Description", "No Description Specified");
       startupText.setText(type + "\n" + title + "\n" + author + "\n" + description);
       this.centerGroup.getChildren().add(startupText);
     } catch (ControllerException e) {
