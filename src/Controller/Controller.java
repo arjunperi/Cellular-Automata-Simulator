@@ -48,6 +48,7 @@ public class Controller {
 
   private String modelType;
   private Properties defaultFile;
+  private Properties currentPropertyFile;
 
   private static final String RESOURCES = "Resources/";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES.replace("/", ".");
@@ -79,11 +80,10 @@ public class Controller {
     inputText = new TextField();
     inputText.setId("inputTextBox");
     EventHandler<ActionEvent> event = e -> {
-      String fileChosen = inputText.getText();
+      currentFileName = inputText.getText();
       try {
-        Properties propertyFile = getPropertyFile(fileChosen);
-        modelType = propertyFile.getProperty("Type");
-        displayInfo(fileChosen);
+        currentPropertyFile = getPropertyFile(currentFileName);
+        displayInfo(currentFileName);
       } catch (ControllerException c) {
         showError(c.getMessage());
       }
@@ -98,24 +98,18 @@ public class Controller {
   public void displayInfo(String fileName) {
     mainView.getCenterGroup().getChildren().clear();
     HBox result = new HBox();
-    currentFileName = fileName;
-    Button startButton = makeButton(fileName,
-        event -> initializeSimulation(fileName + ".csv"));
+    System.out.println(currentFileName);
+    Button startButton = makeButton(currentFileName,
+            event -> initializeSimulation(currentFileName + ".csv"));
     result.getChildren().add(homeButton);
     result.getChildren().add(startButton);
     mainView.getTopGroup().getChildren().add(result);
     try {
       Text startupText = new Text();
-      Properties propertyFile = getPropertyFile(fileName);
-      String type = (String) propertyFile.getOrDefault("Type", "No Type Specified");
-      String title = (String) propertyFile.getOrDefault("Title", "No Title specified");
-      String author = (String) propertyFile.getOrDefault("Author", "No Author Specified");
-      String description = (String) propertyFile.getOrDefault("Description", "No Description Specified");
-
-//      String type = propertyFile.getProperty("Type");
-//      String title = propertyFile.getProperty("Title");
-//      String author = propertyFile.getProperty("Author");
-//      String description = propertyFile.getProperty("Description");
+      String type = (String) currentPropertyFile.getOrDefault("Type", "No Type Specified");
+      String title = (String) currentPropertyFile.getOrDefault("Title", "No Title specified");
+      String author = (String) currentPropertyFile.getOrDefault("Author", "No Author Specified");
+      String description = (String) currentPropertyFile.getOrDefault("Description", "No Description Specified");
       startupText.setText(type + "\n" + title + "\n" + author + "\n" + description);
       mainView.getCenterGroup().getChildren().add(startupText);
     } catch (ControllerException e) {
@@ -129,14 +123,11 @@ public class Controller {
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
     try {
-      Properties propertyFile = getPropertyFile(currentFileName);
-      this.mainModel = new Model(fileName, modelType);
-
-      //Properties defaultFile = getPropertyFile(modelType + "Default");
+      modelType = currentPropertyFile.getProperty("Type");
+      this.mainModel = new Model((String) currentPropertyFile.getOrDefault("FileName", currentFileName + ".csv"), modelType);
       defaultFile = getPropertyFile(modelType + "Default");
       String defaultStates = defaultFile.getProperty("States");
-
-      mainModel.initializeAllStates((String) propertyFile.getOrDefault("States", defaultStates));
+      mainModel.initializeAllStates((String) currentPropertyFile.getOrDefault("States", defaultStates));
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
           mainModel.getNumberOfColumns(), frontEndCellColors);
@@ -148,7 +139,6 @@ public class Controller {
       initializeButtonMenu();
     }
   }
-
 
   public void getSaveInputs() {
     mainModel.setPaused();
@@ -242,19 +232,17 @@ public class Controller {
   }
 
 
-  private Button makeButton(String property, EventHandler<ActionEvent> handler) {
+  private Button makeButton(String buttonName, EventHandler<ActionEvent> handler) {
     Button result = new Button();
-    result.setId(property);
-    result.setText(property);
+    result.setId(buttonName);
+    result.setText(buttonName);
     result.setOnAction(handler);
     return result;
   }
 
   public void initializeColorMapping(int state) {
-    Properties propertyFile = getPropertyFile(currentFileName);
-    //Properties defaultFile = getPropertyFile(modelType + "Default");
     String defaultColor = defaultFile.getProperty(String.valueOf(state));
-    String color = (String) propertyFile.getOrDefault(String.valueOf(state), defaultColor);
+    String color = (String) currentPropertyFile.getOrDefault(String.valueOf(state), defaultColor);
     if (!stateColorMapping.containsKey(state)) {
       stateColorMapping.put(state, color);
     }

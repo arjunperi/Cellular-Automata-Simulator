@@ -1,12 +1,15 @@
 package Model;
 
 
+import Controller.ControllerException;
 import cellsociety.Simulation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import com.sun.jdi.NativeMethodException;
 import org.assertj.core.internal.bytebuddy.matcher.StringMatcher;
 
 
@@ -76,11 +79,16 @@ public class Model {
     return gridOfCells.getCell(row, column);
   }
 
-  public void initializeAllStates(String allStates) {
-    this.allStates = new ArrayList<>();
-    String[] allStatesString = allStates.split(",");
-    for (String stateString : allStatesString) {
-      this.allStates.add(Integer.parseInt(stateString));
+  public void initializeAllStates(String allStates) throws ModelException {
+    try{
+      this.allStates = new ArrayList<>();
+      String[] allStatesString = allStates.split(",");
+      for (String stateString : allStatesString) {
+        this.allStates.add(Integer.parseInt(stateString));
+      }
+    }
+    catch (NumberFormatException e){
+      throw new ModelException("Invalid States Input");
     }
   }
 
