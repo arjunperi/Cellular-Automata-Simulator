@@ -22,7 +22,6 @@ import javafx.event.EventTarget;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 
 
@@ -40,7 +39,7 @@ public class Controller {
   public static final String DEFAULT_RESOURCE_FOLDER = "/" + RESOURCES;
   public static final String STYLESHEET = "GameOfLife.css";
   public static final String BLANK = " ";
-  private final ResourceBundle myResources;
+  private final ResourceBundle projectTextResources;
   private final Map<Integer, String> stateColorMapping = new HashMap<>();
   private List<List<String>> frontEndCellColors;
   private String currentFileName;
@@ -49,8 +48,8 @@ public class Controller {
   private TextField inputText;
 
   public Controller() {
-    this.mainView = new View();
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "English");
+    projectTextResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "English");
+    this.mainView = new View(projectTextResources);
     initializeButtonMenu();
   }
 
