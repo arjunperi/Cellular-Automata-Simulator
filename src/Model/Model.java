@@ -1,13 +1,18 @@
 package Model;
 
 
+import cellsociety.Simulation;
 import Controller.Controller;
 import java.util.ArrayList;
-import Controller.ControllerException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Queue;
+
+import com.sun.jdi.NativeMethodException;
+import javafx.scene.control.Alert;
+import org.assertj.core.internal.bytebuddy.matcher.StringMatcher;
+
 
 
 public abstract class Model {
@@ -17,6 +22,7 @@ public abstract class Model {
   public static final String DEFAULT = "Default";
   public static final String PROPERTIES = ".properties";
   public static final String INVALID = "Invalid File Name";
+  public static final String STATES_ERROR = "Invalid States Input";
   public static final Character SLASH = '/';
   public static final Character DOT = '.';
 
@@ -39,7 +45,7 @@ public abstract class Model {
     int csvTrim = fileName.lastIndexOf(DOT);
     String trimmedFileName = fileName.substring(lastSlash+1, csvTrim);
     this.propertyFile = getPropertyFile(trimmedFileName);
-    gridOfCells.setPropertyFiles(propertyFile,defaultPropertyFile);
+    gridOfCells.setPropertyFiles(propertyFile, defaultPropertyFile);
   }
 
   public boolean modelStep() {
@@ -53,13 +59,26 @@ public abstract class Model {
   }
 
   public void updateCells() {
-    for (int row = 0; row < gridOfCells.getCellsPerColumn(); row++) {
-      for (int column = 0; column < gridOfCells.getCellsPerRow(); column++) {
-        List<Cell> cellNeighbors = gridOfCells.getNeighbors(row, column);
-        updateState(row, column, cellNeighbors);
+    try {
+      for (int row = 0; row < gridOfCells.getCellsPerColumn(); row++) {
+        for (int column = 0; column < gridOfCells.getCellsPerRow(); column++) {
+          List<Cell> cellNeighbors = gridOfCells.getNeighbors(row, column);
+          updateState(row, column, cellNeighbors);
+        }
       }
+    } catch (ModelException e){
+      switchPause();
+      showError(e.getMessage());
     }
   }
+
+  public void showError(String message) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Controller Error");
+    alert.setContentText(message);
+    alert.show();
+    }
+
 
   protected abstract void updateState(int row, int column, List<Cell> cellNeighbors);
 
@@ -98,11 +117,16 @@ public abstract class Model {
     return gridOfCells.getCell(row, column);
   }
 
-  public void initializeAllStates(String allStates) {
-    this.allStates = new ArrayList<>();
-    String[] allStatesString = allStates.split(",");
-    for (String stateString : allStatesString) {
-      this.allStates.add(Integer.parseInt(stateString));
+  public void initializeAllStates(String allStates) throws ModelException {
+    try{
+      this.allStates = new ArrayList<>();
+      String[] allStatesString = allStates.split(",");
+      for (String stateString : allStatesString) {
+        this.allStates.add(Integer.parseInt(stateString));
+      }
+    }
+    catch (NumberFormatException e){
+      throw new ModelException(STATES_ERROR);
     }
   }
 
@@ -137,7 +161,7 @@ public abstract class Model {
       propertyFile.load(Controller.class.getClassLoader()
           .getResourceAsStream(fileName + PROPERTIES));
     } catch (Exception e) {
-      throw new ControllerException(INVALID, e);
+      throw new ModelException(INVALID);
     }
     return propertyFile;
   }

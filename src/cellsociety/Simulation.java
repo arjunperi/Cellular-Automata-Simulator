@@ -1,6 +1,7 @@
 package cellsociety;
 
 import Controller.Controller;
+import Controller.ControllerException;
 import View.View;
 import com.opencsv.CSVWriter;
 import java.io.FileWriter;
@@ -60,6 +61,7 @@ public class Simulation extends Application {
 
   private void gameStep() {
     mainController.gameStep();
+
   }
 
   public static void main(String[] args) throws IOException {

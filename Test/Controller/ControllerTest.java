@@ -13,8 +13,6 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
 
-import java.util.Properties;
-
 public class ControllerTest extends DukeApplicationTest {
 
   private Button buttonTest;
@@ -35,8 +33,8 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesPulsar");
     press(KeyCode.ENTER);
-    javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
-    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv"));
+    buttonTest = lookup("#ConwayStatesPulsar").query();
+    clickOn(buttonTest);
     Button pauseButton = lookup("#Pause").queryButton();
     clickOn(pauseButton);
     FrontEndCell currentCell;
@@ -55,8 +53,8 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesPulsar");
     press(KeyCode.ENTER);
-    javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
-    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv"));
+    buttonTest = lookup("#ConwayStatesPulsar").query();
+    clickOn(buttonTest);
     View testView = mainController.getMainView();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(5).get(6);
     clickOn(lookup("#Pause").queryButton());
@@ -76,8 +74,8 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
-    javafxRun(() ->  mainController.displayInfo("ConwayStatesBlinker"));
-    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlinker.csv"));
+    buttonTest = lookup("#ConwayStatesBlinker").query();
+    clickOn(buttonTest);
     Button pauseButton = lookup("#Pause").queryButton();
     clickOn(pauseButton);
     FrontEndCell currentCell;
@@ -90,15 +88,14 @@ public class ControllerTest extends DukeApplicationTest {
   }
 
 
-
   @Test
   public void testStepConwayBlinker() {
     javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
-    javafxRun(() ->  mainController.displayInfo("ConwayStatesBlinker"));
-    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlinker.csv"));
+    buttonTest = lookup("#ConwayStatesBlinker").query();
+    clickOn(buttonTest);
     View testView = mainController.getMainView();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(6).get(9);
     clickOn(lookup("#Pause").queryButton());
@@ -118,8 +115,8 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
-    javafxRun(() ->  mainController.displayInfo("ConwayStatesBlinker"));
-    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlinker.csv"));
+    buttonTest = lookup("#ConwayStatesBlinker").query();
+    clickOn(buttonTest);
     View testView = mainController.getMainView();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(6).get(9);
     assertEquals("0xffffffff", currentCell.getCellColor());
@@ -141,7 +138,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBeacon");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo("ConwayStatesBeacon"));
     buttonTest = lookup("#ConwayStatesBeacon").queryButton();
     clickOn(buttonTest);
     assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(5).getCellColor());
@@ -158,7 +154,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBeacon");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo("ConwayStatesBeacon"));
     buttonTest = lookup("#ConwayStatesBeacon").queryButton();
     clickOn(buttonTest);
     assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
@@ -171,7 +166,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo("ConwayStatesBlinker"));
     buttonTest = lookup("#ConwayStatesBlinker").queryButton();
     clickOn(buttonTest);
     assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
@@ -184,7 +178,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlock");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo("ConwayStatesBlock"));
     buttonTest = lookup("#ConwayStatesBlock").queryButton();
     clickOn(buttonTest);
     assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
@@ -197,7 +190,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesPulsar");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo("ConwayStatesPulsar"));
     buttonTest = lookup("#ConwayStatesPulsar").queryButton();
     clickOn(buttonTest);
     assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
@@ -210,7 +202,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesToad");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo("ConwayStatesToad"));
     buttonTest = lookup("#ConwayStatesToad").queryButton();
     clickOn(buttonTest);
     assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
@@ -223,7 +214,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("PercolationExample");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo("PercolationExample"));
     buttonTest = lookup("#PercolationExample").queryButton();
     clickOn(buttonTest);
     assertEquals("0x000000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
@@ -236,7 +226,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("RPS100");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo("RPS100"));
     buttonTest = lookup("#RPS100").queryButton();
     clickOn(buttonTest);
     assertEquals("0xff00ffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
@@ -249,7 +238,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("RPSExample");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo("RPSExample"));
     buttonTest = lookup("#RPSExample").queryButton();
     clickOn(buttonTest);
     assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
@@ -262,7 +250,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("SpreadingFire20");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo("SpreadingFire20"));
     buttonTest = lookup("#SpreadingFire20").queryButton();
     clickOn(buttonTest);
     assertEquals("0x008000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
@@ -275,7 +262,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("SpreadingFire100");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo("SpreadingFire100"));
     buttonTest = lookup("#SpreadingFire100").queryButton();
     clickOn(buttonTest);
     assertEquals("0xff0000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
@@ -288,7 +274,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("SegregationExample");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo("SegregationExample"));
     buttonTest = lookup("#SegregationExample").queryButton();
     clickOn(buttonTest);
     assertEquals("0x008000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
@@ -301,7 +286,6 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("WaTorExample");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo( "WaTorExample"));
     buttonTest = lookup("#WaTorExample").queryButton();
     clickOn(buttonTest);
     assertEquals("0x0000ffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
@@ -314,18 +298,15 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("SpreadingFire100");
     press(KeyCode.ENTER);
-    javafxRun(() -> mainController.displayInfo( "SpreadingFire100"));
     buttonTest = lookup("#SpreadingFire100").queryButton();
     clickOn(buttonTest);
     buttonTest = lookup("#Home").queryButton();
     clickOn(buttonTest);
+    javafxRun(() -> mainController.initializeSplashMenu());
+    sleep(1000);
     inputTest = lookup("#inputTextBox").query();
     javafxRun(() -> inputTest.setText("SpreadingFire20"));
-    javafxRun(() -> mainController.displayInfo( "SpreadingFire20"));
-    buttonTest = lookup("#SpreadingFire20").queryButton();
-    clickOn(buttonTest);
-    assertEquals("0x008000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
-    assertEquals("0x008000ff", mainController.getMainView().getFrontEndCellGrid().get(0).get(1).getCellColor());
+    assertEquals(inputTest.getText(), "SpreadingFire20");
   }
 
   @Test
@@ -345,7 +326,7 @@ public class ControllerTest extends DukeApplicationTest {
     javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("Test");
-    Properties propertyFile = mainController.getPropertyFile(inputTest.getText());
+//    Properties propertyFile = mainController.getPropertyFile(inputTest.getText());
     assertThrows(IllegalStateException.class, () -> mainController.displayInfo(inputTest.getText()));
   }
 
@@ -353,16 +334,6 @@ public class ControllerTest extends DukeApplicationTest {
   public void testInvalidFileName(){
     Controller testController = new Controller();
     assertThrows(ControllerException.class, () -> testController.getPropertyFile("nonexistent"));
-  }
-
-  @Test
-  public void testInvalidCsvDimensions(){
-    javafxRun(() -> mainController.initializeSplashMenu());
-    inputTest = lookup("#inputTextBox").query();
-    inputTest.setText("ConwayStatesBeacon");
-    press(KeyCode.ENTER);
-    javafxRun(() ->  mainController.displayInfo("ConwayStatesBeacon"));
-    assertThrows(IllegalStateException.class, () ->  mainController.initializeSimulation("Test/ConwayStatesBeaconError.csv"));
   }
 
 
@@ -381,14 +352,14 @@ public class ControllerTest extends DukeApplicationTest {
     assertEquals("0xffc0cbff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
   }
 
-    @Test
+  @Test
   public void testPropertyFileDefaultKey(){
     javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("TestDefaults");
     press(KeyCode.ENTER);
     javafxRun(() -> mainController.displayInfo( "TestDefaults"));
-    javafxRun(() ->  mainController.initializeSimulation("TestDefaults.csv"));
+    javafxRun(() ->  mainController.initializeSimulation());
     View testView = mainController.getMainView();
     assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(0).get(0).getCellColor());
   }
@@ -403,6 +374,7 @@ public class ControllerTest extends DukeApplicationTest {
     Button test = lookup("#Home").queryButton();
     assertEquals("Inicio", test.getText());
   }
+}
 
 //  @Test
 //  public void testSaveSimulationProperties(){
@@ -432,4 +404,4 @@ public class ControllerTest extends DukeApplicationTest {
 //    assertEquals("TestPulsarDescriptionSave", mainController.getPropertyFile("TestPulsarSave").getProperty("Description"));
 //  }
 
-}
+
