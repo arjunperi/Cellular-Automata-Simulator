@@ -44,7 +44,7 @@ public class ViewTest extends DukeApplicationTest {
       javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBeacon.csv"));
       assertEquals("0xffffffff",
               mainController.getMainView().getFrontEndCellGrid().get(7).get(7).getCellColor());
-      mainController.handleKeyInput(KeyCode.S);
+      clickOn(lookup("#Step").queryButton());
       javafxRun(() -> mainController.gameStep());
       assertEquals("0x000000ff",
               mainController.getMainView().getFrontEndCellGrid().get(7).get(7).getCellColor());
@@ -60,7 +60,7 @@ public class ViewTest extends DukeApplicationTest {
       javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlinker.csv"));
       View testView = mainController.getMainView();
       assertEquals("0x000000ff", testView.getFrontEndCellGrid().get(7).get(8).getCellColor());
-      mainController.handleKeyInput(KeyCode.S);
+      clickOn(lookup("#Step").queryButton());
       javafxRun(() -> mainController.gameStep());
       assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(7).get(8).getCellColor());
   }
@@ -75,7 +75,7 @@ public class ViewTest extends DukeApplicationTest {
       javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlock.csv"));
       View testView = mainController.getMainView();
       assertEquals("0x000000ff", testView.getFrontEndCellGrid().get(9).get(13).getCellColor());
-      mainController.handleKeyInput(KeyCode.S);
+      clickOn(lookup("#Step").queryButton());
       javafxRun(() -> mainController.gameStep());
       assertEquals("0x000000ff", testView.getFrontEndCellGrid().get(9).get(13).getCellColor());
   }
@@ -90,7 +90,7 @@ public class ViewTest extends DukeApplicationTest {
       javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesToad.csv"));
       View testView = mainController.getMainView();
       assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(9).get(10).getCellColor());
-      mainController.handleKeyInput(KeyCode.S);
+      clickOn(lookup("#Step").queryButton());
       javafxRun(() -> mainController.gameStep());
       assertEquals("0x000000ff", testView.getFrontEndCellGrid().get(9).get(10).getCellColor());
   }

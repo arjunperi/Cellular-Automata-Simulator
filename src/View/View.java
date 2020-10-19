@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -15,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
@@ -134,7 +136,7 @@ public class View {
   }
 
   public void initializeSimulationMenu(EventHandler<ActionEvent> saveEvent,EventHandler<ActionEvent> changeColorEvent,
-      EventHandler<ActionEvent> graphEvent, EventHandler<ActionEvent> pauseEvent, EventHandler<ActionEvent> stepEvent){
+      EventHandler<ActionEvent> graphEvent, EventHandler<ActionEvent> pauseEvent, EventHandler<ActionEvent> stepEvent, ChangeListener<Number> sliderEvent){
     HBox topMenuBox = new HBox();
     Button saveButton = makeButton(viewTextResources.getString("SaveButtonText"), saveEvent);
     Button changeColorsButton = makeButton(viewTextResources.getString("ColorsButtonText"), changeColorEvent);
@@ -148,7 +150,19 @@ public class View {
     topMenuBox.getChildren().add(showGraphButton);
     topMenuBox.getChildren().add(pauseButton);
     topMenuBox.getChildren().add(stepButton);
+    topMenuBox.getChildren().add(createSpeedSlider(sliderEvent));
     this.topGroup.getChildren().add(topMenuBox);
+  }
+
+  private Slider createSpeedSlider(ChangeListener<Number> sliderEvent){
+    Slider speedSlider = new Slider(0,100,50);
+    speedSlider.setMinorTickCount(100);
+    speedSlider.setMajorTickUnit(1);
+    speedSlider.setMinorTickCount(1);
+    speedSlider.setBlockIncrement(10);
+    speedSlider.valueProperty().addListener(sliderEvent);
+    speedSlider.setId("slider");
+    return speedSlider;
   }
 
   public Dialog changeColorsPopUp(TextField stateInput, TextField colorInput){

@@ -35,7 +35,7 @@ public class CSVWriteTest extends DukeApplicationTest {
       View testView = mainController.getMainView();
       FrontEndCell currentCell = testView.getFrontEndCellGrid().get(7).get(10);
       assertEquals("0x000000ff", currentCell.getCellColor());
-      mainController.handleKeyInput(KeyCode.S);
+      clickOn(lookup("#Step").queryButton());
       javafxRun(() -> mainController.initializeSplashMenu());
       inputTest = lookup("#inputTextBox").query();
       inputTest.setText("ConwayStatesToad");
@@ -58,7 +58,7 @@ public class CSVWriteTest extends DukeApplicationTest {
       View testView = mainController.getMainView();
       FrontEndCell currentCell = testView.getFrontEndCellGrid().get(4).get(5);
       assertEquals("0x000000ff", currentCell.getCellColor());
-      mainController.handleKeyInput(KeyCode.S);
+      clickOn(lookup("#Step").queryButton());
       javafxRun(() -> mainController.initializeSplashMenu());
       inputTest = lookup("#inputTextBox").query();
       inputTest.setText("ConwayStatesPulsar");
