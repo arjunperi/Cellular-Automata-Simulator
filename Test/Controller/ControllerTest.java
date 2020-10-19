@@ -3,13 +3,11 @@ package Controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import Model.Model;
 import View.FrontEndCell;
 import View.View;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
@@ -32,7 +30,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testPauseConwayPulsar() {
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesPulsar");
     press(KeyCode.ENTER);
@@ -51,7 +49,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStepConwayPulsar() {
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesPulsar");
     press(KeyCode.ENTER);
@@ -74,7 +72,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testPauseConwayBlinker() {
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
@@ -94,7 +92,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStepConwayBlinker() {
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
@@ -180,7 +178,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testChangeCellState() {
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBeacon");
     press(KeyCode.ENTER);
@@ -198,7 +196,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStartConwayBeaconStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBeacon");
     press(KeyCode.ENTER);
@@ -211,7 +209,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStartConwayBlinkerStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
@@ -224,7 +222,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStartConwayBlockStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlock");
     press(KeyCode.ENTER);
@@ -237,7 +235,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStartConwayPulsarStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesPulsar");
     press(KeyCode.ENTER);
@@ -250,7 +248,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStartConwayToadStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesToad");
     press(KeyCode.ENTER);
@@ -263,7 +261,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testPercolationExampleStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("PercolationExample");
     press(KeyCode.ENTER);
@@ -276,7 +274,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testRPS100StartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("RPS100");
     press(KeyCode.ENTER);
@@ -289,7 +287,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testRPSExampleStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("RPSExample");
     press(KeyCode.ENTER);
@@ -302,7 +300,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testSpreadingFire20StartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("SpreadingFire20");
     press(KeyCode.ENTER);
@@ -315,7 +313,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testSpreadingFire100StartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("SpreadingFire100");
     press(KeyCode.ENTER);
@@ -328,7 +326,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testSegregationExampleStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("SegregationExample");
     press(KeyCode.ENTER);
@@ -341,7 +339,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testWaTorExampleStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("WaTorExample");
     press(KeyCode.ENTER);
@@ -354,7 +352,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testHomeButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("SpreadingFire100");
     press(KeyCode.ENTER);
@@ -375,7 +373,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testDialogInput(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
@@ -387,7 +385,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testInvalidModelType(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("Test");
     Properties propertyFile = mainController.getPropertyFile(inputTest.getText());
@@ -402,7 +400,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testInvalidCsvDimensions(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBeacon");
     press(KeyCode.ENTER);
@@ -413,7 +411,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testupdateColorStateMapping(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
@@ -428,16 +426,26 @@ public class ControllerTest extends DukeApplicationTest {
 
     @Test
   public void testPropertyFileDefaultKey(){
-      javafxRun(() -> mainController.initializeButtonMenu());
-      inputTest = lookup("#inputTextBox").query();
-      inputTest.setText("TestDefaults");
-      press(KeyCode.ENTER);
-      javafxRun(() -> mainController.displayInfo( "TestDefaults"));
-      javafxRun(() ->  mainController.initializeSimulation("TestDefaults.csv"));
-      View testView = mainController.getMainView();
-      assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(0).get(0).getCellColor());
-    }
+    javafxRun(() -> mainController.initializeSplashMenu());
+    inputTest = lookup("#inputTextBox").query();
+    inputTest.setText("TestDefaults");
+    press(KeyCode.ENTER);
+    javafxRun(() -> mainController.displayInfo( "TestDefaults"));
+    javafxRun(() ->  mainController.initializeSimulation("TestDefaults.csv"));
+    View testView = mainController.getMainView();
+    assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(0).get(0).getCellColor());
+  }
 
+  @Test
+  public void testLanguageChange(){
+    javafxRun(() -> mainController.initializeSplashMenu());
+    clickOn(lookup("#spanish").queryButton());
+    inputTest = lookup("#inputTextBox").query();
+    inputTest.setText("TestDefaults");
+    press(KeyCode.ENTER);
+    Button test = lookup("#Homegit ").queryButton();
+    assertEquals("Inicio", test.getText());
+  }
 
 //  @Test
 //  public void testSaveSimulationProperties(){

@@ -5,6 +5,7 @@ import cellsociety.Simulation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -32,13 +33,15 @@ public class View {
   private List<List<String>> frontEndCellColors;
   private TextField inputText;
   private Button homeButton;
+  private ResourceBundle viewTextResources;
 
-  public View() {
+  public View(ResourceBundle resources) {
     topGroup = new Group();
     centerGroup = new Group();
     root = new BorderPane();
     root.setCenter(centerGroup);
     root.setTop(topGroup);
+    this.viewTextResources = resources;
   }
 
   public Scene setupScene() {
@@ -89,16 +92,23 @@ public class View {
     }
   }
 
-  public void createInputTextField(TextField inputText, EventHandler<ActionEvent> inputTextEvent){
+  public void createInputTextField(TextField inputText, EventHandler<ActionEvent> inputTextEvent,
+      EventHandler<ActionEvent> englishEvent,EventHandler<ActionEvent> spanishEvent, EventHandler<ActionEvent> languageEvent){
     clearCenterGroup();
     clearTopMenuGroup();
     VBox inputTextBox = new VBox();
     this.inputText = inputText;
     this.inputText.setId("inputTextBox");
     this.inputText.setOnAction(inputTextEvent);
-    Label inputLabel = new Label("Enter Simulation Name and Press Enter");
+    Label inputLabel = new Label(viewTextResources.getString("InputLabelText"));
     inputTextBox.getChildren().add(inputLabel);
     inputTextBox.getChildren().add(inputText);
+    inputTextBox.getChildren().add(makeButton("English", englishEvent));
+    Button spanishButton = makeButton("Spanish", spanishEvent);
+    spanishButton.setId("spanish");
+    inputTextBox.getChildren().add(spanishButton);
+    inputTextBox.getChildren().add(makeButton("FakeLanguage", languageEvent));
+
     this.centerGroup.getChildren().add(inputTextBox);
   }
 
@@ -106,6 +116,7 @@ public class View {
     clearCenterGroup();
     HBox simulationInfoBox = new HBox();
     Button startButton = makeButton(fileName, startButtonEvent);
+    updateHomeButton();
     simulationInfoBox.getChildren().add(homeButton);
     simulationInfoBox.getChildren().add(startButton);
     this.topGroup.getChildren().add(simulationInfoBox);
@@ -124,9 +135,10 @@ public class View {
 
   public void initializeSimulationMenu(EventHandler<ActionEvent> saveEvent,EventHandler<ActionEvent> changeColorEvent,EventHandler<ActionEvent> graphEvent){
     HBox topMenuBox = new HBox();
-    Button saveButton = makeButton("Save", saveEvent);
-    Button changeColorsButton = makeButton("changeColors", changeColorEvent);
-    Button showGraphButton = makeButton("State Concentration Graph", graphEvent);
+    Button saveButton = makeButton(viewTextResources.getString("SaveButtonText"), saveEvent);
+    Button changeColorsButton = makeButton(viewTextResources.getString("ColorsButtonText"), changeColorEvent);
+    Button showGraphButton = makeButton(viewTextResources.getString("GraphButtonText"), graphEvent);
+    updateHomeButton();
     topMenuBox.getChildren().add(homeButton);
     topMenuBox.getChildren().add(saveButton);
     topMenuBox.getChildren().add(changeColorsButton);
@@ -139,8 +151,8 @@ public class View {
     colorInput.setId("colorInput");
     colorInput.setId("stateInput");
     GridPane grid = new GridPane();
-    colorInput.setPromptText("New Color");
-    stateInput.setPromptText("State to Change");
+    colorInput.setPromptText(viewTextResources.getString("ColorInputPrompt"));
+    stateInput.setPromptText(viewTextResources.getString("StateInputPrompt"));
     GridPane.setConstraints(stateInput, 0, 0);
     grid.getChildren().add(stateInput);
     GridPane.setConstraints(colorInput, 0, 1);
@@ -155,9 +167,9 @@ public class View {
     titleInput.setId("titleInput");
     authorInput.setId("authorInput");
     descriptionInput.setId("descriptionInput");
-    titleInput.setPromptText("Title: ");
-    authorInput.setPromptText("Author: ");
-    descriptionInput.setPromptText("Description: ");
+    titleInput.setPromptText(viewTextResources.getString("TitleInputText"));
+    authorInput.setPromptText(viewTextResources.getString("AuthorInputText"));
+    descriptionInput.setPromptText(viewTextResources.getString("DescriptionInputText"));
     GridPane grid = new GridPane();
     GridPane.setConstraints(titleInput, 0, 0);
     grid.getChildren().add(titleInput);
@@ -169,10 +181,6 @@ public class View {
     return saveBox;
   }
 
-  public void initializeButtonMenu(){}
-  public void addTopBarMenu(){}
-  public void makeButton(){}
-
   private Button makeButton(String property, EventHandler<ActionEvent> handler) {
     Button result = new Button();
     result.setId(property);
@@ -182,18 +190,23 @@ public class View {
   }
 
   public Button setHomeButton(EventHandler<ActionEvent> inputTextEvent){
-    this.homeButton = makeButton("Home", inputTextEvent);
+    this.homeButton = makeButton(viewTextResources.getString("HomeButtonText"), inputTextEvent);
+    this.homeButton.setId("Home");
     return this.homeButton;
+  }
+
+  public void updateHomeButton(){
+    this.homeButton.setText(viewTextResources.getString("HomeButtonText"));
   }
 
   private void showError(String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle("Controller Error");
+    alert.setTitle(viewTextResources.getString("ControllerAlertText"));
     alert.setContentText(message);
     alert.showAndWait();
   }
 
-
+  public void updateResourceBundle(ResourceBundle resources){this.viewTextResources = resources;}
   public void clearTopMenuGroup(){this.topGroup.getChildren().clear();}
   public void clearCenterGroup(){this.centerGroup.getChildren().clear();}
   public List<List<FrontEndCell>> getFrontEndCellGrid() {
