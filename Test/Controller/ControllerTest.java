@@ -443,7 +443,7 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("TestDefaults");
     press(KeyCode.ENTER);
-    Button test = lookup("#Homegit ").queryButton();
+    Button test = lookup("#Home").queryButton();
     assertEquals("Inicio", test.getText());
   }
 
