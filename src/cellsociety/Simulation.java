@@ -63,23 +63,7 @@ public class Simulation extends Application {
     mainController.gameStep();
   }
 
-  public static void main(String[] args) {
-//    try (CSVWriter csvWriter = new CSVWriter(new FileWriter("data/RPSExample.csv"))) {
-//      int size=40;
-//      String[] rowsAndColumns = new String[] {Integer.toString(size), Integer.toString(size)};
-//      Random random = new Random();
-//      csvWriter.writeNext(rowsAndColumns,false);
-//      for(int i=0; i<size;i++) {
-//        String[] currentRowStates = new String[size];
-//        for(int j=0;j< size;j++) {
-//          currentRowStates[j] = Integer.toString(random.nextInt(5));
-//        }
-//        csvWriter.writeNext(currentRowStates,false);
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-
+  public static void main(String[] args) throws IOException {
     launch(args);
   }
 }

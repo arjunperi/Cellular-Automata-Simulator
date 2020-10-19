@@ -7,6 +7,11 @@ import View.FrontEndCell;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+
+import java.util.*;
+
+import javafx.collections.FXCollections;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +48,7 @@ public class Controller {
   private final Map<Integer, Integer> stateCountsMap = new HashMap<>();
 
   private String modelType;
+  private Properties defaultFile;
 
   private static final String RESOURCES = "Resources/";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES.replace("/", ".");
@@ -56,12 +62,6 @@ public class Controller {
   private GraphController graphController;
   private final Button homeButton = makeButton("Home", event -> initializeButtonMenu());
   private TextField inputText;
-  private final Map<String, String> saveList = new HashMap<>();
-
-  private OutputStream propertiesPath;
-  private FileWriter writer;
-
-  private final Map<String, String> propertyFills = new HashMap<>();
 
   public Controller() {
     this.mainView = new View();
@@ -108,10 +108,10 @@ public class Controller {
     try {
       Text startupText = new Text();
       Properties propertyFile = getPropertyFile(fileName);
-      String type = propertyFile.getProperty("Type");
-      String title = propertyFile.getProperty("Title");
-      String author = propertyFile.getProperty("Author");
-      String description = propertyFile.getProperty("Description");
+      String type = (String) propertyFile.getOrDefault("Type", "No Type Specified");
+      String title = (String) propertyFile.getOrDefault("Title", "No Title specified");
+      String author = (String) propertyFile.getOrDefault("Author", "No Author Specified");
+      String description = (String) propertyFile.getOrDefault("Description", "No Description Specified");
       startupText.setText(type + "\n" + title + "\n" + author + "\n" + description);
       mainView.getCenterGroup().getChildren().add(startupText);
     } catch (ControllerException e) {
@@ -129,9 +129,10 @@ public class Controller {
       Class<?> cl = Class.forName("Model." + modelType + "Model");
       this.mainModel = (Model) cl.getConstructor(String.class, String.class)
           .newInstance(fileName, modelType);
-      //this.mainModel = new Model(fileName, modelType);
+      defaultFile = getPropertyFile(modelType + "Default");
+      String defaultStates = defaultFile.getProperty("States");
 
-      mainModel.initializeAllStates(propertyFile.getProperty("States"));
+      mainModel.initializeAllStates((String) propertyFile.getOrDefault("States", defaultStates));
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
           mainModel.getNumberOfColumns(), frontEndCellColors);
@@ -142,12 +143,8 @@ public class Controller {
       showError("Invalid Model Type");
       initializeButtonMenu();
     }
-//    catch (FileNotFoundException e) {
-//      e.printStackTrace();
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
   }
+
 
   public void getSaveInputs() {
     mainModel.setPaused();
@@ -171,25 +168,24 @@ public class Controller {
     grid.getChildren().add(descriptionInput);
     saveBox.getDialogPane().setContent(grid);
     Optional<String> result = saveBox.showAndWait();
-    propertyFills.put("Title", titleInput.getText());
-    propertyFills.put("Author", authorInput.getText());
-    propertyFills.put("Description", descriptionInput.getText());
+    Properties savedProperties = new Properties();
+    savedProperties.setProperty("Title", titleInput.getText());
+    savedProperties.setProperty("Author", authorInput.getText());
+    savedProperties.setProperty("Description", descriptionInput.getText());
+    savedProperties.setProperty("Type", modelType);
     if (result.isPresent()) {
-      writeToPropertyFile();
-      mainModel.writeToCSV(propertyFills.get("Title") + ".csv");
+      writeToPropertyFile(savedProperties);
+      mainModel.writeToCSV(savedProperties.getProperty("Title") + ".csv");
     }
     mainModel.switchPause();
   }
 
-  public void writeToPropertyFile() {
+  public void writeToPropertyFile(Properties propertyFile) {
     try {
       FileWriter writer = new FileWriter(
-          "Properties/" + propertyFills.get("Title") + ".properties");
-      Properties prop = new Properties();
-      propertyFills.put("Type", modelType);
-      updateProperties(prop, writer);
-      System.out.println("write");
-    } catch (IOException ex) {
+              "Properties/" + propertyFile.getProperty("Title") + ".properties");
+      propertyFile.store(writer, null);
+    }catch (IOException ex) {
       ex.printStackTrace();
     }
     initializeButtonMenu();
@@ -252,14 +248,8 @@ public class Controller {
 
   public void initializeColorMapping(int state) {
     Properties propertyFile = getPropertyFile(currentFileName);
-
-//    if (!propertyFile.containsKey(String.valueOf(state)) || propertyFile.getProperty(String.valueOf(state)) == null) {
-//      Properties defaultFile = getPropertyFile(modelType + "Default");
-//      String defaultColor = defaultFile.getProperty(String.valueOf(state));
-//      propertyFills.putIfAbsent(String.valueOf(state), defaultColor);
-//      updateProperties(propertyFile,writer);
-//    }
-    String color = propertyFile.getProperty(String.valueOf(state));
+    String defaultColor = defaultFile.getProperty(String.valueOf(state));
+    String color = (String) propertyFile.getOrDefault(String.valueOf(state), defaultColor);
     if (!stateColorMapping.containsKey(state)) {
       stateColorMapping.put(state, color);
     }
@@ -360,17 +350,6 @@ public class Controller {
     }
     this.graphController = new GraphController(this.mainModel, this.stateColorMapping);
     this.graphShowing = true;
-  }
-
-  private void updateProperties(Properties propertyFile, FileWriter writer) {
-    try {
-      for (String property : propertyFills.keySet()) {
-        propertyFile.setProperty(property, propertyFills.get(property));
-      }
-      propertyFile.store(writer, null);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 }
 

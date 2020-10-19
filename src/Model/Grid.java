@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.Queue;
 import javafx.scene.control.Alert;
+import org.hamcrest.Condition;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -76,18 +77,21 @@ public class Grid {
   }
 
   protected List<Cell> getNeighbors(int x, int y) {
+    String defaultShape = defaultPropertyFile.getProperty("Shape");
+    String defaultNeighborhood = defaultPropertyFile.getProperty("NeighborhoodType");
+    String defaultEdge = defaultPropertyFile.getProperty("EdgePolicy");
     String shapeAndType =
-        propertyFile.getProperty("Shape") + propertyFile.getProperty("NeighborhoodType");
+            (String) propertyFile.getOrDefault("Shape", defaultShape) + propertyFile.getOrDefault("NeighborhoodType", defaultNeighborhood);
     int[][] allPossibleNeighbors = neighborhoodTypes.valueOf(shapeAndType).neighborhood;
     List<Cell> neighbors = new ArrayList<>();
-    if (propertyFile.getProperty("EdgePolicy").equals(TOROIDAL)) {
+    if (propertyFile.getOrDefault("EdgePolicy", defaultEdge).equals(TOROIDAL)) {
       for (int[] possibleNeighbor : allPossibleNeighbors) {
         int currentX = ((int) getCellsPerRow() + x + possibleNeighbor[0]) % (int) getCellsPerRow();
         int currentY =
             ((int) getCellsPerRow() + y + possibleNeighbor[1]) % (int) getCellsPerColumn();
         neighbors.add(getCell(currentX, currentY));
       }
-    } else if (propertyFile.getProperty("EdgePolicy").equals(OSCILLATING)) {
+    } else if (propertyFile.getOrDefault("EdgePolicy", defaultEdge).equals(OSCILLATING)) {
       for (int[] possibleNeighbor : allPossibleNeighbors) {
         int currentX = x + possibleNeighbor[0];
         int currentY = y + possibleNeighbor[1];
@@ -98,7 +102,7 @@ public class Grid {
         }
         neighbors.add(getCell(currentX, currentY));
       }
-    } else if (propertyFile.getProperty("EdgePolicy").equals(FINITE)) {
+    } else if (propertyFile.getOrDefault("EdgePolicy", defaultEdge).equals(FINITE)) {
       for (int[] possibleNeighbor : allPossibleNeighbors) {
         int currentX = x + possibleNeighbor[0];
         int currentY = y + possibleNeighbor[1];
@@ -173,6 +177,21 @@ public class Grid {
     return cellsPerColumn;
   }
 
+  public Properties getPropertyFile(String fileName) {
+    Properties propertyFile = new Properties();
+    if (fileName.contains(".csv")){
+      int lastSlash =fileName.lastIndexOf('/');
+      int csvTrim = fileName.lastIndexOf('.');
+      fileName = fileName.substring(lastSlash+1, csvTrim);
+    }
+    try {
+      propertyFile.load(Controller.class.getClassLoader()
+          .getResourceAsStream(fileName + ".properties"));
+    } catch (Exception e) {
+      throw new ControllerException("Invalid File Name", e);
+    }
+    return propertyFile;
+  }
   public enum neighborhoodTypes {
     RECTANGLECARDINAL(new int[][]{{-1, 0},
         {0, 1}, {1, 0},

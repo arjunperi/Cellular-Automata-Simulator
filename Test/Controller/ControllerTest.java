@@ -426,6 +426,19 @@ public class ControllerTest extends DukeApplicationTest {
     assertEquals("0xffc0cbff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
   }
 
+    @Test
+  public void testPropertyFileDefaultKey(){
+      javafxRun(() -> mainController.initializeButtonMenu());
+      inputTest = lookup("#inputTextBox").query();
+      inputTest.setText("TestDefaults");
+      press(KeyCode.ENTER);
+      javafxRun(() -> mainController.displayInfo( "TestDefaults"));
+      javafxRun(() ->  mainController.initializeSimulation("TestDefaults.csv"));
+      View testView = mainController.getMainView();
+      assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(0).get(0).getCellColor());
+    }
+
+
 //  @Test
 //  public void testSaveSimulationProperties(){
 //    javafxRun(() -> mainController.initializeButtonMenu());
@@ -454,7 +467,4 @@ public class ControllerTest extends DukeApplicationTest {
 //    assertEquals("TestPulsarDescriptionSave", mainController.getPropertyFile("TestPulsarSave").getProperty("Description"));
 //  }
 
-  //  @Test
-//  public void testDefaultKeyPlacement(){}
-//
 }
