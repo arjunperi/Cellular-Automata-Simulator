@@ -26,10 +26,11 @@ public class Grid {
   private final double cellsPerRow;
   private final double cellsPerColumn;
   Properties propertyFile;
+  Properties defaultPropertyFile;
 
 
-  public Grid(String fileName, String modelType, Queue<Cell> emptyQueue) {
-    this.propertyFile = getPropertyFile(fileName);
+
+  public Grid(String fileName, String modelType) {
     List<String[]> cellStates = readAll(fileName);
     String fullModelClassName = "Model." + modelType + "Cell";
     String[] firstRow = cellStates.get(0);
@@ -44,8 +45,8 @@ public class Grid {
         for (String stateString : row) {
           int state = Integer.parseInt(stateString);
           Class<?> cl = Class.forName(fullModelClassName);
-          Cell cellToAdd = (Cell) cl.getConstructor(int.class, Queue.class)
-              .newInstance(state, emptyQueue);
+          Cell cellToAdd = (Cell) cl.getConstructor(int.class)
+              .newInstance(state);
           cellRow.add(cellToAdd);
         }
         gridOfCells.add(cellRow);
@@ -53,6 +54,11 @@ public class Grid {
     } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException | ModelException e) {
       showError(e.getMessage());
     }
+  }
+
+  protected void setPropertyFiles(Properties propertyFile, Properties defaultPropertyFile) {
+    this.propertyFile=propertyFile;
+    this.defaultPropertyFile = defaultPropertyFile;
   }
 
   private void showError(String message) {
@@ -112,14 +118,14 @@ public class Grid {
   //cast the grid to the interface, pass it into the cell.
   //this interface will define neighborhood, as well as the list/way to get empty cells.
 
-  protected void updateCells() {
-    for (int row = 0; row < gridOfCells.size(); row++) {
-      for (int column = 0; column < gridOfCells.get(0).size(); column++) {
-        List<Cell> cellNeighbors = getNeighbors(row, column);
-        getCell(row, column).updateState(cellNeighbors);
-      }
-    }
-  }
+//  protected void updateCells() {
+//    for (int row = 0; row < gridOfCells.size(); row++) {
+//      for (int column = 0; column < gridOfCells.get(0).size(); column++) {
+//        List<Cell> cellNeighbors = getNeighbors(row, column);
+//        getCell(row, column).updateState(cellNeighbors);
+//      }
+//    }
+//  }
 
   protected void toNextState() {
     for (int row = 0; row < gridOfCells.size(); row++) {
@@ -165,20 +171,6 @@ public class Grid {
 
   public double getCellsPerColumn() {
     return cellsPerColumn;
-  }
-
-  public Properties getPropertyFile(String fileName) {
-    Properties propertyFile = new Properties();
-    int lastSlash =fileName.lastIndexOf('/');
-    int csvTrim = fileName.lastIndexOf('.');
-    String trimmedFileName = fileName.substring(lastSlash+1, csvTrim);
-    try {
-      propertyFile.load(Controller.class.getClassLoader()
-          .getResourceAsStream(trimmedFileName + ".properties"));
-    } catch (Exception e) {
-      throw new ControllerException("Invalid File Name", e);
-    }
-    return propertyFile;
   }
 
   public enum neighborhoodTypes {

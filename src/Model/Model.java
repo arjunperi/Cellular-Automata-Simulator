@@ -1,30 +1,41 @@
 package Model;
 
 
-import cellsociety.Simulation;
+import Controller.Controller;
 import java.util.ArrayList;
-import java.util.Arrays;
+import Controller.ControllerException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Queue;
-import org.assertj.core.internal.bytebuddy.matcher.StringMatcher;
 
 
-public class Model {
+public abstract class Model {
 
   private static final int ANIMATION_RATE_CHANGE = 5;
   private static final boolean PAUSED = true;
+  public static final String DEFAULT = "Default";
+  public static final Character SLASH = '/';
+  public static final Character DOT = '.';
 
   public double framesPerModelUpdate = 60;
   protected final Grid gridOfCells;
   protected final Queue<Cell> emptyQueue = new LinkedList<>();
+  protected final Properties defaultPropertyFile;
+  protected final Properties propertyFile;
   private boolean isPaused = false;
   private boolean isStep = false;
   private double cycles = 0;
   private List<Integer> allStates;
 
   public Model(String fileName, String modelType) {
-    gridOfCells = new Grid(fileName, modelType, emptyQueue);
+    gridOfCells = new Grid(fileName, modelType);
+    this.defaultPropertyFile = getPropertyFile(modelType + DEFAULT);
+    int lastSlash =fileName.lastIndexOf(SLASH);
+    int csvTrim = fileName.lastIndexOf(DOT);
+    String trimmedFileName = fileName.substring(lastSlash+1, csvTrim);
+    this.propertyFile = getPropertyFile(trimmedFileName);
+    gridOfCells.setPropertyFiles(propertyFile,defaultPropertyFile);
   }
 
   public boolean modelStep() {
@@ -38,8 +49,15 @@ public class Model {
   }
 
   public void updateCells() {
-    gridOfCells.updateCells();
+    for (int row = 0; row < gridOfCells.getCellsPerColumn(); row++) {
+      for (int column = 0; column < gridOfCells.getCellsPerRow(); column++) {
+        List<Cell> cellNeighbors = gridOfCells.getNeighbors(row, column);
+        updateState(row, column, cellNeighbors);
+      }
+    }
   }
+
+  protected abstract void updateState(int row, int column, List<Cell> cellNeighbors);
 
 
   public void writeToCSV(String fileOut) {
@@ -106,5 +124,16 @@ public class Model {
 
   public void slowDown() {
     this.framesPerModelUpdate = Math.min(100, framesPerModelUpdate + ANIMATION_RATE_CHANGE);
+  }
+
+  public Properties getPropertyFile(String fileName) {
+    Properties propertyFile = new Properties();
+    try {
+      propertyFile.load(Controller.class.getClassLoader()
+          .getResourceAsStream(fileName + ".properties"));
+    } catch (Exception e) {
+      throw new ControllerException("Invalid File Name", e);
+    }
+    return propertyFile;
   }
 }

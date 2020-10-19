@@ -1,8 +1,6 @@
 package Model;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Queue;
 
 public class WaTorCell extends Cell {
 
@@ -10,59 +8,44 @@ public class WaTorCell extends Cell {
   private int stepsAfterEating = 1;
   private int stepsAfterEatingFuture = 1;
   private int stepsAliveFuture = 1;
-  public static final int WATER = 0;
-  public static final int FISH = 1;
-  public static final int SHARK = 2;
-  public static final int FISH_BREEDING = 5;
-  public static final int SHARK_BREEDING = 15;
-  public static final int SHARK_STARVE = 10;
 
-  public WaTorCell(int state, Queue<Cell> emptyQueue) {
-    super(state, emptyQueue);
+
+  public WaTorCell(int state) {
+    super(state);
   }
 
-  @Override
-  public void updateState(List<Cell> neighbors) {
-    Collections.shuffle(neighbors);
-    if (this.getCurrentState() == FISH && this.getFutureState() == FISH) {
-      moveIfCellIsFish(neighbors);
-    } else if (this.getCurrentState() == SHARK) {
-      moveIfCellIsShark(neighbors);
-    }
-  }
-
-  private void moveIfCellIsFish(List<Cell> neighbors) {
+  protected void moveIfCellIsFish(List<Cell> neighbors) {
     for (Cell neighbor : neighbors) {
       WaTorCell waTorNeighbor = (WaTorCell) neighbor;
-      if (waTorNeighbor.getFutureState() == WATER) {
-        this.setFutureState(WATER);
+      if (waTorNeighbor.getFutureState() == WaTorModel.WATER) {
+        this.setFutureState(WaTorModel.WATER);
         setFutureStats(waTorNeighbor, this.getCurrentState(), this.stepsAlive + 1);
         break;
       }
     }
     for (Cell neighbor : neighbors) {
       WaTorCell waTorNeighbor = (WaTorCell) neighbor;
-      if (stepsAlive % FISH_BREEDING == 0 && waTorNeighbor.getFutureState() == WATER) {
+      if (stepsAlive % WaTorModel.FISH_BREEDING == 0 && waTorNeighbor.getFutureState() == WaTorModel.WATER) {
         setFutureStats(waTorNeighbor, this.getCurrentState(), 1);
         break;
       }
     }
   }
 
-  private void moveIfCellIsShark(List<Cell> neighbors) {
-    if (stepsAfterEating % SHARK_STARVE == 0) {
-      setFutureSharkStats(this, WATER, 1, 1);
+  protected void moveIfCellIsShark(List<Cell> neighbors) {
+    if (stepsAfterEating % WaTorModel.SHARK_STARVE == 0) {
+      setFutureSharkStats(this, WaTorModel.WATER, 1, 1);
       return;
     }
     for (Cell neighbor : neighbors) {
       WaTorCell waTorNeighbor = (WaTorCell) neighbor;
-      if (sharkMoveIntoWaterOrEatFish(waTorNeighbor, FISH, 1)) {
+      if (sharkMoveIntoWaterOrEatFish(waTorNeighbor, WaTorModel.FISH, 1)) {
         return;
       }
     }
     for (Cell neighbor : neighbors) {
       WaTorCell waTorNeighbor = (WaTorCell) neighbor;
-      if (sharkMoveIntoWaterOrEatFish(waTorNeighbor, WATER, this.stepsAfterEating + 1)) {
+      if (sharkMoveIntoWaterOrEatFish(waTorNeighbor, WaTorModel.WATER, this.stepsAfterEating + 1)) {
         return;
       }
     }
@@ -70,8 +53,8 @@ public class WaTorCell extends Cell {
 
   private boolean sharkMoveIntoWaterOrEatFish(WaTorCell cell, int prey, int stepsAfterEating) {
     if (cell.getFutureState() == prey) {
-      this.setFutureState(WATER);
-      setFutureSharkStats(cell, SHARK, this.stepsAlive + 1, stepsAfterEating);
+      this.setFutureState(WaTorModel.WATER);
+      setFutureSharkStats(cell, WaTorModel.SHARK, this.stepsAlive + 1, stepsAfterEating);
       sharkBreed();
       return true;
     }
@@ -79,8 +62,8 @@ public class WaTorCell extends Cell {
   }
 
   private void sharkBreed() {
-    if (stepsAlive % SHARK_BREEDING == 0) {
-      setFutureSharkStats(this, SHARK, 1, 1);
+    if (stepsAlive % WaTorModel.SHARK_BREEDING == 0) {
+      setFutureSharkStats(this, WaTorModel.SHARK, 1, 1);
     }
   }
 

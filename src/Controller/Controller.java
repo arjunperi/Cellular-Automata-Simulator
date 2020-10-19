@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Map;
+import java.util.Queue;
 import java.util.ResourceBundle;
 
 import javafx.event.Event;
@@ -125,19 +126,10 @@ public class Controller {
     stateColorMapping.clear();
     try {
       Properties propertyFile = getPropertyFile(currentFileName);
-      this.mainModel = new Model(fileName, modelType);
-
-
-//      fileName = fileName.replace(".csv", "");
-      //propertiesPath = new FileOutputStream("Properties/" + fileName + ".properties");
-      // writer = new FileWriter("Properties/" + fileName + ".properties", true);
-//
-//      if (!propertyFile.containsKey("States") || propertyFile.getProperty("States") == null) {
-//        Properties defaultFile = getPropertyFile(modelType + "Default");
-//        String defaultStates = defaultFile.getProperty("States");
-//        propertyFills.putIfAbsent("States", defaultStates);
-//        updateProperties(propertyFile, writer);
-//      }
+      Class<?> cl = Class.forName("Model." + modelType + "Model");
+      this.mainModel = (Model) cl.getConstructor(String.class, String.class)
+          .newInstance(fileName, modelType);
+      //this.mainModel = new Model(fileName, modelType);
 
       mainModel.initializeAllStates(propertyFile.getProperty("States"));
       this.frontEndCellColors = updateFrontEndCellColors();
