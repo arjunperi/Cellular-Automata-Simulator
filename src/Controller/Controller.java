@@ -6,11 +6,6 @@ import View.FrontEndCell;
 
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-
-import java.util.*;
-
-import javafx.collections.FXCollections;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,15 +21,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Text;
 
 
 public class Controller {
@@ -42,11 +32,7 @@ public class Controller {
   private Model mainModel;
   private final View mainView;
   private boolean simIsSet = false;
-
   private boolean graphShowing = false;
-  private final Map<Integer, XYChart.Series> stateSeries = new HashMap<>();
-  private final Map<Integer, Integer> stateCountsMap = new HashMap<>();
-
   private String modelType;
   private Properties defaultFile;
 
@@ -60,7 +46,7 @@ public class Controller {
   private List<List<String>> frontEndCellColors;
   private String currentFileName;
   private GraphController graphController;
-  private final Button homeButton = makeButton("Home", event -> initializeButtonMenu());
+  private Button homeButton;
   private TextField inputText;
 
   public Controller() {
@@ -74,11 +60,7 @@ public class Controller {
       this.graphController.closeGraph();
       this.graphShowing = false;
     }
-    mainView.getCenterGroup().getChildren().clear();
-    mainView.getTopGroup().getChildren().clear();
-    VBox result = new VBox();
-    inputText = new TextField();
-    inputText.setId("inputTextBox");
+    this.inputText = new TextField();
     EventHandler<ActionEvent> event = e -> {
       String fileChosen = inputText.getText();
       try {
@@ -89,39 +71,23 @@ public class Controller {
         showError(c.getMessage());
       }
     };
-    inputText.setOnAction(event);
-    Label inputLabel = new Label("Enter Simulation Name and Press Enter");
-    result.getChildren().add(inputLabel);
-    result.getChildren().add(inputText);
-    mainView.getCenterGroup().getChildren().add(result);
+    this.mainView.createInputTextField(this.inputText, event);
+    this.homeButton = this.mainView.setHomeButton(homeButtonEvent -> initializeButtonMenu());
   }
 
   public void displayInfo(String fileName) {
-    mainView.getCenterGroup().getChildren().clear();
-    HBox result = new HBox();
-    currentFileName = fileName;
-    Button startButton = makeButton(fileName,
-        event -> initializeSimulation(fileName + ".csv"));
-    result.getChildren().add(homeButton);
-    result.getChildren().add(startButton);
-    mainView.getTopGroup().getChildren().add(result);
+   currentFileName = fileName;
     try {
-      Text startupText = new Text();
       Properties propertyFile = getPropertyFile(fileName);
-      String type = (String) propertyFile.getOrDefault("Type", "No Type Specified");
-      String title = (String) propertyFile.getOrDefault("Title", "No Title specified");
-      String author = (String) propertyFile.getOrDefault("Author", "No Author Specified");
-      String description = (String) propertyFile.getOrDefault("Description", "No Description Specified");
-      startupText.setText(type + "\n" + title + "\n" + author + "\n" + description);
-      mainView.getCenterGroup().getChildren().add(startupText);
-    } catch (ControllerException e) {
+      this.mainView.displaySimulationInfo(fileName,propertyFile, event -> initializeSimulation(fileName + ".csv"));
+    } catch (ControllerException e){
       showError(e.getMessage());
     }
   }
 
   public void initializeSimulation(String fileName) {
-    mainView.getCenterGroup().getChildren().clear();
-    mainView.getTopGroup().getChildren().clear();
+    mainView.clearCenterGroup();
+    mainView.clearTopMenuGroup();
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
     try {
@@ -131,7 +97,6 @@ public class Controller {
           .newInstance(fileName, modelType);
       defaultFile = getPropertyFile(modelType + "Default");
       String defaultStates = defaultFile.getProperty("States");
-
       mainModel.initializeAllStates((String) propertyFile.getOrDefault("States", defaultStates));
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
@@ -148,32 +113,19 @@ public class Controller {
 
   public void getSaveInputs() {
     mainModel.setPaused();
-    Dialog saveBox = new TextInputDialog();
-    saveBox.getDialogPane().lookupButton(ButtonType.OK).setId("SaveOK");
     TextField titleInput = new TextField();
-    titleInput.setId("titleInput");
     TextField authorInput = new TextField();
-    authorInput.setId("authorInput");
     TextField descriptionInput = new TextField();
-    descriptionInput.setId("descriptionInput");
-    GridPane grid = new GridPane();
-    titleInput.setPromptText("Title: ");
-    authorInput.setPromptText("Author: ");
-    descriptionInput.setPromptText("Description: ");
-    GridPane.setConstraints(titleInput, 0, 0);
-    grid.getChildren().add(titleInput);
-    GridPane.setConstraints(authorInput, 0, 1);
-    grid.getChildren().add(authorInput);
-    GridPane.setConstraints(descriptionInput, 0, 2);
-    grid.getChildren().add(descriptionInput);
-    saveBox.getDialogPane().setContent(grid);
-    Optional<String> result = saveBox.showAndWait();
+
+    Dialog saveBox = this.mainView.showSaveInputs(titleInput,authorInput,descriptionInput);
+    Optional<String> saveBoxResult = saveBox.showAndWait();
     Properties savedProperties = new Properties();
+
     savedProperties.setProperty("Title", titleInput.getText());
     savedProperties.setProperty("Author", authorInput.getText());
     savedProperties.setProperty("Description", descriptionInput.getText());
     savedProperties.setProperty("Type", modelType);
-    if (result.isPresent()) {
+    if (saveBoxResult.isPresent()) {
       writeToPropertyFile(savedProperties);
       mainModel.writeToCSV(savedProperties.getProperty("Title") + ".csv");
     }
@@ -217,19 +169,6 @@ public class Controller {
     return frontEndCellColors;
   }
 
-  public Scene setupScene() {
-    return mainView.setupScene();
-  }
-
-  public Model getMainModel() {
-    return mainModel;
-  }
-
-  public View getMainView() {
-    return mainView;
-  }
-
-
   private void showError(String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle("Controller Error");
@@ -237,14 +176,6 @@ public class Controller {
     alert.showAndWait();
   }
 
-
-  private Button makeButton(String property, EventHandler<ActionEvent> handler) {
-    Button result = new Button();
-    result.setId(property);
-    result.setText(property);
-    result.setOnAction(handler);
-    return result;
-  }
 
   public void initializeColorMapping(int state) {
     Properties propertyFile = getPropertyFile(currentFileName);
@@ -299,32 +230,16 @@ public class Controller {
   }
 
   public void initializeSimulationMenu() {
-    HBox test = new HBox();
-    Button saveButton = makeButton("Save", event -> getSaveInputs());
-    test.getChildren().add(homeButton);
-    test.getChildren().add(saveButton);
-    test.getChildren().add(makeButton("changeColors", event -> changeColorsPopUp()));
-    test.getChildren().add(makeButton("State Concentration Graph", event -> createGraph()));
-    mainView.getTopGroup().getChildren().add(test);
+    this.mainView.initializeSimulationMenu(saveEvent -> getSaveInputs(), colorEvent -> changeColorsPopUp(), graphEvent -> createGraph());
   }
 
   public void changeColorsPopUp() {
     mainModel.setPaused();
-    Dialog colorBox = new TextInputDialog();
     TextField colorInput = new TextField();
-    colorInput.setId("colorInput");
     TextField stateInput = new TextField();
-    colorInput.setId("stateInput");
-    GridPane grid = new GridPane();
-    colorInput.setPromptText("New Color");
-    stateInput.setPromptText("State to Change");
-    GridPane.setConstraints(stateInput, 0, 0);
-    grid.getChildren().add(stateInput);
-    GridPane.setConstraints(colorInput, 0, 1);
-    grid.getChildren().add(colorInput);
-    colorBox.getDialogPane().setContent(grid);
-    colorBox.showAndWait();
-    if(stateInput.getText().length() + colorInput.getText().length() > 0){
+    Dialog colorBox = this.mainView.changeColorsPopUp(stateInput, colorInput);
+    Optional<ButtonType> colorBoxResult = colorBox.showAndWait();
+    if(colorBoxResult.isPresent()){
       updateColorStateMapping(stateInput.getText(), colorInput.getText());
     }
     mainModel.switchPause();
@@ -350,6 +265,14 @@ public class Controller {
     }
     this.graphController = new GraphController(this.mainModel, this.stateColorMapping);
     this.graphShowing = true;
+  }
+
+  public Scene setupScene() {
+    return mainView.setupScene();
+  }
+
+  public View getMainView() {
+    return mainView;
   }
 }
 
