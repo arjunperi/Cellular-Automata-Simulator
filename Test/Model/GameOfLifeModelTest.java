@@ -1,9 +1,14 @@
 package Model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
+
+import Controller.Controller;
 import org.junit.jupiter.api.Test;
 
 class GameOfLifeModelTest {
@@ -53,5 +58,13 @@ class GameOfLifeModelTest {
     assertEquals(0, testModel.getCellState(9,10));
     testModel.step();
     assertEquals(1, testModel.getCellState(9,10));
+  }
+
+  @Test
+  public void testInvalidStates() throws IOException {
+    Model testModel = new Model("Test/TestInvalidStates.csv", "GameOfLife");
+    Properties propertyFile = new Properties();
+    propertyFile.load(Controller.class.getClassLoader().getResourceAsStream("TestInvalidStates" + ".properties"));
+    assertThrows(ModelException.class, () -> testModel.initializeAllStates((String) propertyFile.getProperty("States")));
   }
 }

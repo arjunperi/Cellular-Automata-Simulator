@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Queue;
 
 import com.sun.jdi.NativeMethodException;
+import javafx.scene.control.Alert;
 import org.assertj.core.internal.bytebuddy.matcher.StringMatcher;
 
 
@@ -27,7 +28,7 @@ public class Model {
   private List<Integer> allStates;
 
   public Model(String fileName, String modelType) {
-    gridOfCells = new Grid(fileName, modelType, emptyQueue);
+      gridOfCells = new Grid(fileName, modelType, emptyQueue);
   }
 
   public boolean modelStep() {
@@ -41,7 +42,18 @@ public class Model {
   }
 
   public void updateCells() {
-    gridOfCells.updateCells();
+    try{gridOfCells.updateCells();}
+    catch (ModelException e){
+      switchPause();
+      showError(e.getMessage());
+    }
+  }
+
+  public void showError(String message) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Controller Error");
+    alert.setContentText(message);
+    alert.show();
   }
 
 
