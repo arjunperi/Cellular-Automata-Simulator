@@ -92,7 +92,8 @@ public class View {
     }
   }
 
-  public void createInputTextField(TextField inputText, EventHandler<ActionEvent> inputTextEvent){
+  public void createInputTextField(TextField inputText, EventHandler<ActionEvent> inputTextEvent,
+      EventHandler<ActionEvent> englishEvent,EventHandler<ActionEvent> spanishEvent, EventHandler<ActionEvent> languageEvent){
     clearCenterGroup();
     clearTopMenuGroup();
     VBox inputTextBox = new VBox();
@@ -102,6 +103,12 @@ public class View {
     Label inputLabel = new Label(viewTextResources.getString("InputLabelText"));
     inputTextBox.getChildren().add(inputLabel);
     inputTextBox.getChildren().add(inputText);
+    inputTextBox.getChildren().add(makeButton("English", englishEvent));
+    Button spanishButton = makeButton("Spanish", spanishEvent);
+    spanishButton.setId("spanish");
+    inputTextBox.getChildren().add(spanishButton);
+    inputTextBox.getChildren().add(makeButton("FakeLanguage", languageEvent));
+
     this.centerGroup.getChildren().add(inputTextBox);
   }
 
@@ -109,6 +116,7 @@ public class View {
     clearCenterGroup();
     HBox simulationInfoBox = new HBox();
     Button startButton = makeButton(fileName, startButtonEvent);
+    updateHomeButton();
     simulationInfoBox.getChildren().add(homeButton);
     simulationInfoBox.getChildren().add(startButton);
     this.topGroup.getChildren().add(simulationInfoBox);
@@ -130,6 +138,7 @@ public class View {
     Button saveButton = makeButton(viewTextResources.getString("SaveButtonText"), saveEvent);
     Button changeColorsButton = makeButton(viewTextResources.getString("ColorsButtonText"), changeColorEvent);
     Button showGraphButton = makeButton(viewTextResources.getString("GraphButtonText"), graphEvent);
+    updateHomeButton();
     topMenuBox.getChildren().add(homeButton);
     topMenuBox.getChildren().add(saveButton);
     topMenuBox.getChildren().add(changeColorsButton);
@@ -182,7 +191,12 @@ public class View {
 
   public Button setHomeButton(EventHandler<ActionEvent> inputTextEvent){
     this.homeButton = makeButton(viewTextResources.getString("HomeButtonText"), inputTextEvent);
+    this.homeButton.setId("Home");
     return this.homeButton;
+  }
+
+  public void updateHomeButton(){
+    this.homeButton.setText(viewTextResources.getString("HomeButtonText"));
   }
 
   private void showError(String message) {

@@ -4,11 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import Controller.Controller;
 import javafx.scene.input.KeyCode;
-import Model.Model;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
@@ -27,7 +24,7 @@ public class ViewTest extends DukeApplicationTest {
 
   @Test
   public void testInitializeFrontendCells() {
-      javafxRun(() -> mainController.initializeButtonMenu());
+      javafxRun(() -> mainController.initializeSplashMenu());
       inputTest = lookup("#inputTextBox").query();
       inputTest.setText("ConwayStatesPulsar");
       press(KeyCode.ENTER);
@@ -39,7 +36,7 @@ public class ViewTest extends DukeApplicationTest {
 
   @Test
   public void testViewStepBeacon() {
-      javafxRun(() -> mainController.initializeButtonMenu());
+      javafxRun(() -> mainController.initializeSplashMenu());
       inputTest = lookup("#inputTextBox").query();
       inputTest.setText("ConwayStatesBeacon");
       press(KeyCode.ENTER);
@@ -55,7 +52,7 @@ public class ViewTest extends DukeApplicationTest {
 
   @Test
   public void testViewStepBlinker() {
-      javafxRun(() -> mainController.initializeButtonMenu());
+      javafxRun(() -> mainController.initializeSplashMenu());
       inputTest = lookup("#inputTextBox").query();
       inputTest.setText("ConwayStatesBlinker");
       press(KeyCode.ENTER);
@@ -70,7 +67,7 @@ public class ViewTest extends DukeApplicationTest {
 
   @Test
   public void testViewStepBlock() {
-      javafxRun(() -> mainController.initializeButtonMenu());
+      javafxRun(() -> mainController.initializeSplashMenu());
       inputTest = lookup("#inputTextBox").query();
       inputTest.setText("ConwayStatesBlock");
       press(KeyCode.ENTER);
@@ -85,7 +82,7 @@ public class ViewTest extends DukeApplicationTest {
 
   @Test
   public void testViewStepToad() {
-      javafxRun(() -> mainController.initializeButtonMenu());
+      javafxRun(() -> mainController.initializeSplashMenu());
       inputTest = lookup("#inputTextBox").query();
       inputTest.setText("ConwayStatesToad");
       press(KeyCode.ENTER);

@@ -39,27 +39,26 @@ public class Controller {
   public static final String DEFAULT_RESOURCE_FOLDER = "/" + RESOURCES;
   public static final String STYLESHEET = "GameOfLife.css";
   public static final String BLANK = " ";
-  private final ResourceBundle projectTextResources;
+  private  ResourceBundle projectTextResources;
   private final Map<Integer, String> stateColorMapping = new HashMap<>();
   private List<List<String>> frontEndCellColors;
   private String currentFileName;
   private GraphController graphController;
-  private Button homeButton;
   private TextField inputText;
 
   public Controller() {
     projectTextResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "English");
     this.mainView = new View(projectTextResources);
-    initializeButtonMenu();
+    initializeSplashMenu();
   }
 
-  public void initializeButtonMenu() {
+  public void initializeSplashMenu() {
     if(this.graphShowing){
       this.graphController.closeGraph();
       this.graphShowing = false;
     }
     this.inputText = new TextField();
-    EventHandler<ActionEvent> event = e -> {
+    EventHandler<ActionEvent> simulationInputEvent = e -> {
       String fileChosen = inputText.getText();
       try {
         Properties propertyFile = getPropertyFile(fileChosen);
@@ -69,8 +68,9 @@ public class Controller {
         showError(c.getMessage());
       }
     };
-    this.mainView.createInputTextField(this.inputText, event);
-    this.homeButton = this.mainView.setHomeButton(homeButtonEvent -> initializeButtonMenu());
+    this.mainView.createInputTextField(this.inputText, simulationInputEvent, event -> changeTextResourceFile("English"),
+        event -> changeTextResourceFile("Spanish"), event -> changeTextResourceFile("FakeLanguage"));
+    this.mainView.setHomeButton(homeButtonEvent -> initializeSplashMenu());
   }
 
   public void displayInfo(String fileName) {
@@ -102,10 +102,9 @@ public class Controller {
       initializeSimulationMenu();
     } catch (Exception e) {
       showError("Invalid Model Type");
-      initializeButtonMenu();
+      initializeSplashMenu();
     }
   }
-
 
   public void getSaveInputs() {
     mainModel.setPaused();
@@ -136,7 +135,7 @@ public class Controller {
     }catch (IOException ex) {
       ex.printStackTrace();
     }
-    initializeButtonMenu();
+    initializeSplashMenu();
   }
 
   public void gameStep() {
@@ -191,6 +190,13 @@ public class Controller {
       throw new ControllerException("Invalid File Name", e);
     }
     return propertyFile;
+  }
+
+  public void changeTextResourceFile(String language){
+    ResourceBundle newBundle = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
+    this.projectTextResources = newBundle;
+    this.mainView.updateResourceBundle(newBundle);
+    initializeSplashMenu();
   }
 
 
@@ -250,13 +256,13 @@ public class Controller {
       Paint.valueOf(color);
       this.stateColorMapping.put(stateInt, color);
     } catch (Exception e) {
-      showError("Please enter a valid color state mapping");
+      showError(this.projectTextResources.getString("ColorMappingError"));
     }
   }
 
   public void createGraph(){
     if(this.graphShowing) {
-      showError("Please close current graph instance");
+      showError(this.projectTextResources.getString("GraphError"));
       return;
     }
     this.graphController = new GraphController(this.mainModel, this.stateColorMapping);
