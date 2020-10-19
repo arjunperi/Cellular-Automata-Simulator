@@ -4,10 +4,11 @@ import java.util.List;
 
 public class SegregationModel extends Model{
   public static final int EMPTY = 0;
-  public static final double PERCENT_SIMILAR = .5;
+  private final double percentSimilar;
 
   public SegregationModel(String fileName, String modelType) {
     super(fileName, modelType);
+    percentSimilar=Double.parseDouble((String)propertyFile.getOrDefault("Percent_Similar", defaultPropertyFile.get("Percent_Similar")));
     initializeEmptyQueue();
   }
 
@@ -15,7 +16,7 @@ public class SegregationModel extends Model{
     Cell currentCell = getCell(row,column);
     if (currentCell.getCurrentState() != EMPTY) {
       double percentSimilarInNeighborhood = getPercentageSimilar(currentCell, neighbors);
-      if (percentSimilarInNeighborhood <= PERCENT_SIMILAR) {
+      if (percentSimilarInNeighborhood <= percentSimilar) {
         if (!emptyQueue.isEmpty()) {
           emptyQueue.poll().setFutureState(currentCell.getCurrentState());
           currentCell.setFutureState(EMPTY);

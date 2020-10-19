@@ -12,8 +12,6 @@ public abstract class Cell {
 
   protected int currentState;
   protected int futureState;
-  private Cell cell;
-  protected Properties propertyFile;
 
   public Cell(int state) {
     this.currentState = state;

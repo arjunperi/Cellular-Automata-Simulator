@@ -7,8 +7,8 @@ import java.util.Properties;
 import java.util.Random;
 
 public class RPSModel extends Model{
-  private int threshold = 2;
-  private int randomVariation = 2;
+  private final int threshold;
+  private final int randomVariation;
   private int variable = 0;
 
   //DEFINE IN PROPERTIES FILES

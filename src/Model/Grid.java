@@ -5,6 +5,8 @@ import Controller.ControllerException;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.Queue;
@@ -83,38 +85,50 @@ public class Grid {
     String shapeAndType =
             (String) propertyFile.getOrDefault("Shape", defaultShape) + propertyFile.getOrDefault("NeighborhoodType", defaultNeighborhood);
     int[][] allPossibleNeighbors = neighborhoodTypes.valueOf(shapeAndType).neighborhood;
+    String edgePolicy = (String)propertyFile.getOrDefault("EdgePolicy", defaultEdge);
     List<Cell> neighbors = new ArrayList<>();
-    if (propertyFile.getOrDefault("EdgePolicy", defaultEdge).equals(TOROIDAL)) {
-      for (int[] possibleNeighbor : allPossibleNeighbors) {
-        int currentX = ((int) getCellsPerRow() + x + possibleNeighbor[0]) % (int) getCellsPerRow();
-        int currentY =
-            ((int) getCellsPerRow() + y + possibleNeighbor[1]) % (int) getCellsPerColumn();
-        neighbors.add(getCell(currentX, currentY));
-      }
-    } else if (propertyFile.getOrDefault("EdgePolicy", defaultEdge).equals(OSCILLATING)) {
-      for (int[] possibleNeighbor : allPossibleNeighbors) {
-        int currentX = x + possibleNeighbor[0];
-        int currentY = y + possibleNeighbor[1];
-        if (currentX < 0 || currentY < 0 || currentX >= getCellsPerColumn()
-            || currentY >= getCellsPerRow()) {
-          currentX = ((int) getCellsPerRow() + y + possibleNeighbor[1]) % (int) getCellsPerColumn();
-          currentY = ((int) getCellsPerRow() + x + possibleNeighbor[0]) % (int) getCellsPerRow();
-        }
-        neighbors.add(getCell(currentX, currentY));
-      }
-    } else if (propertyFile.getOrDefault("EdgePolicy", defaultEdge).equals(FINITE)) {
-      for (int[] possibleNeighbor : allPossibleNeighbors) {
-        int currentX = x + possibleNeighbor[0];
-        int currentY = y + possibleNeighbor[1];
-        if (currentX < 0 || currentY < 0 || currentX >= getCellsPerColumn()
-            || currentY >= getCellsPerRow()) {
-          continue;
-        }
-        neighbors.add(getCell(currentX, currentY));
-      }
+    try {
+      Method method = this.getClass().getDeclaredMethod("getNeighbors" + edgePolicy, int[][].class, List.class, int.class, int.class);
+      method.invoke(this, allPossibleNeighbors, neighbors, x, y);
+    } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+      neighbors = new ArrayList<>();
+      getNeighborsFinite(allPossibleNeighbors, neighbors,x,y);
     }
-
     return neighbors;
+  }
+
+  private void getNeighborsFinite(int[][] allPossibleNeighbors, List<Cell> neighbors, int x, int y) {
+    for (int[] possibleNeighbor : allPossibleNeighbors) {
+      int currentX = x + possibleNeighbor[0];
+      int currentY = y + possibleNeighbor[1];
+      if (currentX < 0 || currentY < 0 || currentX >= getCellsPerColumn()
+          || currentY >= getCellsPerRow()) {
+        continue;
+      }
+      neighbors.add(getCell(currentX, currentY));
+    }
+  }
+
+  private void getNeighborsToroidal(int[][] allPossibleNeighbors, List<Cell> neighbors, int x, int y) {
+    for (int[] possibleNeighbor : allPossibleNeighbors) {
+      int currentX = ((int) getCellsPerRow() + x + possibleNeighbor[0]) % (int) getCellsPerRow();
+      int currentY =
+          ((int) getCellsPerRow() + y + possibleNeighbor[1]) % (int) getCellsPerColumn();
+      neighbors.add(getCell(currentX, currentY));
+    }
+  }
+
+  private void getNeighborsOscillating(int[][] allPossibleNeighbors, List<Cell> neighbors, int x, int y) {
+    for (int[] possibleNeighbor : allPossibleNeighbors) {
+      int currentX = x + possibleNeighbor[0];
+      int currentY = y + possibleNeighbor[1];
+      if (currentX < 0 || currentY < 0 || currentX >= getCellsPerColumn()
+          || currentY >= getCellsPerRow()) {
+        currentX = ((int) getCellsPerRow() + y + possibleNeighbor[1]) % (int) getCellsPerColumn();
+        currentY = ((int) getCellsPerRow() + x + possibleNeighbor[0]) % (int) getCellsPerRow();
+      }
+      neighbors.add(getCell(currentX, currentY));
+    }
   }
 
   //make neighborhoods and have cells have access to neighborhood
