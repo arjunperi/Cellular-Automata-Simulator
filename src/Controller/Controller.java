@@ -111,11 +111,6 @@ public class Controller {
       String title = (String) propertyFile.getOrDefault("Title", "No Title specified");
       String author = (String) propertyFile.getOrDefault("Author", "No Author Specified");
       String description = (String) propertyFile.getOrDefault("Description", "No Description Specified");
-
-//      String type = propertyFile.getProperty("Type");
-//      String title = propertyFile.getProperty("Title");
-//      String author = propertyFile.getProperty("Author");
-//      String description = propertyFile.getProperty("Description");
       startupText.setText(type + "\n" + title + "\n" + author + "\n" + description);
       mainView.getCenterGroup().getChildren().add(startupText);
     } catch (ControllerException e) {
@@ -131,8 +126,6 @@ public class Controller {
     try {
       Properties propertyFile = getPropertyFile(currentFileName);
       this.mainModel = new Model(fileName, modelType);
-
-      //Properties defaultFile = getPropertyFile(modelType + "Default");
       defaultFile = getPropertyFile(modelType + "Default");
       String defaultStates = defaultFile.getProperty("States");
 
@@ -252,7 +245,6 @@ public class Controller {
 
   public void initializeColorMapping(int state) {
     Properties propertyFile = getPropertyFile(currentFileName);
-    //Properties defaultFile = getPropertyFile(modelType + "Default");
     String defaultColor = defaultFile.getProperty(String.valueOf(state));
     String color = (String) propertyFile.getOrDefault(String.valueOf(state), defaultColor);
     if (!stateColorMapping.containsKey(state)) {
