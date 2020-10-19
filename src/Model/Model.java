@@ -15,10 +15,14 @@ public abstract class Model {
   private static final int ANIMATION_RATE_CHANGE = 5;
   private static final boolean PAUSED = true;
   public static final String DEFAULT = "Default";
+  public static final String PROPERTIES = ".properties";
+  public static final String INVALID = "Invalid File Name";
   public static final Character SLASH = '/';
   public static final Character DOT = '.';
 
-  public double framesPerModelUpdate = 60;
+  private double framesPerModelUpdate = 60;
+  public static final int MIN_FRAMES_PER_MODEL_UPDATE = 10;
+  public static final int MAX_FRAMES_PER_MODEL_UPDATE = 100;
   protected final Grid gridOfCells;
   protected final Queue<Cell> emptyQueue = new LinkedList<>();
   protected final Properties defaultPropertyFile;
@@ -114,25 +118,21 @@ public abstract class Model {
     return (int) gridOfCells.getCellsPerRow();
   }
 
-  public Queue<Cell> getQueue() {
-    return emptyQueue;
-  }
-
   public void speedUp() {
-    this.framesPerModelUpdate = Math.max(10, framesPerModelUpdate - ANIMATION_RATE_CHANGE);
+    this.framesPerModelUpdate = Math.max(MIN_FRAMES_PER_MODEL_UPDATE, framesPerModelUpdate - ANIMATION_RATE_CHANGE);
   }
 
   public void slowDown() {
-    this.framesPerModelUpdate = Math.min(100, framesPerModelUpdate + ANIMATION_RATE_CHANGE);
+    this.framesPerModelUpdate = Math.min(MAX_FRAMES_PER_MODEL_UPDATE, framesPerModelUpdate + ANIMATION_RATE_CHANGE);
   }
 
   public Properties getPropertyFile(String fileName) {
     Properties propertyFile = new Properties();
     try {
       propertyFile.load(Controller.class.getClassLoader()
-          .getResourceAsStream(fileName + ".properties"));
+          .getResourceAsStream(fileName + PROPERTIES));
     } catch (Exception e) {
-      throw new ControllerException("Invalid File Name", e);
+      throw new ControllerException(INVALID, e);
     }
     return propertyFile;
   }

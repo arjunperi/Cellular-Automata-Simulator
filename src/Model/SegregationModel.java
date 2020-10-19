@@ -5,10 +5,11 @@ import java.util.List;
 public class SegregationModel extends Model{
   public static final int EMPTY = 0;
   private final double percentSimilar;
+  private static final String PERCENT_SIMILAR = "Percent_Similar";
 
   public SegregationModel(String fileName, String modelType) {
     super(fileName, modelType);
-    percentSimilar=Double.parseDouble((String)propertyFile.getOrDefault("Percent_Similar", defaultPropertyFile.get("Percent_Similar")));
+    percentSimilar=Double.parseDouble((String)propertyFile.getOrDefault(PERCENT_SIMILAR, defaultPropertyFile.get(PERCENT_SIMILAR)));
     initializeEmptyQueue();
   }
 

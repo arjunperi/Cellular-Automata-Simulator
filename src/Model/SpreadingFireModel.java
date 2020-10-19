@@ -9,10 +9,11 @@ public class SpreadingFireModel extends Model{
   public static final int BURNING = 2;
   private final double probCatchFire;
   public static final Random RANDOM_NUMBER_GEN = new Random();
+  private static final String PROB_CATCH_FIRE = "Probability_Catch_Fire";
 
   public SpreadingFireModel(String fileName, String modelType) {
     super(fileName, modelType);
-    probCatchFire=Double.parseDouble((String)propertyFile.getOrDefault("Probability_Catch_Fire", defaultPropertyFile.get("Probability_Catch_Fire")));
+    probCatchFire=Double.parseDouble((String)propertyFile.getOrDefault(PROB_CATCH_FIRE, defaultPropertyFile.get(PROB_CATCH_FIRE)));
   }
 
   public void updateState(int row, int column, List<Cell> neighbors) {

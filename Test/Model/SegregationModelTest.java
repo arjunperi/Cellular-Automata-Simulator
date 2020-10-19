@@ -34,6 +34,6 @@ public class SegregationModelTest extends DukeApplicationTest {
     Model testModel = new SegregationModel("Segregation20Example2.csv", "Segregation");
     assertEquals(1, testModel.getCellState(0,8));
     testModel.step();
-    assertEquals(1, testModel.getCellState(0,8));
+    assertEquals(2, testModel.getCellState(0,8));
   }
 }

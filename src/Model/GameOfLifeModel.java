@@ -5,6 +5,8 @@ import java.util.List;
 public class GameOfLifeModel extends Model{
   private static final int ALIVE = 1;
   private static final int DEAD = 0;
+  private static final int TWO = 2;
+  private static final int THREE = 3;
 
   public GameOfLifeModel(String fileName, String modelType) {
     super(fileName,modelType);
@@ -13,9 +15,9 @@ public class GameOfLifeModel extends Model{
   protected void updateState(int row, int column, List<Cell> neighbors) {
     int countAliveNeighbors = getNumberOfLiveNeighbors(neighbors);
     Cell currentCell = getCell(row,column);
-    if (currentCell.getCurrentState() == ALIVE && (countAliveNeighbors == 2 || countAliveNeighbors == 3)
+    if (currentCell.getCurrentState() == ALIVE && (countAliveNeighbors == TWO || countAliveNeighbors == THREE)
         || (
-        currentCell.getCurrentState() == DEAD && countAliveNeighbors == 3)) {
+        currentCell.getCurrentState() == DEAD && countAliveNeighbors == THREE)) {
       currentCell.setFutureState(ALIVE);
     } else {
       currentCell.setFutureState(DEAD);

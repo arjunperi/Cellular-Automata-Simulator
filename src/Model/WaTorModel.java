@@ -10,12 +10,15 @@ public class WaTorModel extends Model{
   private final int fishBreedingRate;
   private final int sharkBreedingRate;
   private final int sharkStarve;
+  private static final String FISH_BREEDING_RATE = "Fish_Breeding_Rate";
+  private static final String SHARK_BREEDING_RATE = "Shark_Breeding_Rate";
+  private static final String SHARK_STARVE_RATE = "Shark_Starve_Rate";
 
   public WaTorModel(String fileName, String modelType) {
     super(fileName, modelType);
-    fishBreedingRate=Integer.parseInt((String)propertyFile.getOrDefault("Fish_Breeding_Rate", defaultPropertyFile.get("Fish_Breeding_Rate")));
-    sharkBreedingRate=Integer.parseInt((String)propertyFile.getOrDefault("Shark_Breeding_Rate", defaultPropertyFile.get("Shark_Breeding_Rate")));
-    sharkStarve=Integer.parseInt((String)propertyFile.getOrDefault("Shark_Starve_Rate", defaultPropertyFile.get("Shark_Starve_Rate")));
+    fishBreedingRate=Integer.parseInt((String)propertyFile.getOrDefault(FISH_BREEDING_RATE, defaultPropertyFile.get(FISH_BREEDING_RATE)));
+    sharkBreedingRate=Integer.parseInt((String)propertyFile.getOrDefault(SHARK_BREEDING_RATE, defaultPropertyFile.get(SHARK_BREEDING_RATE)));
+    sharkStarve=Integer.parseInt((String)propertyFile.getOrDefault(SHARK_STARVE_RATE, defaultPropertyFile.get(SHARK_STARVE_RATE)));
   }
 
   public void updateState(int row, int column, List<Cell> neighbors) {
@@ -28,6 +31,4 @@ public class WaTorModel extends Model{
       currentCell.moveIfCellIsShark(neighbors);
     }
   }
-
-
 }

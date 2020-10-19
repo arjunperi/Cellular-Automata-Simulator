@@ -25,6 +25,15 @@ public class Grid {
   private static final String TOROIDAL = "TOROIDAL";
   private static final String FINITE = "FINITE";
   private static final String OSCILLATING = "OSCILLATING";
+  private static final String INVALID_CSV = "Invalid CSV";
+  private static final String MODEL_DOT = "Model.";
+  private static final String CELL = "Cell";
+  private static final String CONTROLLER_ERROR = "Controller Error";
+  private static final String SHAPE = "Shape";
+  private static final String NEIGHBORHOOD_TYPE = "NeighborhoodType";
+  private static final String EDGE_POLICY = "EdgePolicy";
+  private static final String GET_NEIGHBORS = "getNeighbors";
+  private static final String DOT_CSV = ".csv";
   final String PATH = "data/";
   private final double cellsPerRow;
   private final double cellsPerColumn;
@@ -35,13 +44,12 @@ public class Grid {
 
   public Grid(String fileName, String modelType) {
     List<String[]> cellStates = readAll(fileName);
-    String fullModelClassName = "Model." + modelType + "Cell";
+    String fullModelClassName = MODEL_DOT + modelType + CELL;
     String[] firstRow = cellStates.get(0);
     cellsPerRow = Double.parseDouble(firstRow[0]);
     cellsPerColumn = Double.parseDouble(firstRow[1]);
     checkCSVDimensions(cellStates.size() - 1, cellStates.get(1).length);
     try {
-      //checkCSVDimensions(cellStates.size() - 1, cellStates.get(1).length);
       for (int i = 1; i < cellStates.size(); i++) {
         String[] row = cellStates.get(i);
         List<Cell> cellRow = new ArrayList<>();
@@ -66,29 +74,28 @@ public class Grid {
 
   private void showError(String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle("Controller Error");
+    alert.setTitle(CONTROLLER_ERROR);
     alert.setContentText(message);
     alert.showAndWait();
   }
 
   private void checkCSVDimensions(int columnCheck, int rowCheck) {
     if (!(columnCheck == cellsPerColumn && rowCheck == cellsPerRow)) {
-      //showError("Invalid CSV Dimensions");
-      throw new ModelException("Invalid CSV");
+      throw new ModelException(INVALID_CSV);
     }
   }
 
   protected List<Cell> getNeighbors(int x, int y) {
-    String defaultShape = defaultPropertyFile.getProperty("Shape");
-    String defaultNeighborhood = defaultPropertyFile.getProperty("NeighborhoodType");
-    String defaultEdge = defaultPropertyFile.getProperty("EdgePolicy");
+    String defaultShape = defaultPropertyFile.getProperty(SHAPE);
+    String defaultNeighborhood = defaultPropertyFile.getProperty(NEIGHBORHOOD_TYPE);
+    String defaultEdge = defaultPropertyFile.getProperty(EDGE_POLICY);
     String shapeAndType =
-            (String) propertyFile.getOrDefault("Shape", defaultShape) + propertyFile.getOrDefault("NeighborhoodType", defaultNeighborhood);
+            (String) propertyFile.getOrDefault(SHAPE, defaultShape) + propertyFile.getOrDefault(NEIGHBORHOOD_TYPE, defaultNeighborhood);
     int[][] allPossibleNeighbors = neighborhoodTypes.valueOf(shapeAndType).neighborhood;
-    String edgePolicy = (String)propertyFile.getOrDefault("EdgePolicy", defaultEdge);
+    String edgePolicy = (String)propertyFile.getOrDefault(EDGE_POLICY, defaultEdge);
     List<Cell> neighbors = new ArrayList<>();
     try {
-      Method method = this.getClass().getDeclaredMethod("getNeighbors" + edgePolicy, int[][].class, List.class, int.class, int.class);
+      Method method = this.getClass().getDeclaredMethod(GET_NEIGHBORS + edgePolicy, int[][].class, List.class, int.class, int.class);
       method.invoke(this, allPossibleNeighbors, neighbors, x, y);
     } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
       neighbors = new ArrayList<>();
@@ -131,23 +138,9 @@ public class Grid {
     }
   }
 
-  //make neighborhoods and have cells have access to neighborhood
-  //use interface to get neighborhood, egt empty cells throughout the grid.
-  //cast the grid to the interface, pass it into the cell.
-  //this interface will define neighborhood, as well as the list/way to get empty cells.
-
-//  protected void updateCells() {
-//    for (int row = 0; row < gridOfCells.size(); row++) {
-//      for (int column = 0; column < gridOfCells.get(0).size(); column++) {
-//        List<Cell> cellNeighbors = getNeighbors(row, column);
-//        getCell(row, column).updateState(cellNeighbors);
-//      }
-//    }
-//  }
-
   protected void toNextState() {
-    for (int row = 0; row < gridOfCells.size(); row++) {
-      for (int column = 0; column < gridOfCells.get(0).size(); column++) {
+    for (int row = 0; row < getCellsPerColumn(); row++) {
+      for (int column = 0; column < getCellsPerRow(); column++) {
         getCell(row, column).toNextState();
       }
     }
@@ -193,16 +186,16 @@ public class Grid {
 
   public Properties getPropertyFile(String fileName) {
     Properties propertyFile = new Properties();
-    if (fileName.contains(".csv")){
-      int lastSlash =fileName.lastIndexOf('/');
-      int csvTrim = fileName.lastIndexOf('.');
+    if (fileName.contains(DOT_CSV)){
+      int lastSlash =fileName.lastIndexOf(Model.SLASH);
+      int csvTrim = fileName.lastIndexOf(Model.DOT);
       fileName = fileName.substring(lastSlash+1, csvTrim);
     }
     try {
       propertyFile.load(Controller.class.getClassLoader()
-          .getResourceAsStream(fileName + ".properties"));
+          .getResourceAsStream(fileName + Model.PROPERTIES));
     } catch (Exception e) {
-      throw new ControllerException("Invalid File Name", e);
+      throw new ControllerException(Model.INVALID, e);
     }
     return propertyFile;
   }
