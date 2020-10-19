@@ -36,7 +36,8 @@ public class ControllerTest extends DukeApplicationTest {
     press(KeyCode.ENTER);
     javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
     javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv"));
-    javafxRun(() -> mainController.handleKeyInput(KeyCode.P));
+    Button pauseButton = lookup("#Pause").queryButton();
+    clickOn(pauseButton);
     FrontEndCell currentCell;
     String previousCellColor = mainController.getMainView().getFrontEndCellGrid().get(4).get(5)
             .getCellColor();
@@ -59,11 +60,12 @@ public class ControllerTest extends DukeApplicationTest {
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(5).get(6);
     press(KeyCode.SPACE);
     assertEquals("0xffffffff", currentCell.getCellColor());
-    javafxRun(() -> mainController.handleKeyInput(KeyCode.S));
+    Button stepButton = lookup("#Step").queryButton();
+    clickOn(stepButton);
     javafxRun(() -> mainController.gameStep());
     sleep(1000);
     assertEquals("0x000000ff", currentCell.getCellColor());
-    javafxRun(() -> mainController.handleKeyInput(KeyCode.S));
+    clickOn(stepButton);
     javafxRun(() -> mainController.gameStep());
     sleep(1000);
     assertEquals("0x000000ff", currentCell.getCellColor());
@@ -78,7 +80,8 @@ public class ControllerTest extends DukeApplicationTest {
     press(KeyCode.ENTER);
     javafxRun(() ->  mainController.displayInfo("ConwayStatesBlinker"));
     javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlinker.csv"));
-    javafxRun(() -> mainController.handleKeyInput(KeyCode.P));
+    Button pauseButton = lookup("#Pause").queryButton();
+    clickOn(pauseButton);
     FrontEndCell currentCell;
     String previousCellColor = mainController.getMainView().getFrontEndCellGrid().get(7).get(8).getCellColor();
     for (int i = 0; i < 120; i++) {
@@ -103,11 +106,12 @@ public class ControllerTest extends DukeApplicationTest {
 
     press(KeyCode.SPACE);
     assertEquals("0xffffffff", currentCell.getCellColor());
-    javafxRun(() -> mainController.handleKeyInput(KeyCode.S));
+    Button stepButton = lookup("#Step").queryButton();
+    clickOn(stepButton);
     javafxRun(() -> mainController.gameStep());
     sleep(1000);
     assertEquals("0x000000ff", currentCell.getCellColor());
-    javafxRun(() -> mainController.handleKeyInput(KeyCode.S));
+    clickOn(stepButton);
     javafxRun(() -> mainController.gameStep());
     sleep(1000);
     assertEquals("0xffffffff", currentCell.getCellColor());
