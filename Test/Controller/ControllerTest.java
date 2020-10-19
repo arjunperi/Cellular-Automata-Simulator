@@ -37,8 +37,7 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest.setText("ConwayStatesPulsar");
     press(KeyCode.ENTER);
     javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
-    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv",
-            "Test/ConwayStatesPulsarOut.csv"));
+    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv"));
     javafxRun(() -> mainController.handleKeyInput(KeyCode.P));
     FrontEndCell currentCell;
     String previousCellColor = mainController.getMainView().getFrontEndCellGrid().get(4).get(5)
@@ -57,8 +56,7 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest.setText("ConwayStatesPulsar");
     press(KeyCode.ENTER);
     javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
-    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv",
-            "Test/ConwayStatesPulsarOut.csv"));
+    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv"));
     View testView = mainController.getMainView();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(5).get(6);
     press(KeyCode.SPACE);
@@ -81,8 +79,7 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
     javafxRun(() ->  mainController.displayInfo("ConwayStatesBlinker"));
-    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlinker.csv",
-            "Test/ConwayStatesBlinkerOut.csv"));
+    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlinker.csv"));
     javafxRun(() -> mainController.handleKeyInput(KeyCode.P));
     FrontEndCell currentCell;
     String previousCellColor = mainController.getMainView().getFrontEndCellGrid().get(7).get(8).getCellColor();
@@ -102,8 +99,7 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
     javafxRun(() ->  mainController.displayInfo("ConwayStatesBlinker"));
-    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlinker.csv",
-            "Test/ConwayStatesBlinkerOut.csv"));
+    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlinker.csv"));
     View testView = mainController.getMainView();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(6).get(9);
 
@@ -126,18 +122,18 @@ public class ControllerTest extends DukeApplicationTest {
 //    inputTest.setText("ConwayStatesBlinker");
 //    press(KeyCode.ENTER);
 //    javafxRun(() ->  mainController.displayInfo("ConwayStatesBlinker"));
-//    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesBlinker.csv",
-//            "Test/ConwayStatesBlinkerOut.csv"));
+//    javafxRun(() ->  mainController.initializeSimulation("ConwayStatesBlinker.csv",
+//            "ConwayStatesBlinkerOut.csv"));
 //    View testView = mainController.getMainView();
 //
 //    Controller testStepController = new Controller();
 //    testStepController.startSimulation("GameOfLife","ConwayStatesBlinker");
-//    testStepController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
-//        "Test/ConwayStatesBlinkerOut.csv");
+//    testStepController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
+//        "ConwayStatesBlinkerOut.csv");
 //    Controller testSpeedUpController = new Controller();
 //    testSpeedUpController.startSimulation("GameOfLife","ConwayStatesBlinker");
-//    testSpeedUpController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
-//        "Test/ConwayStatesBlinkerOut.csv");
+//    testSpeedUpController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
+//        "ConwayStatesBlinkerOut.csv");
 //    View testStepView = testStepController.getMainView();
 //    FrontEndCell currentStepCell = testStepView.getFrontEndCellGrid().get(6).get(9);
 //    View testSpeedUpView = testSpeedUpController.getMainView();
@@ -158,12 +154,12 @@ public class ControllerTest extends DukeApplicationTest {
 //  public void testSlowDownConwayBlinker(){
 //    Controller testNormalController = new Controller();
 //    testNormalController.startSimulation("GameOfLife","ConwayStatesBlinker");
-//    testNormalController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
-//        "Test/ConwayStatesBlinkerOut.csv");
+//    testNormalController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
+//        "ConwayStatesBlinkerOut.csv");
 //    Controller testSlowDownController = new Controller();
 //    testSlowDownController.startSimulation("GameOfLife","ConwayStatesBlinker");
-//    testSlowDownController.initializeSimulation("Test/ConwayStatesBlinker.csv", "GameOfLife",
-//        "Test/ConwayStatesBlinkerOut.csv");
+//    testSlowDownController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
+//        "ConwayStatesBlinkerOut.csv");
 //    View testNormalView = testNormalController.getMainView();
 //    FrontEndCell currentNormalCell = testNormalView.getFrontEndCellGrid().get(6).get(9);
 //    View testSlowDownView = testSlowDownController.getMainView();
@@ -181,6 +177,7 @@ public class ControllerTest extends DukeApplicationTest {
 //    assertEquals(testSlowDownCell.getCellColor(), currentNormalCell.getCellColor());
 //  }
 //
+
   @Test
   public void testChangeCellState() {
     javafxRun(() -> mainController.initializeButtonMenu());
@@ -410,8 +407,7 @@ public class ControllerTest extends DukeApplicationTest {
     inputTest.setText("ConwayStatesBeacon");
     press(KeyCode.ENTER);
     javafxRun(() ->  mainController.displayInfo("ConwayStatesBeacon"));
-    assertThrows(IllegalStateException.class, () ->  mainController.initializeSimulation("Test/ConwayStatesBeaconError.csv",
-            "Test/ConwayStatesBeaconErrorOut.csv"));
+    assertThrows(IllegalStateException.class, () ->  mainController.initializeSimulation("Test/ConwayStatesBeaconError.csv"));
   }
 
 
@@ -430,6 +426,19 @@ public class ControllerTest extends DukeApplicationTest {
     assertEquals("0xffc0cbff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
   }
 
+    @Test
+  public void testPropertyFileDefaultKey(){
+      javafxRun(() -> mainController.initializeButtonMenu());
+      inputTest = lookup("#inputTextBox").query();
+      inputTest.setText("TestDefaults");
+      press(KeyCode.ENTER);
+      javafxRun(() -> mainController.displayInfo( "TestDefaults"));
+      javafxRun(() ->  mainController.initializeSimulation("TestDefaults.csv"));
+      View testView = mainController.getMainView();
+      assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(0).get(0).getCellColor());
+    }
+
+
 //  @Test
 //  public void testSaveSimulationProperties(){
 //    javafxRun(() -> mainController.initializeButtonMenu());
@@ -437,8 +446,8 @@ public class ControllerTest extends DukeApplicationTest {
 //    inputTest.setText("ConwayStatesPulsar");
 //    press(KeyCode.ENTER);
 //    javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
-//    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv",
-//            "Test/ConwayStatesPulsarOut.csv"));
+//    javafxRun(() ->  mainController.initializeSimulation("ConwayStatesPulsar.csv",
+//            "ConwayStatesPulsarOut.csv"));
 //    buttonTest = lookup("#Save").queryButton();
 //    clickOn(buttonTest);
 //    TextField titleTest = lookup("#titleInput").query();
@@ -449,16 +458,13 @@ public class ControllerTest extends DukeApplicationTest {
 //    descriptionTest.setText("TestPulsarDescriptionSave");
 //    Button okTest = lookup("#SaveOK").queryButton();
 //    clickOn(okTest);
-//    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv",
-//            "Test/ConwayStatesPulsarOut.csv"));
+//    javafxRun(() ->  mainController.initializeSimulation("ConwayStatesPulsar.csv",
+//            "ConwayStatesPulsarOut.csv"));
 //    buttonTest = lookup("#Home").queryButton();
 //    javafxRun(() -> stage.close());
-//    javafxRun(() ->  mainController.initializeSimulation("Test/ConwayStatesPulsar.csv",
-//            "Test/ConwayStatesPulsarOut.csv"));
+//    javafxRun(() ->  mainController.initializeSimulation("ConwayStatesPulsar.csv",
+//            "ConwayStatesPulsarOut.csv"));
 //    assertEquals("TestPulsarDescriptionSave", mainController.getPropertyFile("TestPulsarSave").getProperty("Description"));
 //  }
 
-  //  @Test
-//  public void testDefaultKeyPlacement(){}
-//
 }

@@ -3,22 +3,19 @@ package Model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 
 public class SpreadingFireCell extends Cell {
 
-  public static final List<Integer> POSSIBLE_STATES = new ArrayList<>(Arrays.asList(0,1,2));
-  public static final int[][] POSSIBLE_NEIGHBORS_SPREADING_FIRE = new int[][]{{-1, 0}, {0, 1},
-      {1, 0},
-      {0, -1}};
   public static final int ALIVE = 1;
   public static final int EMPTY = 0;
   public static final int BURNING = 2;
   public static final double PROB_CATCH_FIRE = .5;
   public static final Random RANDOM_NUMBER_GEN = new Random();
 
-  public SpreadingFireCell(int state) {
-    super(state);
+  public SpreadingFireCell(int state, Queue<Cell> emptyQueue) {
+    super(state, emptyQueue);
   }
 
   /**
@@ -39,10 +36,5 @@ public class SpreadingFireCell extends Cell {
         }
       }
     }
-  }
-
-  @Override
-  public int[][] getPossibleNeighbors() {
-    return POSSIBLE_NEIGHBORS_SPREADING_FIRE;
   }
 }
