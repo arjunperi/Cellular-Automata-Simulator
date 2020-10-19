@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -231,21 +233,6 @@ public class Controller {
     initializeSplashMenu();
   }
 
-
-  public void handleKeyInput(KeyCode code) {
-    switch (code) {
-      case P -> mainModel.switchPause();
-      case S -> {
-        mainModel.step();
-        if(graphController!=null) {
-          graphController.updateGraph();
-        }
-      }
-      case W -> mainModel.speedUp();
-      case Q -> mainModel.slowDown();
-    }
-  }
-
   public void addCellEventHandlers() {
     List<List<FrontEndCell>> frontEndCells = this.mainView.getFrontEndCellGrid();
     for (List<FrontEndCell> cellRow : frontEndCells) {
@@ -264,8 +251,21 @@ public class Controller {
   }
 
   public void initializeSimulationMenu() {
-    this.mainView.initializeSimulationMenu(saveEvent -> getSaveInputs(), colorEvent -> changeColorsPopUp(), graphEvent -> createGraph());
+    EventHandler<ActionEvent> saveEvent = e -> getSaveInputs();
+    EventHandler<ActionEvent> colorEvent = e -> changeColorsPopUp();
+    EventHandler<ActionEvent> graphEvent = e -> createGraph();
+    EventHandler<ActionEvent> pauseEvent  = e -> mainModel.switchPause();
+    EventHandler<ActionEvent> stepEvent = e ->{
+      mainModel.step();
+      if(graphController!=null) {
+
+        graphController.updateGraph();
+      }
+    };
+    ChangeListener<Number> test = (ov, old_val, new_val) -> {this.mainModel.setSimulationSpeed(new_val.doubleValue() / 100);};
+    this.mainView.initializeSimulationMenu(saveEvent, colorEvent, graphEvent, pauseEvent, stepEvent, test);
   }
+
 
   public void changeColorsPopUp() {
     mainModel.setPaused();

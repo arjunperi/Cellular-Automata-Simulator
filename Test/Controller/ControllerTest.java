@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import View.FrontEndCell;
 import View.View;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -34,7 +35,8 @@ public class ControllerTest extends DukeApplicationTest {
     press(KeyCode.ENTER);
     buttonTest = lookup("#ConwayStatesPulsar").query();
     clickOn(buttonTest);
-    javafxRun(() -> mainController.handleKeyInput(KeyCode.P));
+    Button pauseButton = lookup("#Pause").queryButton();
+    clickOn(pauseButton);
     FrontEndCell currentCell;
     String previousCellColor = mainController.getMainView().getFrontEndCellGrid().get(4).get(5)
             .getCellColor();
@@ -55,15 +57,13 @@ public class ControllerTest extends DukeApplicationTest {
     clickOn(buttonTest);
     View testView = mainController.getMainView();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(5).get(6);
-    press(KeyCode.SPACE);
+    clickOn(lookup("#Pause").queryButton());
     assertEquals("0xffffffff", currentCell.getCellColor());
-    javafxRun(() -> mainController.handleKeyInput(KeyCode.S));
+    clickOn(lookup("#Step").queryButton());
     javafxRun(() -> mainController.gameStep());
-    sleep(1000);
     assertEquals("0x000000ff", currentCell.getCellColor());
-    javafxRun(() -> mainController.handleKeyInput(KeyCode.S));
+    clickOn(lookup("#Step").queryButton());
     javafxRun(() -> mainController.gameStep());
-    sleep(1000);
     assertEquals("0x000000ff", currentCell.getCellColor());
   }
 
@@ -76,7 +76,8 @@ public class ControllerTest extends DukeApplicationTest {
     press(KeyCode.ENTER);
     buttonTest = lookup("#ConwayStatesBlinker").query();
     clickOn(buttonTest);
-    javafxRun(() -> mainController.handleKeyInput(KeyCode.P));
+    Button pauseButton = lookup("#Pause").queryButton();
+    clickOn(pauseButton);
     FrontEndCell currentCell;
     String previousCellColor = mainController.getMainView().getFrontEndCellGrid().get(7).get(8).getCellColor();
     for (int i = 0; i < 120; i++) {
@@ -97,80 +98,39 @@ public class ControllerTest extends DukeApplicationTest {
     clickOn(buttonTest);
     View testView = mainController.getMainView();
     FrontEndCell currentCell = testView.getFrontEndCellGrid().get(6).get(9);
-    press(KeyCode.SPACE);
+    clickOn(lookup("#Pause").queryButton());
     assertEquals("0xffffffff", currentCell.getCellColor());
-    javafxRun(() -> mainController.handleKeyInput(KeyCode.S));
+    Button stepButton = lookup("#Step").queryButton();
+    clickOn(stepButton);
     javafxRun(() -> mainController.gameStep());
-    sleep(1000);
     assertEquals("0x000000ff", currentCell.getCellColor());
-    javafxRun(() -> mainController.handleKeyInput(KeyCode.S));
+    clickOn(stepButton);
     javafxRun(() -> mainController.gameStep());
-    sleep(1000);
     assertEquals("0xffffffff", currentCell.getCellColor());
   }
-//
-//  @Test
-//  public void testSpeedUpConwayBlinker(){
-//    javafxRun(() -> mainController.initializeButtonMenu());
-//    inputTest = lookup("#inputTextBox").query();
-//    inputTest.setText("ConwayStatesBlinker");
-//    press(KeyCode.ENTER);
-//    javafxRun(() ->  mainController.displayInfo("ConwayStatesBlinker"));
-//    javafxRun(() ->  mainController.initializeSimulation("ConwayStatesBlinker.csv",
-//            "ConwayStatesBlinkerOut.csv"));
-//    View testView = mainController.getMainView();
-//
-//    Controller testStepController = new Controller();
-//    testStepController.startSimulation("GameOfLife","ConwayStatesBlinker");
-//    testStepController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
-//        "ConwayStatesBlinkerOut.csv");
-//    Controller testSpeedUpController = new Controller();
-//    testSpeedUpController.startSimulation("GameOfLife","ConwayStatesBlinker");
-//    testSpeedUpController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
-//        "ConwayStatesBlinkerOut.csv");
-//    View testStepView = testStepController.getMainView();
-//    FrontEndCell currentStepCell = testStepView.getFrontEndCellGrid().get(6).get(9);
-//    View testSpeedUpView = testSpeedUpController.getMainView();
-//    FrontEndCell testSpeedUpCell = testSpeedUpView.getFrontEndCellGrid().get(6).get(9);
-//    for(int i = 0; i < 6; i ++){
-//      testSpeedUpController.handleKeyInput(KeyCode.W);
-//    }
-//    assertEquals(testSpeedUpCell.getCellColor(), currentStepCell.getCellColor());
-//    for(int i = 0; i < 60; i ++){
-//      testStepController.gameStep();
-//    }
-//    for(int i = 0; i < 30; i ++){
-//      testSpeedUpController.gameStep();
-//    }
-//    assertEquals(testSpeedUpCell.getCellColor(), currentStepCell.getCellColor());
-//  }
-//  @Test
-//  public void testSlowDownConwayBlinker(){
-//    Controller testNormalController = new Controller();
-//    testNormalController.startSimulation("GameOfLife","ConwayStatesBlinker");
-//    testNormalController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
-//        "ConwayStatesBlinkerOut.csv");
-//    Controller testSlowDownController = new Controller();
-//    testSlowDownController.startSimulation("GameOfLife","ConwayStatesBlinker");
-//    testSlowDownController.initializeSimulation("ConwayStatesBlinker.csv", "GameOfLife",
-//        "ConwayStatesBlinkerOut.csv");
-//    View testNormalView = testNormalController.getMainView();
-//    FrontEndCell currentNormalCell = testNormalView.getFrontEndCellGrid().get(6).get(9);
-//    View testSlowDownView = testSlowDownController.getMainView();
-//    FrontEndCell testSlowDownCell = testSlowDownView.getFrontEndCellGrid().get(6).get(9);
-//    for(int i = 0; i < 6; i ++){
-//      testSlowDownController.handleKeyInput(KeyCode.Q);
-//    }
-//    assertEquals(testSlowDownCell.getCellColor(), currentNormalCell.getCellColor());
-//    for(int i = 0; i < 60; i ++){
-//      testNormalController.gameStep();
-//    }
-//    for(int i = 0; i < 120; i ++){
-//      testSlowDownController.gameStep();
-//    }
-//    assertEquals(testSlowDownCell.getCellColor(), currentNormalCell.getCellColor());
-//  }
-//
+
+  @Test
+  public void testSpeedUpConwayBlinker(){
+    javafxRun(() -> mainController.initializeSplashMenu());
+    inputTest = lookup("#inputTextBox").query();
+    inputTest.setText("ConwayStatesBlinker");
+    press(KeyCode.ENTER);
+    buttonTest = lookup("#ConwayStatesBlinker").query();
+    clickOn(buttonTest);
+    View testView = mainController.getMainView();
+    FrontEndCell currentCell = testView.getFrontEndCellGrid().get(6).get(9);
+    assertEquals("0xffffffff", currentCell.getCellColor());
+    for(int i = 0; i < 60; i ++){
+      javafxRun(() -> mainController.gameStep());
+    }
+    assertEquals("0x000000ff", currentCell.getCellColor());
+    Slider slider = lookup("#slider").query();
+    slider.setValue(70);
+    for(int i = 0; i < 30; i ++){
+      javafxRun(() -> mainController.gameStep());
+    }
+    assertEquals("0xffffffff", currentCell.getCellColor());
+  }
 
   @Test
   public void testChangeCellState() {
@@ -184,7 +144,6 @@ public class ControllerTest extends DukeApplicationTest {
     FrontEndCell testCell = lookup("#cell04").query();
     assertEquals("0xffffffff", testCell.getCellColor());
     clickOn("#cell04");
-    sleep(1000);
     javafxRun(() -> mainController.gameStep());
     assertEquals("0x000000ff", testCell.getCellColor());
   }

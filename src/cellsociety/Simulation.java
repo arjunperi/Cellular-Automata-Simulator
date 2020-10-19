@@ -45,7 +45,6 @@ public class Simulation extends Application {
     stage.setScene(mainController.setupScene());
     stage.setTitle(TITLE);
     stage.show();
-    stage.getScene().setOnKeyPressed(e -> mainController.handleKeyInput(e.getCode()));
     initializeAnimation();
   }
 
