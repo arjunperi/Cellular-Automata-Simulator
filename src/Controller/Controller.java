@@ -232,7 +232,18 @@ public class Controller {
   }
 
   public void initializeSimulationMenu() {
-    this.mainView.initializeSimulationMenu(saveEvent -> getSaveInputs(), colorEvent -> changeColorsPopUp(), graphEvent -> createGraph());
+    EventHandler<ActionEvent> saveEvent = e -> getSaveInputs();
+    EventHandler<ActionEvent> colorEvent = e -> changeColorsPopUp();
+    EventHandler<ActionEvent> graphEvent = e -> createGraph();
+    EventHandler<ActionEvent> pauseEvent  = e -> mainModel.switchPause();
+    EventHandler<ActionEvent> stepEvent = e ->{
+      mainModel.step();
+      if(graphController!=null) {
+
+        graphController.updateGraph();
+      }
+    };
+    this.mainView.initializeSimulationMenu(saveEvent, colorEvent, graphEvent, pauseEvent, stepEvent);
   }
 
   public void changeColorsPopUp() {

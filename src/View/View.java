@@ -133,16 +133,21 @@ public class View {
     }
   }
 
-  public void initializeSimulationMenu(EventHandler<ActionEvent> saveEvent,EventHandler<ActionEvent> changeColorEvent,EventHandler<ActionEvent> graphEvent){
+  public void initializeSimulationMenu(EventHandler<ActionEvent> saveEvent,EventHandler<ActionEvent> changeColorEvent,
+      EventHandler<ActionEvent> graphEvent, EventHandler<ActionEvent> pauseEvent, EventHandler<ActionEvent> stepEvent){
     HBox topMenuBox = new HBox();
     Button saveButton = makeButton(viewTextResources.getString("SaveButtonText"), saveEvent);
     Button changeColorsButton = makeButton(viewTextResources.getString("ColorsButtonText"), changeColorEvent);
     Button showGraphButton = makeButton(viewTextResources.getString("GraphButtonText"), graphEvent);
+    Button pauseButton = makeButton(viewTextResources.getString("PauseButtonText"), pauseEvent);
+    Button stepButton = makeButton(viewTextResources.getString("StepButtonText"), stepEvent);
     updateHomeButton();
     topMenuBox.getChildren().add(homeButton);
     topMenuBox.getChildren().add(saveButton);
     topMenuBox.getChildren().add(changeColorsButton);
     topMenuBox.getChildren().add(showGraphButton);
+    topMenuBox.getChildren().add(pauseButton);
+    topMenuBox.getChildren().add(stepButton);
     this.topGroup.getChildren().add(topMenuBox);
   }
 
