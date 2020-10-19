@@ -27,7 +27,7 @@ public abstract class Model {
   public static final Character DOT = '.';
 
   private double framesPerModelUpdate = 60;
-  public static final int MIN_FRAMES_PER_MODEL_UPDATE = 10;
+  public static final int MIN_FRAMES_PER_MODEL_UPDATE = 5;
   public static final int MAX_FRAMES_PER_MODEL_UPDATE = 100;
   protected final Grid gridOfCells;
   protected final Queue<Cell> emptyQueue = new LinkedList<>();
@@ -148,6 +148,11 @@ public abstract class Model {
 
   public void slowDown() {
     this.framesPerModelUpdate = Math.min(MAX_FRAMES_PER_MODEL_UPDATE, framesPerModelUpdate + ANIMATION_RATE_CHANGE);
+  }
+
+  public void setSimulationSpeed(double speed){
+    Double temp = (1-speed)*MAX_FRAMES_PER_MODEL_UPDATE;
+    this.framesPerModelUpdate = Math.max(MIN_FRAMES_PER_MODEL_UPDATE, Math.round(temp/10.0) * 10);
   }
 
   public Properties getPropertyFile(String fileName) {
