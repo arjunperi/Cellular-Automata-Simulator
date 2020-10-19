@@ -15,14 +15,14 @@ class GameOfLifeModelTest {
 
   @Test
   public void testConstructor() {
-    Model testModel = new Model("Test/ConwayStatesPulsar.csv", "GameOfLife");
+    Model testModel = new GameOfLifeModel("Test/ConwayStatesPulsar.csv", "GameOfLife");
     assertEquals(0, testModel.getCellState(0,0));
     assertEquals(1, testModel.getCellState(4,5));
   }
 
   @Test
   public void testStepPulsar() {
-    Model testModel = new Model("Test/ConwayStatesPulsar.csv", "GameOfLife");
+    Model testModel = new GameOfLifeModel("Test/ConwayStatesPulsar.csv", "GameOfLife");
     assertEquals(1, testModel.getCellState(4,5));
     testModel.step();
     assertEquals(0, testModel.getCellState(4,5));
@@ -30,7 +30,7 @@ class GameOfLifeModelTest {
 
   @Test
   public void testStepBeacon() {
-    Model testModel = new Model("Test/ConwayStatesBeacon.csv", "GameOfLife");
+    Model testModel = new GameOfLifeModel("Test/ConwayStatesBeacon.csv", "GameOfLife");
     assertEquals(0, testModel.getCellState(7,7));
     testModel.step();
     assertEquals(1, testModel.getCellState(7,7));
@@ -38,7 +38,7 @@ class GameOfLifeModelTest {
 
   @Test
   public void testStepBlinker() {
-    Model testModel = new Model("Test/ConwayStatesBlinker.csv", "GameOfLife");
+    Model testModel = new GameOfLifeModel("Test/ConwayStatesBlinker.csv", "GameOfLife");
     assertEquals(1, testModel.getCellState(7,8));
     testModel.step();
     assertEquals(0, testModel.getCellState(7,8));
@@ -46,7 +46,7 @@ class GameOfLifeModelTest {
 
   @Test
   public void testStepBlock() {
-    Model testModel = new Model("Test/ConwayStatesBlock.csv", "GameOfLife");
+    Model testModel = new GameOfLifeModel("Test/ConwayStatesBlock.csv", "GameOfLife");
     assertEquals(1, testModel.getCellState(9,13));
     testModel.step();
     assertEquals(1, testModel.getCellState(9,13));
@@ -54,7 +54,7 @@ class GameOfLifeModelTest {
 
   @Test
   public void testStepToad() {
-    Model testModel = new Model("Test/ConwayStatesToad.csv", "GameOfLife");
+    Model testModel = new GameOfLifeModel("Test/ConwayStatesToad.csv", "GameOfLife");
     assertEquals(0, testModel.getCellState(9,10));
     testModel.step();
     assertEquals(1, testModel.getCellState(9,10));
@@ -62,7 +62,7 @@ class GameOfLifeModelTest {
 
   @Test
   public void testInvalidStates() throws IOException {
-    Model testModel = new Model("Test/TestInvalidStates.csv", "GameOfLife");
+    Model testModel = new GameOfLifeModel("Test/TestInvalidStates.csv", "GameOfLife");
     Properties propertyFile = new Properties();
     propertyFile.load(Controller.class.getClassLoader().getResourceAsStream("TestInvalidStates" + ".properties"));
     assertThrows(ModelException.class, () -> testModel.initializeAllStates((String) propertyFile.getProperty("States")));

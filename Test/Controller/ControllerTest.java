@@ -28,7 +28,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testPauseConwayPulsar() {
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesPulsar");
     press(KeyCode.ENTER);
@@ -47,7 +47,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStepConwayPulsar() {
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesPulsar");
     press(KeyCode.ENTER);
@@ -70,7 +70,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testPauseConwayBlinker() {
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
@@ -89,7 +89,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStepConwayBlinker() {
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
@@ -174,7 +174,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testChangeCellState() {
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBeacon");
     press(KeyCode.ENTER);
@@ -191,7 +191,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStartConwayBeaconStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBeacon");
     press(KeyCode.ENTER);
@@ -203,7 +203,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStartConwayBlinkerStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
@@ -215,7 +215,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStartConwayBlockStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlock");
     press(KeyCode.ENTER);
@@ -227,7 +227,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStartConwayPulsarStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesPulsar");
     press(KeyCode.ENTER);
@@ -239,7 +239,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testStartConwayToadStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesToad");
     press(KeyCode.ENTER);
@@ -251,7 +251,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testPercolationExampleStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("PercolationExample");
     press(KeyCode.ENTER);
@@ -263,7 +263,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testRPS100StartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("RPS100");
     press(KeyCode.ENTER);
@@ -275,7 +275,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testRPSExampleStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("RPSExample");
     press(KeyCode.ENTER);
@@ -287,7 +287,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testSpreadingFire20StartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("SpreadingFire20");
     press(KeyCode.ENTER);
@@ -299,7 +299,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testSpreadingFire100StartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("SpreadingFire100");
     press(KeyCode.ENTER);
@@ -311,7 +311,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testSegregationExampleStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("SegregationExample");
     press(KeyCode.ENTER);
@@ -323,7 +323,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testWaTorExampleStartButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("WaTorExample");
     press(KeyCode.ENTER);
@@ -335,7 +335,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testHomeButton(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("SpreadingFire100");
     press(KeyCode.ENTER);
@@ -343,7 +343,7 @@ public class ControllerTest extends DukeApplicationTest {
     clickOn(buttonTest);
     buttonTest = lookup("#Home").queryButton();
     clickOn(buttonTest);
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     sleep(1000);
     inputTest = lookup("#inputTextBox").query();
     javafxRun(() -> inputTest.setText("SpreadingFire20"));
@@ -352,7 +352,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testDialogInput(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
@@ -363,14 +363,24 @@ public class ControllerTest extends DukeApplicationTest {
   }
 
   @Test
+  public void testInvalidModelType(){
+    javafxRun(() -> mainController.initializeSplashMenu());
+    inputTest = lookup("#inputTextBox").query();
+    inputTest.setText("Test");
+//    Properties propertyFile = mainController.getPropertyFile(inputTest.getText());
+    assertThrows(IllegalStateException.class, () -> mainController.displayInfo(inputTest.getText()));
+  }
+
+  @Test
   public void testInvalidFileName(){
     Controller testController = new Controller();
     assertThrows(ControllerException.class, () -> testController.getPropertyFile("nonexistent"));
   }
 
+
   @Test
   public void testupdateColorStateMapping(){
-    javafxRun(() -> mainController.initializeButtonMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
     press(KeyCode.ENTER);
@@ -385,15 +395,27 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testPropertyFileDefaultKey(){
-      javafxRun(() -> mainController.initializeButtonMenu());
-      inputTest = lookup("#inputTextBox").query();
-      inputTest.setText("TestDefaults");
-      press(KeyCode.ENTER);
-      javafxRun(() -> mainController.displayInfo( "TestDefaults"));
-      javafxRun(() ->  mainController.initializeSimulation());
-      View testView = mainController.getMainView();
-      assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(0).get(0).getCellColor());
-    }
+    javafxRun(() -> mainController.initializeSplashMenu());
+    inputTest = lookup("#inputTextBox").query();
+    inputTest.setText("TestDefaults");
+    press(KeyCode.ENTER);
+    javafxRun(() -> mainController.displayInfo( "TestDefaults"));
+    javafxRun(() ->  mainController.initializeSimulation());
+    View testView = mainController.getMainView();
+    assertEquals("0xffffffff", testView.getFrontEndCellGrid().get(0).get(0).getCellColor());
+  }
+
+  @Test
+  public void testLanguageChange(){
+    javafxRun(() -> mainController.initializeSplashMenu());
+    clickOn(lookup("#spanish").queryButton());
+    inputTest = lookup("#inputTextBox").query();
+    inputTest.setText("TestDefaults");
+    press(KeyCode.ENTER);
+    Button test = lookup("#Home").queryButton();
+    assertEquals("Inicio", test.getText());
+  }
+}
 
 //  @Test
 //  public void testSaveSimulationProperties(){
@@ -423,4 +445,4 @@ public class ControllerTest extends DukeApplicationTest {
 //    assertEquals("TestPulsarDescriptionSave", mainController.getPropertyFile("TestPulsarSave").getProperty("Description"));
 //  }
 
-}
+

@@ -5,6 +5,7 @@ import cellsociety.Simulation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -32,13 +33,55 @@ public class View {
   private List<List<String>> frontEndCellColors;
   private TextField inputText;
   private Button homeButton;
+  private ResourceBundle viewTextResources;
 
-  public View() {
+  private static final String CELL = "cell";
+  private static final String INPUT_TEXT_BOX = "inputTextBox";
+  private static final String ENGLISH = "English";
+  private static final String SPANISH = "Spanish";
+  private static final String SPANISH_LOWER = "spanish";
+  private static final String FAKE_LANGUAGE = "FakeLanguage";
+  private static final String TYPE = "Type";
+  private static final String HOME = "Home";
+  private static final String INPUT = "Input";
+  private static final String PROMPT = "Prompt";
+  private static final String TEXT = "Text";
+  private static final String LABEL = "Label";
+  private static final String TITLE = "Title";
+  private static final String AUTHOR = "Author";
+  private static final String DESCRIPTION = "Description";
+  private static final String TITLE_LOWER = "title";
+  private static final String AUTHOR_LOWER = "author";
+  private static final String DESCRIPTION_LOWER = "description";
+  private static final String NO = "No";
+  private static final String SPACE = " ";
+  private static final String SPECIFIED = "Specified";
+  private static final String NEWLINE = "\n";
+  private static final String COLORS = "Colors";
+  private static final String COLOR_LOWER = "color";
+  private static final String COLOR = "Color";
+  private static final String BUTTON = "Button";
+  private static final String SAVE = "Save";
+  private static final int ZERO = 0;
+  private static final int ONE = 1;
+  private static final int TWO = 2;
+  private static final String STATE_LOWER = "state";
+  private static final String STATE = "State";
+  private static final String CONTROLLER = "Controller";
+  private static final String GRAPH = "Graph";
+  private static final String OK = "OK";
+  private static final String ALERT = "Alert";
+
+
+
+
+  public View(ResourceBundle resources) {
     topGroup = new Group();
     centerGroup = new Group();
     root = new BorderPane();
     root.setCenter(centerGroup);
     root.setTop(topGroup);
+    this.viewTextResources = resources;
   }
 
   public Scene setupScene() {
@@ -75,7 +118,7 @@ public class View {
     FrontEndCell currentFrontEndCell = new FrontEndCell(stateString, x, y, xOffset, yOffset, row,
         column);
     frontEndCellRow.add(currentFrontEndCell);
-    currentFrontEndCell.setId("cell" + row + column);
+    currentFrontEndCell.setId(CELL + row + column);
     centerGroup.getChildren().add(currentFrontEndCell);
   }
 
@@ -89,16 +132,23 @@ public class View {
     }
   }
 
-  public void createInputTextField(TextField inputText, EventHandler<ActionEvent> inputTextEvent){
+  public void createInputTextField(TextField inputText, EventHandler<ActionEvent> inputTextEvent,
+      EventHandler<ActionEvent> englishEvent,EventHandler<ActionEvent> spanishEvent, EventHandler<ActionEvent> languageEvent){
     clearCenterGroup();
     clearTopMenuGroup();
     VBox inputTextBox = new VBox();
     this.inputText = inputText;
-    this.inputText.setId("inputTextBox");
+    this.inputText.setId(INPUT_TEXT_BOX);
     this.inputText.setOnAction(inputTextEvent);
-    Label inputLabel = new Label("Enter Simulation Name and Press Enter");
+    Label inputLabel = new Label(viewTextResources.getString( INPUT+LABEL+TEXT));
     inputTextBox.getChildren().add(inputLabel);
     inputTextBox.getChildren().add(inputText);
+    inputTextBox.getChildren().add(makeButton(ENGLISH, englishEvent));
+    Button spanishButton = makeButton(SPANISH, spanishEvent);
+    spanishButton.setId(SPANISH_LOWER);
+    inputTextBox.getChildren().add(spanishButton);
+    inputTextBox.getChildren().add(makeButton(FAKE_LANGUAGE, languageEvent));
+
     this.centerGroup.getChildren().add(inputTextBox);
   }
 
@@ -106,16 +156,17 @@ public class View {
     clearCenterGroup();
     HBox simulationInfoBox = new HBox();
     Button startButton = makeButton(fileName, startButtonEvent);
+    updateHomeButton();
     simulationInfoBox.getChildren().add(homeButton);
     simulationInfoBox.getChildren().add(startButton);
     this.topGroup.getChildren().add(simulationInfoBox);
     try {
       Text startupText = new Text();
-      String type = (String) simulationPropertyFile.getOrDefault("Type", "No Type Specified");
-      String title = (String) simulationPropertyFile.getOrDefault("Title", "No Title specified");
-      String author = (String) simulationPropertyFile.getOrDefault("Author", "No Author Specified");
-      String description = (String) simulationPropertyFile.getOrDefault("Description", "No Description Specified");
-      startupText.setText(type + "\n" + title + "\n" + author + "\n" + description);
+      String type = (String) simulationPropertyFile.getOrDefault(TYPE, NO + SPACE + TYPE + SPACE + SPECIFIED);
+      String title = (String) simulationPropertyFile.getOrDefault(TITLE, NO + SPACE + TITLE + SPACE + SPECIFIED);
+      String author = (String) simulationPropertyFile.getOrDefault(AUTHOR, NO + SPACE + AUTHOR + SPACE + SPECIFIED);
+      String description = (String) simulationPropertyFile.getOrDefault(DESCRIPTION, NO + SPACE + DESCRIPTION + SPACE + SPECIFIED);
+      startupText.setText(type + NEWLINE + title + NEWLINE + author + NEWLINE + description);
       this.centerGroup.getChildren().add(startupText);
     } catch (ControllerException e) {
       showError(e.getMessage());
@@ -124,9 +175,10 @@ public class View {
 
   public void initializeSimulationMenu(EventHandler<ActionEvent> saveEvent,EventHandler<ActionEvent> changeColorEvent,EventHandler<ActionEvent> graphEvent){
     HBox topMenuBox = new HBox();
-    Button saveButton = makeButton("Save", saveEvent);
-    Button changeColorsButton = makeButton("changeColors", changeColorEvent);
-    Button showGraphButton = makeButton("State Concentration Graph", graphEvent);
+    Button saveButton = makeButton(viewTextResources.getString(SAVE + BUTTON + TEXT), saveEvent);
+    Button changeColorsButton = makeButton(viewTextResources.getString(COLORS + BUTTON + TEXT), changeColorEvent);
+    Button showGraphButton = makeButton(viewTextResources.getString(GRAPH + BUTTON + TEXT), graphEvent);
+    updateHomeButton();
     topMenuBox.getChildren().add(homeButton);
     topMenuBox.getChildren().add(saveButton);
     topMenuBox.getChildren().add(changeColorsButton);
@@ -136,14 +188,14 @@ public class View {
 
   public Dialog changeColorsPopUp(TextField stateInput, TextField colorInput){
     Dialog colorBox = new TextInputDialog();
-    colorInput.setId("colorInput");
-    colorInput.setId("stateInput");
+    colorInput.setId(COLOR_LOWER + INPUT);
+    colorInput.setId(STATE_LOWER + INPUT);
     GridPane grid = new GridPane();
-    colorInput.setPromptText("New Color");
-    stateInput.setPromptText("State to Change");
-    GridPane.setConstraints(stateInput, 0, 0);
+    colorInput.setPromptText(viewTextResources.getString(COLOR+INPUT+PROMPT));
+    stateInput.setPromptText(viewTextResources.getString(STATE+INPUT+PROMPT));
+    GridPane.setConstraints(stateInput, ZERO, ZERO);
     grid.getChildren().add(stateInput);
-    GridPane.setConstraints(colorInput, 0, 1);
+    GridPane.setConstraints(colorInput, ZERO, ONE);
     grid.getChildren().add(colorInput);
     colorBox.getDialogPane().setContent(grid);
     return colorBox;
@@ -151,27 +203,23 @@ public class View {
 
   public Dialog showSaveInputs(TextField titleInput, TextField authorInput, TextField descriptionInput){
     Dialog saveBox = new TextInputDialog();
-    saveBox.getDialogPane().lookupButton(ButtonType.OK).setId("SaveOK");
-    titleInput.setId("titleInput");
-    authorInput.setId("authorInput");
-    descriptionInput.setId("descriptionInput");
-    titleInput.setPromptText("Title: ");
-    authorInput.setPromptText("Author: ");
-    descriptionInput.setPromptText("Description: ");
+    saveBox.getDialogPane().lookupButton(ButtonType.OK).setId(SAVE + OK);
+    titleInput.setId(TITLE_LOWER + INPUT);
+    authorInput.setId(AUTHOR_LOWER + INPUT);
+    descriptionInput.setId(DESCRIPTION_LOWER + INPUT);
+    titleInput.setPromptText(viewTextResources.getString(TITLE+INPUT+TEXT));
+    authorInput.setPromptText(viewTextResources.getString(AUTHOR+INPUT+TEXT));
+    descriptionInput.setPromptText(viewTextResources.getString(DESCRIPTION+INPUT+TEXT));
     GridPane grid = new GridPane();
-    GridPane.setConstraints(titleInput, 0, 0);
+    GridPane.setConstraints(titleInput, ZERO, ZERO);
     grid.getChildren().add(titleInput);
-    GridPane.setConstraints(authorInput, 0, 1);
+    GridPane.setConstraints(authorInput, ZERO, ONE);
     grid.getChildren().add(authorInput);
-    GridPane.setConstraints(descriptionInput, 0, 2);
+    GridPane.setConstraints(descriptionInput, ZERO, TWO);
     grid.getChildren().add(descriptionInput);
     saveBox.getDialogPane().setContent(grid);
     return saveBox;
   }
-
-  public void initializeButtonMenu(){}
-  public void addTopBarMenu(){}
-  public void makeButton(){}
 
   private Button makeButton(String property, EventHandler<ActionEvent> handler) {
     Button result = new Button();
@@ -182,18 +230,23 @@ public class View {
   }
 
   public Button setHomeButton(EventHandler<ActionEvent> inputTextEvent){
-    this.homeButton = makeButton("Home", inputTextEvent);
+    this.homeButton = makeButton(viewTextResources.getString(HOME + BUTTON + TEXT), inputTextEvent);
+    this.homeButton.setId(HOME);
     return this.homeButton;
+  }
+
+  public void updateHomeButton(){
+    this.homeButton.setText(viewTextResources.getString(HOME + BUTTON + TEXT));
   }
 
   private void showError(String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle("Controller Error");
+    alert.setTitle(viewTextResources.getString(CONTROLLER + ALERT + TEXT));
     alert.setContentText(message);
     alert.showAndWait();
   }
 
-
+  public void updateResourceBundle(ResourceBundle resources){this.viewTextResources = resources;}
   public void clearTopMenuGroup(){this.topGroup.getChildren().clear();}
   public void clearCenterGroup(){this.centerGroup.getChildren().clear();}
   public List<List<FrontEndCell>> getFrontEndCellGrid() {

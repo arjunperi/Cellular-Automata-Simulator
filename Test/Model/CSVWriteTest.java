@@ -26,7 +26,7 @@ public class CSVWriteTest extends DukeApplicationTest {
 
   @Test
   public void testWriteConwayToad() {
-      javafxRun(() -> mainController.initializeButtonMenu());
+      javafxRun(() -> mainController.initializeSplashMenu());
       inputTest = lookup("#inputTextBox").query();
       inputTest.setText("ConwayStatesToad");
       press(KeyCode.ENTER);
@@ -36,7 +36,7 @@ public class CSVWriteTest extends DukeApplicationTest {
       FrontEndCell currentCell = testView.getFrontEndCellGrid().get(7).get(10);
       assertEquals("0x000000ff", currentCell.getCellColor());
       mainController.handleKeyInput(KeyCode.S);
-      javafxRun(() -> mainController.initializeButtonMenu());
+      javafxRun(() -> mainController.initializeSplashMenu());
       inputTest = lookup("#inputTextBox").query();
       inputTest.setText("ConwayStatesToad");
       press(KeyCode.ENTER);
@@ -49,7 +49,7 @@ public class CSVWriteTest extends DukeApplicationTest {
 
   @Test
   public void testWriteConwayPulsar() {
-      javafxRun(() -> mainController.initializeButtonMenu());
+      javafxRun(() -> mainController.initializeSplashMenu());
       inputTest = lookup("#inputTextBox").query();
       inputTest.setText("ConwayStatesPulsar");
       press(KeyCode.ENTER);
@@ -59,7 +59,7 @@ public class CSVWriteTest extends DukeApplicationTest {
       FrontEndCell currentCell = testView.getFrontEndCellGrid().get(4).get(5);
       assertEquals("0x000000ff", currentCell.getCellColor());
       mainController.handleKeyInput(KeyCode.S);
-      javafxRun(() -> mainController.initializeButtonMenu());
+      javafxRun(() -> mainController.initializeSplashMenu());
       inputTest = lookup("#inputTextBox").query();
       inputTest.setText("ConwayStatesPulsar");
       press(KeyCode.ENTER);
