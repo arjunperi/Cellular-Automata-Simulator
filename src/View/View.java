@@ -11,6 +11,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -148,8 +149,24 @@ public class View {
     return colorBox;
   }
 
-  public void getSaveInputs(){
-
+  public Dialog showSaveInputs(TextField titleInput, TextField authorInput, TextField descriptionInput){
+    Dialog saveBox = new TextInputDialog();
+    saveBox.getDialogPane().lookupButton(ButtonType.OK).setId("SaveOK");
+    titleInput.setId("titleInput");
+    authorInput.setId("authorInput");
+    descriptionInput.setId("descriptionInput");
+    titleInput.setPromptText("Title: ");
+    authorInput.setPromptText("Author: ");
+    descriptionInput.setPromptText("Description: ");
+    GridPane grid = new GridPane();
+    GridPane.setConstraints(titleInput, 0, 0);
+    grid.getChildren().add(titleInput);
+    GridPane.setConstraints(authorInput, 0, 1);
+    grid.getChildren().add(authorInput);
+    GridPane.setConstraints(descriptionInput, 0, 2);
+    grid.getChildren().add(descriptionInput);
+    saveBox.getDialogPane().setContent(grid);
+    return saveBox;
   }
 
   public void initializeButtonMenu(){}

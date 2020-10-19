@@ -23,7 +23,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 
 
@@ -111,32 +110,19 @@ public class Controller {
 
   public void getSaveInputs() {
     mainModel.setPaused();
-    Dialog saveBox = new TextInputDialog();
-    saveBox.getDialogPane().lookupButton(ButtonType.OK).setId("SaveOK");
     TextField titleInput = new TextField();
-    titleInput.setId("titleInput");
     TextField authorInput = new TextField();
-    authorInput.setId("authorInput");
     TextField descriptionInput = new TextField();
-    descriptionInput.setId("descriptionInput");
-    GridPane grid = new GridPane();
-    titleInput.setPromptText("Title: ");
-    authorInput.setPromptText("Author: ");
-    descriptionInput.setPromptText("Description: ");
-    GridPane.setConstraints(titleInput, 0, 0);
-    grid.getChildren().add(titleInput);
-    GridPane.setConstraints(authorInput, 0, 1);
-    grid.getChildren().add(authorInput);
-    GridPane.setConstraints(descriptionInput, 0, 2);
-    grid.getChildren().add(descriptionInput);
-    saveBox.getDialogPane().setContent(grid);
-    Optional<String> result = saveBox.showAndWait();
+
+    Dialog saveBox = this.mainView.showSaveInputs(titleInput,authorInput,descriptionInput);
+    Optional<String> saveBoxResult = saveBox.showAndWait();
     Properties savedProperties = new Properties();
+
     savedProperties.setProperty("Title", titleInput.getText());
     savedProperties.setProperty("Author", authorInput.getText());
     savedProperties.setProperty("Description", descriptionInput.getText());
     savedProperties.setProperty("Type", modelType);
-    if (result.isPresent()) {
+    if (saveBoxResult.isPresent()) {
       writeToPropertyFile(savedProperties);
       mainModel.writeToCSV(savedProperties.getProperty("Title") + ".csv");
     }
@@ -180,19 +166,6 @@ public class Controller {
     return frontEndCellColors;
   }
 
-  public Scene setupScene() {
-    return mainView.setupScene();
-  }
-
-  public Model getMainModel() {
-    return mainModel;
-  }
-
-  public View getMainView() {
-    return mainView;
-  }
-
-
   private void showError(String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle("Controller Error");
@@ -200,14 +173,6 @@ public class Controller {
     alert.showAndWait();
   }
 
-
-  private Button makeButton(String property, EventHandler<ActionEvent> handler) {
-    Button result = new Button();
-    result.setId(property);
-    result.setText(property);
-    result.setOnAction(handler);
-    return result;
-  }
 
   public void initializeColorMapping(int state) {
     Properties propertyFile = getPropertyFile(currentFileName);
@@ -297,6 +262,14 @@ public class Controller {
     }
     this.graphController = new GraphController(this.mainModel, this.stateColorMapping);
     this.graphShowing = true;
+  }
+
+  public Scene setupScene() {
+    return mainView.setupScene();
+  }
+
+  public View getMainView() {
+    return mainView;
   }
 }
 
