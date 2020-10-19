@@ -367,7 +367,6 @@ public class ControllerTest extends DukeApplicationTest {
     javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("Test");
-//    Properties propertyFile = mainController.getPropertyFile(inputTest.getText());
     assertThrows(IllegalStateException.class, () -> mainController.displayInfo(inputTest.getText()));
   }
 
