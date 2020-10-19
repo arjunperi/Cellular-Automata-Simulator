@@ -1,6 +1,7 @@
 package View;
 
 
+import Model.ModelException;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -20,7 +21,12 @@ public class FrontEndCell extends Rectangle {
   }
 
   public void updateCellColor(String stateColor) {
-    cellStateColor = Paint.valueOf(stateColor);
+    try{
+      cellStateColor = Paint.valueOf(stateColor);
+    }
+    catch(NullPointerException e){
+      throw new ModelException("Invalid CSV Intitial State Inputs");
+    }
     this.setFill(Color.valueOf(String.valueOf(this.cellStateColor)));
   }
 

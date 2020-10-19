@@ -1,12 +1,14 @@
 package Controller;
 
 import Model.Model;
+import Model.ModelException;
 import View.View;
 import View.FrontEndCell;
 
 
 import java.io.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +36,7 @@ public class Controller {
   private boolean graphShowing = false;
   private String modelType;
   private Properties defaultFile;
+  private Properties currentPropertyFile;
 
   private static final String RESOURCES = "Resources/";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES.replace("/", ".");
@@ -58,7 +61,9 @@ public class Controller {
   private static final String DEFAULT = "Default";
   private static final String STATES = "States";
   private static final String INVALID_MODEL_TYPE = "Invalid Model Type";
+  private static final String WRITING_ERROR = "Error Writing to Properties File";
   private static final String TITLE = "Title";
+  private static final String FILENAME = "FileName";
   private static final String AUTHOR = "Author";
   private static final String DESCRIPTION = "Description";
   private static final String PROPERTIES = "Properties";
@@ -81,11 +86,10 @@ public class Controller {
     }
     this.inputText = new TextField();
     EventHandler<ActionEvent> simulationInputEvent = e -> {
-      String fileChosen = inputText.getText();
+      currentFileName = inputText.getText();
       try {
-        Properties propertyFile = getPropertyFile(fileChosen);
-        modelType = propertyFile.getProperty(TYPE);
-        displayInfo(fileChosen);
+        currentPropertyFile = getPropertyFile(currentFileName);
+        displayInfo(currentFileName);
       } catch (ControllerException c) {
         showError(c.getMessage());
       }
@@ -96,36 +100,42 @@ public class Controller {
   }
 
   public void displayInfo(String fileName) {
-   currentFileName = fileName;
     try {
-      Properties propertyFile = getPropertyFile(fileName);
-      this.mainView.displaySimulationInfo(fileName,propertyFile, event -> initializeSimulation(fileName + DOT_CSV));
+      this.mainView.displaySimulationInfo(fileName, currentPropertyFile, event -> initializeSimulation());
     } catch (ControllerException e){
       showError(e.getMessage());
     }
   }
 
-  public void initializeSimulation(String fileName) {
+  public void initializeSimulation() {
     mainView.clearCenterGroup();
     mainView.clearTopMenuGroup();
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
     try {
-      Properties propertyFile = getPropertyFile(currentFileName);
+      modelType = currentPropertyFile.getProperty(TYPE);
       Class<?> cl = Class.forName(MODEL + DOT + modelType + MODEL);
       this.mainModel = (Model) cl.getConstructor(String.class, String.class)
-          .newInstance(fileName, modelType);
+          .newInstance(currentPropertyFile.getOrDefault(FILENAME, currentFileName + DOT_CSV), modelType);
       defaultFile = getPropertyFile(modelType + DEFAULT);
       String defaultStates = defaultFile.getProperty(STATES);
-      mainModel.initializeAllStates((String) propertyFile.getOrDefault(STATES, defaultStates));
+      mainModel.initializeAllStates((String) currentPropertyFile.getOrDefault(STATES, defaultStates));
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
           mainModel.getNumberOfColumns(), frontEndCellColors);
       simIsSet = true;
       addCellEventHandlers();
       initializeSimulationMenu();
-    } catch (Exception e) {
+    }
+    catch (ClassNotFoundException e){
       showError(INVALID_MODEL_TYPE);
+    }
+    catch (InvocationTargetException e){
+      showError(e.getTargetException().getMessage());
+    }
+    catch (Exception e) {
+      showError(e.getMessage());
+//      e.printStackTrace();
       initializeSplashMenu();
     }
   }
@@ -157,7 +167,7 @@ public class Controller {
               PROPERTIES + SLASH + propertyFile.getProperty(TITLE) + DOT_PROPERTIES);
       propertyFile.store(writer, null);
     }catch (IOException ex) {
-      ex.printStackTrace();
+      throw new ModelException(WRITING_ERROR);
     }
     initializeSplashMenu();
   }
@@ -188,18 +198,16 @@ public class Controller {
     return frontEndCellColors;
   }
 
-  private void showError(String message) {
+  public void showError(String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle(CONTROLLER_ERROR);
     alert.setContentText(message);
     alert.showAndWait();
   }
 
-
   public void initializeColorMapping(int state) {
-    Properties propertyFile = getPropertyFile(currentFileName);
     String defaultColor = defaultFile.getProperty(String.valueOf(state));
-    String color = (String) propertyFile.getOrDefault(String.valueOf(state), defaultColor);
+    String color = (String) currentPropertyFile.getOrDefault(String.valueOf(state), defaultColor);
     if (!stateColorMapping.containsKey(state)) {
       stateColorMapping.put(state, color);
     }
@@ -266,7 +274,7 @@ public class Controller {
     Dialog colorBox = this.mainView.changeColorsPopUp(stateInput, colorInput);
     Optional<ButtonType> colorBoxResult = colorBox.showAndWait();
     if(colorBoxResult.isPresent()){
-      updateColorStateMapping(stateInput.getText(), colorInput.getText());
+       updateColorStateMapping(stateInput.getText(), colorInput.getText());
     }
     mainModel.switchPause();
   }
