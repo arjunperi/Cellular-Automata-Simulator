@@ -13,13 +13,15 @@ public class GraphController {
   private final static int NEW_GRAPH_STEP_COUNT = 0;
   private final static boolean GRAPH_SHOWING = true;
   private final static boolean GRAPH_NOT_SHOWING = false;
+  private final static String STATE = "state";
+  private final static String COLON = ":";
   private final GraphView graphView;
   private final Model mainModel;
 
   private boolean graphShowing = GRAPH_NOT_SHOWING;
   private int graphStepCount = NEW_GRAPH_STEP_COUNT;
 
-  private Map<Integer, String> stateColorMap;
+  private final Map<Integer, String> stateColorMap;
   private Map<Integer, Series> stateSeries = new HashMap<>();
   private Map<Integer, Integer> stateCountsMap = new HashMap<>();
 
@@ -72,7 +74,7 @@ public class GraphController {
   private void initializeStateSeries(){
     for(Integer state:this.stateCountsMap.keySet()){
       XYChart.Series currentSeries = new Series();
-      currentSeries.setName("state: "+state);
+      currentSeries.setName(STATE + COLON +state);
       this.stateSeries.put(state, currentSeries);
     }
   }
