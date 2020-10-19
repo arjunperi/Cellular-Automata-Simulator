@@ -11,8 +11,7 @@ class GridTest extends DukeApplicationTest {
 
   @Test
   public void testGridReadingFromFile() {
-    Queue<Cell> emptyQueue = new LinkedList<>();
-    Grid myGrid = new Grid("Test/ConwayStatesPulsar.csv", "GameOfLife", emptyQueue);
+    Grid myGrid = new Grid("Test/ConwayStatesPulsar.csv", "GameOfLife");
     assertEquals(1, myGrid.getCell(9,5).getCurrentState());
     assertEquals(0, myGrid.getCell(9,4).getCurrentState());
   }

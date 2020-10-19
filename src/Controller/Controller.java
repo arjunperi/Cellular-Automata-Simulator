@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Map;
+import java.util.Queue;
 import java.util.ResourceBundle;
 
 import javafx.event.Event;
@@ -90,7 +91,9 @@ public class Controller {
     stateColorMapping.clear();
     try {
       Properties propertyFile = getPropertyFile(currentFileName);
-      this.mainModel = new Model(fileName, modelType);
+      Class<?> cl = Class.forName("Model." + modelType + "Model");
+      this.mainModel = (Model) cl.getConstructor(String.class, String.class)
+          .newInstance(fileName, modelType);
       defaultFile = getPropertyFile(modelType + "Default");
       String defaultStates = defaultFile.getProperty("States");
       mainModel.initializeAllStates((String) propertyFile.getOrDefault("States", defaultStates));
