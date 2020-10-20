@@ -118,6 +118,16 @@ public class Controller {
     mainView.clearTopMenuGroup();
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
+    initializeModel();
+    this.frontEndCellColors = updateFrontEndCellColors();
+    mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
+        mainModel.getNumberOfColumns(), frontEndCellColors);
+    simIsSet = true;
+    addCellEventHandlers();
+    initializeSimulationMenu();
+  }
+
+  private void initializeModel() {
     try {
       modelType = currentPropertyFile.getProperty(TYPE);
       Class<?> cl = Class.forName(MODEL + DOT + modelType + MODEL);
@@ -126,22 +136,17 @@ public class Controller {
       defaultFile = getPropertyFile(modelType + DEFAULT);
       String defaultStates = defaultFile.getProperty(STATES);
       mainModel.initializeAllStates((String) currentPropertyFile.getOrDefault(STATES, defaultStates));
-      this.frontEndCellColors = updateFrontEndCellColors();
-      mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
-          mainModel.getNumberOfColumns(), frontEndCellColors);
-      simIsSet = true;
-      addCellEventHandlers();
-      initializeSimulationMenu();
     }
     catch (ClassNotFoundException e){
       showError(INVALID_MODEL_TYPE);
+      initializeSplashMenu();
     }
     catch (InvocationTargetException e){
       showError(e.getTargetException().getMessage());
+      initializeSplashMenu();
     }
     catch (Exception e) {
       showError(e.getMessage());
-//      e.printStackTrace();
       initializeSplashMenu();
     }
   }

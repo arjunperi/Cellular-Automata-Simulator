@@ -21,6 +21,7 @@ public abstract class Model {
   public static final String STATES_ERROR = "Invalid States Input";
   public static final Character SLASH = '/';
   public static final Character DOT = '.';
+  private static final String STATES = "States";
 
   private double framesPerModelUpdate = 60;
   public static final int MIN_FRAMES_PER_MODEL_UPDATE = 5;
@@ -32,15 +33,17 @@ public abstract class Model {
   private boolean isPaused = false;
   private boolean isStep = false;
   private double cycles = 0;
-  private List<Integer> allStates;
+  protected List<Integer> allStates;
 
   public Model(String fileName, String modelType) {
-    gridOfCells = new Grid(fileName, modelType);
     this.defaultPropertyFile = getPropertyFile(modelType + DEFAULT);
     int lastSlash =fileName.lastIndexOf(SLASH);
     int csvTrim = fileName.lastIndexOf(DOT);
     String trimmedFileName = fileName.substring(lastSlash+1, csvTrim);
     this.propertyFile = getPropertyFile(trimmedFileName);
+    String defaultStates = defaultPropertyFile.getProperty(STATES);
+    initializeAllStates((String) propertyFile.getOrDefault(STATES, defaultStates));
+    gridOfCells = new Grid(fileName, modelType);
     gridOfCells.setPropertyFiles(propertyFile, defaultPropertyFile);
   }
 
