@@ -12,7 +12,6 @@ import java.util.Queue;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
-import org.hamcrest.Condition;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
