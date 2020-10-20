@@ -2,28 +2,28 @@ package Controller;
 
 import Model.Model;
 import Model.ModelException;
-import View.View;
 import View.FrontEndCell;
-
-
-import java.io.*;
-
+import View.View;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.Map;
 import java.util.ResourceBundle;
-
 import javafx.beans.value.ChangeListener;
-import javafx.event.Event;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
@@ -60,13 +60,13 @@ public class Controller {
   public static final String DEFAULT_RESOURCE_FOLDER = "/" + RESOURCES;
   public static final String STYLESHEET = "GameOfLife.css";
   public static final String BLANK = " ";
-  private  ResourceBundle projectTextResources;
+  private ResourceBundle projectTextResources;
   private final Map<Integer, String> stateColorMapping = new HashMap<>();
   private List<List<String>> frontEndCellColors;
   private String currentFileName;
   private GraphController graphController;
 
-  private Stage stage;
+  private final Stage stage;
   private Model mainModel;
   private final View mainView;
   private boolean simIsSet = false;
@@ -84,7 +84,7 @@ public class Controller {
   }
 
   public void initializeSplashMenu() {
-    if(this.graphShowing){
+    if (this.graphShowing) {
       this.graphController.closeGraph();
       this.graphShowing = false;
     }
@@ -98,16 +98,17 @@ public class Controller {
         showError(c.getMessage());
       }
     };
-    this.mainView.createInputTextField(inputText, simulationInputEvent, event -> changeTextResourceFile(ENGLISH),
+    this.mainView.createInputTextField(inputText, simulationInputEvent,
+        event -> changeTextResourceFile(ENGLISH),
         event -> changeTextResourceFile(SPANISH), event -> changeTextResourceFile(FAKE_LANGUAGE));
     this.mainView.setHomeButton(homeButtonEvent -> initializeSplashMenu());
   }
 
   public void displayInfo(String fileName) {
     try {
-      this.mainView.displaySimulationInfo(fileName, currentPropertyFile, event -> initializeSimulation());
-    }
-    catch (ControllerException e){
+      this.mainView
+          .displaySimulationInfo(fileName, currentPropertyFile, event -> initializeSimulation());
+    } catch (ControllerException e) {
       showError(e.getMessage());
     }
   }
@@ -117,16 +118,15 @@ public class Controller {
     mainView.clearTopMenuGroup();
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
-    try{
+    try {
       initializeModel();
       this.frontEndCellColors = updateFrontEndCellColors();
       mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
-              mainModel.getNumberOfColumns(), frontEndCellColors);
+          mainModel.getNumberOfColumns(), frontEndCellColors);
       simIsSet = true;
       addCellEventHandlers();
       initializeSimulationMenu();
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       showError(e.getMessage());
       initializeSplashMenu();
     }
@@ -137,18 +137,17 @@ public class Controller {
       modelType = currentPropertyFile.getProperty(TYPE);
       Class<?> cl = Class.forName(MODEL + DOT + modelType + MODEL);
       this.mainModel = (Model) cl.getConstructor(String.class, String.class)
-          .newInstance(currentPropertyFile.getOrDefault(FILENAME, currentFileName + DOT_CSV), modelType);
+          .newInstance(currentPropertyFile.getOrDefault(FILENAME, currentFileName + DOT_CSV),
+              modelType);
       defaultFile = getPropertyFile(modelType + DEFAULT);
       String defaultStates = defaultFile.getProperty(STATES);
-      mainModel.initializeAllStates((String) currentPropertyFile.getOrDefault(STATES, defaultStates));
-    }
-    catch (ClassNotFoundException e){
+      mainModel
+          .initializeAllStates((String) currentPropertyFile.getOrDefault(STATES, defaultStates));
+    } catch (ClassNotFoundException e) {
       throw new ControllerException(INVALID_MODEL_TYPE);
-    }
-    catch (InvocationTargetException e){
+    } catch (InvocationTargetException e) {
       throw new ControllerException(e.getTargetException().getMessage());
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new ControllerException(e.getMessage());
     }
   }
@@ -159,7 +158,7 @@ public class Controller {
     TextField authorInput = new TextField();
     TextField descriptionInput = new TextField();
 
-    Dialog saveBox = this.mainView.showSaveInputs(titleInput,authorInput,descriptionInput);
+    Dialog saveBox = this.mainView.showSaveInputs(titleInput, authorInput, descriptionInput);
     Optional<String> saveBoxResult = saveBox.showAndWait();
     Properties savedProperties = new Properties();
 
@@ -177,9 +176,9 @@ public class Controller {
   public void writeToPropertyFile(Properties propertyFile) {
     try {
       FileWriter writer = new FileWriter(
-              PROPERTIES + SLASH + propertyFile.getProperty(TITLE) + DOT_PROPERTIES);
+          PROPERTIES + SLASH + propertyFile.getProperty(TITLE) + DOT_PROPERTIES);
       propertyFile.store(writer, null);
-    }catch (IOException ex) {
+    } catch (IOException ex) {
       throw new ModelException(WRITING_ERROR);
     }
     initializeSplashMenu();
@@ -187,7 +186,7 @@ public class Controller {
 
   public void gameStep() {
     if (simIsSet) {
-      if(mainModel.modelStep() && graphShowing){
+      if (mainModel.modelStep() && graphShowing) {
         this.graphShowing = graphController.updateGraph();
       }
       this.frontEndCellColors = updateFrontEndCellColors();
@@ -237,7 +236,7 @@ public class Controller {
     return propertyFile;
   }
 
-  public void changeTextResourceFile(String language){
+  public void changeTextResourceFile(String language) {
     ResourceBundle newBundle = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
     this.projectTextResources = newBundle;
     this.mainView.updateResourceBundle(newBundle);
@@ -265,16 +264,18 @@ public class Controller {
     EventHandler<ActionEvent> saveEvent = e -> getSaveInputs();
     EventHandler<ActionEvent> colorEvent = e -> changeColorsPopUp();
     EventHandler<ActionEvent> graphEvent = e -> createGraph();
-    EventHandler<ActionEvent> pauseEvent  = e -> mainModel.switchPause();
-    EventHandler<ActionEvent> stepEvent = e ->{
+    EventHandler<ActionEvent> pauseEvent = e -> mainModel.switchPause();
+    EventHandler<ActionEvent> stepEvent = e -> {
       mainModel.step();
-      if(graphController!=null) {
+      if (graphController != null) {
         graphController.updateGraph();
       }
     };
-
-    ChangeListener<Number> speedEvent = (ov, old_val, new_val) -> {this.mainModel.setSimulationSpeed(new_val.doubleValue() / ONE_HUNDRED);};
-    this.mainView.initializeSimulationMenu(saveEvent, colorEvent, graphEvent, pauseEvent, stepEvent, speedEvent);
+    ChangeListener<Number> speedEvent = (ov, old_val, new_val) -> {
+      this.mainModel.setSimulationSpeed(new_val.doubleValue() / ONE_HUNDRED);
+    };
+    this.mainView.initializeSimulationMenu(saveEvent, colorEvent, graphEvent, pauseEvent, stepEvent,
+        speedEvent);
   }
 
 
@@ -284,8 +285,8 @@ public class Controller {
     TextField stateInput = new TextField();
     Dialog colorBox = this.mainView.changeColorsPopUp(stateInput, colorInput);
     Optional<ButtonType> colorBoxResult = colorBox.showAndWait();
-    if(colorBoxResult.isPresent()){
-       updateColorStateMapping(stateInput.getText(), colorInput.getText());
+    if (colorBoxResult.isPresent()) {
+      updateColorStateMapping(stateInput.getText(), colorInput.getText());
     }
     mainModel.switchPause();
   }
@@ -303,12 +304,13 @@ public class Controller {
     }
   }
 
-  public void createGraph(){
-    if(this.graphShowing) {
+  public void createGraph() {
+    if (this.graphShowing) {
       showError(this.projectTextResources.getString(GRAPH_ERROR));
       return;
     }
-    this.graphController = new GraphController(this.mainModel, this.stateColorMapping, this.stage, this.projectTextResources);
+    this.graphController = new GraphController(this.mainModel, this.stateColorMapping, this.stage,
+        this.projectTextResources);
     this.graphShowing = true;
   }
 

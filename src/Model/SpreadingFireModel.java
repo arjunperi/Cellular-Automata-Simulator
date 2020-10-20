@@ -3,7 +3,8 @@ package Model;
 import java.util.List;
 import java.util.Random;
 
-public class SpreadingFireModel extends Model{
+public class SpreadingFireModel extends Model {
+
   public static final int ALIVE = 1;
   public static final int EMPTY = 0;
   public static final int BURNING = 2;
@@ -13,16 +14,16 @@ public class SpreadingFireModel extends Model{
 
   public SpreadingFireModel(String fileName, String modelType) {
     super(fileName, modelType);
-    try{
-      probCatchFire=Double.parseDouble((String)propertyFile.getOrDefault(PROB_CATCH_FIRE, defaultPropertyFile.get(PROB_CATCH_FIRE)));
-    }
-    catch (NumberFormatException e){
+    try {
+      probCatchFire = Double.parseDouble((String) propertyFile
+          .getOrDefault(PROB_CATCH_FIRE, defaultPropertyFile.get(PROB_CATCH_FIRE)));
+    } catch (NumberFormatException e) {
       throw new ModelException("Invalid Catching Fire Probability Input");
     }
   }
 
   public void updateState(int row, int column, List<Cell> neighbors) {
-    Cell currentCell = getCell(row,column);
+    Cell currentCell = getCell(row, column);
     if (currentCell.getCurrentState() == BURNING) {
       currentCell.setFutureState(EMPTY);
     } else if (currentCell.getCurrentState() == ALIVE) {

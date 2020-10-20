@@ -2,33 +2,31 @@ package Model;
 
 import java.util.List;
 
-public class SegregationModel extends Model{
+public class SegregationModel extends Model {
+
   public static final int EMPTY = 0;
   private final double percentSimilar;
   private static final String PERCENT_SIMILAR = "Percent_Similar";
 
   public SegregationModel(String fileName, String modelType) {
     super(fileName, modelType);
-    try{
-      percentSimilar=Double.parseDouble((String)propertyFile.getOrDefault(PERCENT_SIMILAR, defaultPropertyFile.get(PERCENT_SIMILAR)));
-    }
-    catch (NumberFormatException e){
+    try {
+      percentSimilar = Double.parseDouble((String) propertyFile
+          .getOrDefault(PERCENT_SIMILAR, defaultPropertyFile.get(PERCENT_SIMILAR)));
+    } catch (NumberFormatException e) {
       throw new ModelException("Invalid Percent Similar Input");
     }
     initializeEmptyQueue();
   }
 
   public void updateState(int row, int column, List<Cell> neighbors) {
-    Cell currentCell = getCell(row,column);
-    if (currentCell.getCurrentState() != EMPTY) {
-      double percentSimilarInNeighborhood = getPercentageSimilar(currentCell, neighbors);
-      if (percentSimilarInNeighborhood <= percentSimilar) {
-        if (!emptyQueue.isEmpty()) {
-          emptyQueue.poll().setFutureState(currentCell.getCurrentState());
-          currentCell.setFutureState(EMPTY);
-          emptyQueue.add(currentCell);
-        }
-      }
+    Cell currentCell = getCell(row, column);
+    if (currentCell.getCurrentState() != EMPTY
+        && getPercentageSimilar(currentCell, neighbors) <= percentSimilar && !emptyQueue
+        .isEmpty()) {
+      emptyQueue.poll().setFutureState(currentCell.getCurrentState());
+      currentCell.setFutureState(EMPTY);
+      emptyQueue.add(currentCell);
     }
   }
 
@@ -53,8 +51,8 @@ public class SegregationModel extends Model{
   private void initializeEmptyQueue() {
     for (int row = 0; row < gridOfCells.getCellsPerColumn(); row++) {
       for (int column = 0; column < gridOfCells.getCellsPerRow(); column++) {
-        if(getCell(row,column).getCurrentState()==EMPTY) {
-          emptyQueue.add(getCell(row,column));
+        if (getCell(row, column).getCurrentState() == EMPTY) {
+          emptyQueue.add(getCell(row, column));
         }
       }
     }

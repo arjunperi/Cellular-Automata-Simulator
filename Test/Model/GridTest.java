@@ -2,10 +2,9 @@ package Model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.LinkedList;
-import java.util.Properties;
-import java.util.Queue;
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
 
@@ -16,6 +15,22 @@ class GridTest extends DukeApplicationTest {
     Grid myGrid = new Grid("Test/ConwayStatesPulsar.csv", "GameOfLife");
     assertEquals(1, myGrid.getCell(9,5).getCurrentState());
     assertEquals(0, myGrid.getCell(9,4).getCurrentState());
+  }
+
+  @Test
+  public void testGridInOrder() {
+    Grid myGrid = new Grid("Test/ConwayStatesPulsar.csv", "GameOfLife");
+    myGrid.initializeWithType("InOrder", Arrays.asList(0,1));
+    assertEquals(0, myGrid.getCell(0,0).getCurrentState());
+    assertEquals(1, myGrid.getCell(0,1).getCurrentState());
+  }
+
+  @Test
+  public void testGridRandom() {
+    Grid myGrid = new Grid("Test/ConwayStatesPulsar.csv", "GameOfLife");
+    myGrid.initializeWithType("ProbabilityDistribution", Arrays.asList(0,1));
+    assertTrue(0== myGrid.getCell(0,0).getCurrentState() || 1== myGrid.getCell(0,0).getCurrentState());
+    assertTrue(0== myGrid.getCell(0,1).getCurrentState() || 1== myGrid.getCell(0,1).getCurrentState());
   }
 
   @Test
@@ -35,14 +50,6 @@ class GridTest extends DukeApplicationTest {
     myGrid.setPropertyFiles(myModel.propertyFile, myModel.defaultPropertyFile);
     assertThrows(ModelException.class, () -> myGrid.getNeighbors(0,0));
   }
-
-//  @Test
-//  public void testInvalidEdgePolicy() {
-//    Model myModel = new GameOfLifeModel("Test/TestInvalidEdgePolicy.csv", "GameOfLife");
-//    Grid myGrid = new Grid("Test/TestInvalidEdgePolicy.csv", "GameOfLife");
-//    myGrid.setPropertyFiles(myModel.propertyFile, myModel.defaultPropertyFile);
-//    assertThrows(ModelException.class, () -> myGrid.getNeighbors(0,0));
-//  }
 
   @Test
   public void testCSVInputsOutOfBounds(){

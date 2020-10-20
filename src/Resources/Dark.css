@@ -51,21 +51,22 @@
   -fx-font-size: 20px;
   -fx-font-weight: bold;
   -fx-text-fill: darkgray;
-  -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+  -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 0, 0, 0, 1);
 }
 
-.combo-box{
+.combo-box {
   -fx-font-size: 16px;
   -fx-font-family: "Arial Narrow";
   -fx-font-weight: bold;
   -fx-background-color: linear-gradient(darkgrey, black);
 }
 
-.combo-box-base .text{
+.combo-box-base .text {
   -fx-fill: darkgray;
 }
+
 .combo-box .text-field:focused {
-  -fx-prompt-text-fill: transparent ;
+  -fx-prompt-text-fill: transparent;
 }
 
 

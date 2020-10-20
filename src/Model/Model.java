@@ -7,9 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Queue;
-
 import javafx.scene.control.Alert;
-import org.apache.commons.lang3.ObjectUtils;
 
 
 public abstract class Model {
@@ -20,12 +18,14 @@ public abstract class Model {
   public static final String PROPERTIES = ".properties";
   public static final String INVALID = "Invalid File Name";
   public static final String STATES_ERROR = "Invalid States Input";
+  public static final String INITIALIZATION_TYPE = "Initialization_Type";
   public static final Character SLASH = '/';
   public static final Character DOT = '.';
   private static final String STATES = "States";
 
   private double framesPerModelUpdate = 60;
   public static final int MIN_FRAMES_PER_MODEL_UPDATE = 5;
+  public static final double TEN = 10;
   public static final int MAX_FRAMES_PER_MODEL_UPDATE = 100;
   protected final Grid gridOfCells;
   protected final Queue<Cell> emptyQueue = new LinkedList<>();
@@ -38,14 +38,18 @@ public abstract class Model {
 
   public Model(String fileName, String modelType) {
     this.defaultPropertyFile = getPropertyFile(modelType + DEFAULT);
-    int lastSlash =fileName.lastIndexOf(SLASH);
+    int lastSlash = fileName.lastIndexOf(SLASH);
     int csvTrim = fileName.lastIndexOf(DOT);
-    String trimmedFileName = fileName.substring(lastSlash+1, csvTrim);
+    String trimmedFileName = fileName.substring(lastSlash + 1, csvTrim);
     this.propertyFile = getPropertyFile(trimmedFileName);
     String defaultStates = defaultPropertyFile.getProperty(STATES);
     initializeAllStates((String) propertyFile.getOrDefault(STATES, defaultStates));
+    String initializationTypeDefault = defaultPropertyFile.getProperty(INITIALIZATION_TYPE);
+    String initializationType = (String) propertyFile
+        .getOrDefault(INITIALIZATION_TYPE, initializationTypeDefault);
     gridOfCells = new Grid(fileName, modelType);
     gridOfCells.setPropertyFiles(propertyFile, defaultPropertyFile);
+    gridOfCells.initializeWithType(initializationType, allStates);
   }
 
   public boolean modelStep() {
@@ -66,13 +70,11 @@ public abstract class Model {
           updateState(row, column, cellNeighbors);
         }
       }
-    }
-    catch (NullPointerException e){
+    } catch (NullPointerException e) {
       switchPause();
       showError("Pausing Simulation: Listed States and RPS Mapping Inputs Don't Match. \n" +
-              "Please press home and try another file or edit current properties file");
-    }
-    catch (ModelException e){
+          "Please press home and try another file or edit current properties file");
+    } catch (ModelException e) {
       switchPause();
       showError(e.getMessage());
     }
@@ -83,7 +85,7 @@ public abstract class Model {
     alert.setTitle("Controller Error");
     alert.setContentText(message);
     alert.show();
-    }
+  }
 
 
   protected abstract void updateState(int row, int column, List<Cell> cellNeighbors);
@@ -124,14 +126,13 @@ public abstract class Model {
   }
 
   public void initializeAllStates(String allStates) throws ModelException {
-    try{
+    try {
       this.allStates = new ArrayList<>();
       String[] allStatesString = allStates.split(",");
       for (String stateString : allStatesString) {
         this.allStates.add(Integer.parseInt(stateString));
       }
-    }
-    catch (NumberFormatException e){
+    } catch (NumberFormatException e) {
       throw new ModelException(STATES_ERROR);
     }
   }
@@ -149,16 +150,18 @@ public abstract class Model {
   }
 
   public void speedUp() {
-    this.framesPerModelUpdate = Math.max(MIN_FRAMES_PER_MODEL_UPDATE, framesPerModelUpdate - ANIMATION_RATE_CHANGE);
+    this.framesPerModelUpdate = Math
+        .max(MIN_FRAMES_PER_MODEL_UPDATE, framesPerModelUpdate - ANIMATION_RATE_CHANGE);
   }
 
   public void slowDown() {
-    this.framesPerModelUpdate = Math.min(MAX_FRAMES_PER_MODEL_UPDATE, framesPerModelUpdate + ANIMATION_RATE_CHANGE);
+    this.framesPerModelUpdate = Math
+        .min(MAX_FRAMES_PER_MODEL_UPDATE, framesPerModelUpdate + ANIMATION_RATE_CHANGE);
   }
 
-  public void setSimulationSpeed(double speed){
-    Double temp = (1-speed)*MAX_FRAMES_PER_MODEL_UPDATE;
-    this.framesPerModelUpdate = Math.max(MIN_FRAMES_PER_MODEL_UPDATE, Math.round(temp/10.0) * 10);
+  public void setSimulationSpeed(double speed) {
+    double temp = (1 - speed) * MAX_FRAMES_PER_MODEL_UPDATE;
+    this.framesPerModelUpdate = Math.max(MIN_FRAMES_PER_MODEL_UPDATE, Math.round(temp / TEN) * TEN);
   }
 
   public Properties getPropertyFile(String fileName) {
