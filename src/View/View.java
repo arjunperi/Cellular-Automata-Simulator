@@ -30,6 +30,7 @@ import javafx.scene.text.Text;
 
 public class View {
 
+  private static final String COLOR_BUTTON = "colorsButton";
   private static final String THEME = "Theme";
   private static final String RESOURCES = "Resources/";
   private static final String DUKE = "Duke";
@@ -202,6 +203,7 @@ public class View {
     Button showGraphButton = makeButton(viewTextResources.getString(GRAPH + BUTTON + TEXT), graphEvent);
     Button pauseButton = makeButton(viewTextResources.getString(PAUSE+BUTTON+TEXT), pauseEvent);
     Button stepButton = makeButton(viewTextResources.getString(STEP+BUTTON+TEXT), stepEvent);
+    changeColorsButton.setId(COLOR_BUTTON);
     updateHomeButton();
     topMenuBox.getChildren().add(homeButton);
     topMenuBox.getChildren().add(saveButton);
@@ -227,8 +229,8 @@ public class View {
 
   public Dialog changeColorsPopUp(TextField stateInput, TextField colorInput){
     Dialog colorBox = new TextInputDialog();
+    stateInput.setId(STATE_LOWER + INPUT);
     colorInput.setId(COLOR_LOWER + INPUT);
-    colorInput.setId(STATE_LOWER + INPUT);
     GridPane grid = new GridPane();
     colorInput.setPromptText(viewTextResources.getString(COLOR+INPUT+PROMPT));
     stateInput.setPromptText(viewTextResources.getString(STATE+INPUT+PROMPT));

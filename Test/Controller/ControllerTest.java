@@ -351,6 +351,27 @@ public class ControllerTest extends DukeApplicationTest {
     javafxRun(() -> mainController.gameStep());
     assertEquals("0xffc0cbff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
   }
+  @Test
+  public void changeColorPopup(){
+    javafxRun(() -> mainController.initializeSplashMenu());
+    inputTest = lookup("#inputTextBox").query();
+    inputTest.setText("ConwayStatesBlinker");
+    press(KeyCode.ENTER);
+    buttonTest = lookup("#ConwayStatesBlinker").queryButton();
+    clickOn(buttonTest);
+    assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+    clickOn(lookup("#colorsButton").queryButton());
+    inputTest = lookup("#colorInput").query();
+    inputTest.setText("Yellow");
+    inputTest = lookup("#stateInput").query();
+    inputTest.setText("0");
+    press(KeyCode.ENTER);
+    javafxRun(() -> mainController.gameStep());
+    javafxRun(() -> mainController.gameStep());
+    javafxRun(() -> mainController.gameStep());
+    javafxRun(() -> mainController.gameStep());
+    assertEquals("0xffffffff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+  }
 
   @Test
   public void testPropertyFileDefaultKey(){
@@ -391,6 +412,7 @@ public class ControllerTest extends DukeApplicationTest {
     clickOn(lookup("Display Simulation Grid").queryButton());
     assertTrue(true == this.stage.isShowing());
   }
+
 }
 
 
