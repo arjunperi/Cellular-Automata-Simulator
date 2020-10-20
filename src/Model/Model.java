@@ -1,7 +1,6 @@
 package Model;
 
 
-import cellsociety.Simulation;
 import Controller.Controller;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -9,10 +8,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Queue;
 
-import com.sun.jdi.NativeMethodException;
 import javafx.scene.control.Alert;
-import org.assertj.core.internal.bytebuddy.matcher.StringMatcher;
-
 
 
 public abstract class Model {

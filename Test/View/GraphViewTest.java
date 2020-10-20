@@ -7,6 +7,7 @@ import Controller.GraphController;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.XYChart;
@@ -27,7 +28,8 @@ class GraphViewTest extends DukeApplicationTest {
   public void start(final Stage stage) {
     stateColorMap.put(0,"Pink");
     stateColorMap.put(1, "Cyan");
-    graphView = new GraphView(stateColorMap);
+    graphView = new GraphView(stage, stateColorMap, ResourceBundle
+        .getBundle("Resources" + ".English"));
     graphView.createLineChart();
     this.stage = graphView.getStage();
   }

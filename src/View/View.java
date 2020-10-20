@@ -1,7 +1,7 @@
 package View;
 
 import Controller.ControllerException;
-import cellsociety.Simulation;
+import cellsociety.SimulationRunner;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -28,15 +28,7 @@ import javafx.scene.text.Text;
 
 public class View {
 
-  private final BorderPane root;
-  private final Group topGroup;
-  private final Group centerGroup;
-  private List<List<FrontEndCell>> frontEndCellGrid;
-  private List<List<String>> frontEndCellColors;
-  private TextField inputText;
-  private Button homeButton;
-  private ResourceBundle viewTextResources;
-
+  private static final String SLIDER = "slider";
   private static final String CELL = "cell";
   private static final String INPUT_TEXT_BOX = "inputTextBox";
   private static final String ENGLISH = "English";
@@ -76,8 +68,14 @@ public class View {
   private static final String OK = "OK";
   private static final String ALERT = "Alert";
 
-
-
+  private final BorderPane root;
+  private final Group topGroup;
+  private final Group centerGroup;
+  private List<List<FrontEndCell>> frontEndCellGrid;
+  private List<List<String>> frontEndCellColors;
+  private TextField inputText;
+  private Button homeButton;
+  private ResourceBundle viewTextResources;
 
   public View(ResourceBundle resources) {
     topGroup = new Group();
@@ -89,7 +87,7 @@ public class View {
   }
 
   public Scene setupScene() {
-    return new Scene(root, Simulation.SCENE_WIDTH, Simulation.SCENE_HEIGHT, Simulation.BACKGROUND);
+    return new Scene(root, SimulationRunner.SCENE_WIDTH, SimulationRunner.SCENE_HEIGHT, SimulationRunner.BACKGROUND);
   }
 
   public void viewStep(List<List<String>> frontEndCellColors) {
@@ -100,8 +98,8 @@ public class View {
       List<List<String>> frontEndCellColors) {
     this.frontEndCellColors = frontEndCellColors;
     this.frontEndCellGrid = new ArrayList<>();
-    double xOffset = Simulation.SCENE_WIDTH / (double) numberOfRows;
-    double yOffset = Simulation.SCENE_HEIGHT / (double) numberOfColumns;
+    double xOffset = SimulationRunner.SCENE_WIDTH / (double) numberOfRows;
+    double yOffset = SimulationRunner.SCENE_HEIGHT / (double) numberOfColumns;
     double x;
     double y = 0;
     for (int row = 0; row < numberOfRows; row++) {
@@ -188,10 +186,10 @@ public class View {
     updateHomeButton();
     topMenuBox.getChildren().add(homeButton);
     topMenuBox.getChildren().add(saveButton);
-    topMenuBox.getChildren().add(changeColorsButton);
-    topMenuBox.getChildren().add(showGraphButton);
     topMenuBox.getChildren().add(pauseButton);
     topMenuBox.getChildren().add(stepButton);
+    topMenuBox.getChildren().add(changeColorsButton);
+    topMenuBox.getChildren().add(showGraphButton);
     topMenuBox.getChildren().add(createSpeedSlider(sliderEvent));
     this.topGroup.getChildren().add(topMenuBox);
   }
@@ -203,7 +201,7 @@ public class View {
     speedSlider.setMinorTickCount(1);
     speedSlider.setBlockIncrement(10);
     speedSlider.valueProperty().addListener(sliderEvent);
-    speedSlider.setId("slider");
+    speedSlider.setId(SLIDER);
     return speedSlider;
   }
 
