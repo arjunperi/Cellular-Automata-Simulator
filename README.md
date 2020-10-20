@@ -15,9 +15,12 @@ Start Date: 10/2/2020
 Finish Date: 10/20/2020
 
 Hours Spent: 
-25 hrs/week * 3 weeks = 75 hrs
+30 hrs/week * 3 weeks = 90 hrs
 
 ### Primary Roles
+- Alex: Handled visualization and Controller.
+- Arjun: Worked with exceptions and configuration. 
+- Chris: Responsible for Model and simulations. 
 
 
 ### Resources Used
@@ -49,11 +52,13 @@ Features implemented:
     - Step button
     - Change color button which allows user to specify the color of a certain state. 
     - Show graph button which pops up a graph on a separate window displaying the frequencies of each cell state. 
-    -  Speed slider to dynamically change the speed of the simulation. 
+    -  Speed slider to dynamically change the speed of the simulation.
+- Error checking so that the program doesn't crash and descriptive error messages to indicate where errors have occured. 
 
 ### Notes/Assumptions
 
 Assumptions or Simplifications:
+- To start a simulation, run the program and enter into the resulting text box one of the properties files listed in the Properties folder. For example, input "ConwayStatesPulsar" to run the Game of Life simulation with Pulsar configuration. 
 - To access and reference different simulations, we use a variable called modelType throughout the program. There are 6 different possible values of modelType for each of the 6 different simulations: GameOfLife, Percolation, RPS, Segregation, SpreadingFire, WaTor. In order to add a new simulation to the program, one needs to make a properties file that has the key "Type" that equals one of these 6 modelType values. The "Type" key is the only key in the properties file that will not be set to a default value if nonexistent, as retreiving the modelType is one of the most integral steps in chossing and starting a simulatoin. 
 - One assumption we make is that there will be a default properties file that exists for each type of simulation, and that is accurately named and populated. The default file should be named modelType + "Default.properties", where the modelType is one of the 6 different simulation prefixes.
 
@@ -69,4 +74,5 @@ Extra credit:
 
 
 ### Impressions
+- Arjun: Overall, I thought this project was a great introduction to front end development as well a great opportunity to continue building on JavaFx skills. Learning about GUI elements, css, and properties files was tough at first but the iterative nature of the project made it manageable.
 
