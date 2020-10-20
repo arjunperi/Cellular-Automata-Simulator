@@ -1,0 +1,72 @@
+.root {
+  -fx-background-image: url("Duke_background.png");
+}
+
+.displayBox {
+  -fx-font-size: 20px;
+  -fx-font-weight: bold;
+  -fx-fill: white;
+  -fx-prompt-text-fill: white;
+  -fx-background-color: white;
+  -fx-highlight-text-fill: white;
+}
+
+.button {
+  -fx-font-size: 16px;
+  -fx-text-fill: white;
+  -fx-font-family: "Arial Narrow";
+  -fx-font-weight: bold;
+  -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+}
+
+.slider {
+  -fx-color: #0000ff;
+  -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+  -fx-border-radius: 20;
+  -fx-background-radius: 20;
+  -fx-max-height: 50;
+}
+
+.slider:hover {
+  -thumb-color: #6699ff;
+}
+
+.slider .thumb {
+  fx-color: #0000ff;
+}
+
+.slider .track {
+  -fx-control-inner-background: #6699ff;
+  -fx-background-color: linear-gradient(to right, #969696 0%, #6699ff 100%);
+  -fx-background-insets: 0 0 -1 0, 0, 1;
+  -fx-background-radius: 0.25em, 0.25em, 0.166667em;
+  -fx-padding: 0.25em;
+}
+
+.button:hover {
+  -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+
+.label {
+  -fx-font-size: 20px;
+  -fx-font-weight: bold;
+  -fx-text-fill: white;
+  -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+
+.combo-box{
+  -fx-font-size: 16px;
+  -fx-font-family: "Arial Narrow";
+  -fx-font-weight: bold;
+  -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+}
+
+.combo-box-base .text{
+  -fx-fill: white;
+}
+.combo-box .text-field:focused {
+  -fx-prompt-text-fill: transparent ;
+}
+
+
+

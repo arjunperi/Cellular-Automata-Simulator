@@ -34,6 +34,7 @@ public class Controller {
   private static final String SPANISH = "Spanish";
   private static final String FAKE_LANGUAGE = "FakeLanguage";
   private static final String DOT_CSV = ".csv";
+  private static final String DOT_CSS = ".css";
   private static final String TYPE = "Type";
   private static final String MODEL = "Model";
   private static final String DOT = ".";
@@ -64,7 +65,6 @@ public class Controller {
   private List<List<String>> frontEndCellColors;
   private String currentFileName;
   private GraphController graphController;
-  private TextField inputText;
 
   private final Stage stage;
   private Model mainModel;
@@ -88,7 +88,7 @@ public class Controller {
       this.graphController.closeGraph();
       this.graphShowing = false;
     }
-    this.inputText = new TextField();
+    TextField inputText = new TextField();
     EventHandler<ActionEvent> simulationInputEvent = e -> {
       currentFileName = inputText.getText();
       try {
@@ -98,7 +98,7 @@ public class Controller {
         showError(c.getMessage());
       }
     };
-    this.mainView.createInputTextField(this.inputText, simulationInputEvent, event -> changeTextResourceFile(ENGLISH),
+    this.mainView.createInputTextField(inputText, simulationInputEvent, event -> changeTextResourceFile(ENGLISH),
         event -> changeTextResourceFile(SPANISH), event -> changeTextResourceFile(FAKE_LANGUAGE));
     this.mainView.setHomeButton(homeButtonEvent -> initializeSplashMenu());
   }
@@ -269,12 +269,11 @@ public class Controller {
     EventHandler<ActionEvent> stepEvent = e ->{
       mainModel.step();
       if(graphController!=null) {
-
         graphController.updateGraph();
       }
     };
-    ChangeListener<Number> test = (ov, old_val, new_val) -> {this.mainModel.setSimulationSpeed(new_val.doubleValue() / ONE_HUNDRED);};
-    this.mainView.initializeSimulationMenu(saveEvent, colorEvent, graphEvent, pauseEvent, stepEvent, test);
+    ChangeListener<Number> speedEvent = (ov, old_val, new_val) -> {this.mainModel.setSimulationSpeed(new_val.doubleValue() / ONE_HUNDRED);};
+    this.mainView.initializeSimulationMenu(saveEvent, colorEvent, graphEvent, pauseEvent, stepEvent, speedEvent);
   }
 
 

@@ -47,7 +47,8 @@ public class GraphView {
     final NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
     this.lineChart = new LineChart<>(xAxis,yAxis);
-    lineChart.setTitle(GRAPH_TITLE);
+    lineChart.getStylesheets().clear();
+    lineChart.setTitle(this.projectTextResources.getString(GRAPH_TITLE));
     lineChart.setId(GRAPH_ID);
   }
 
