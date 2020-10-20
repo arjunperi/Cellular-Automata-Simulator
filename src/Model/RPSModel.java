@@ -21,8 +21,13 @@ public class RPSModel extends Model{
 
   public RPSModel(String fileName, String modelType) {
     super(fileName, modelType);
-    threshold=Integer.parseInt((String)propertyFile.getOrDefault("Threshold", defaultPropertyFile.get("Threshold")));
-    randomVariation=Integer.parseInt((String)propertyFile.getOrDefault("Random_Variation", defaultPropertyFile.get("Random_Variation")));
+    try{
+      threshold=Integer.parseInt((String)propertyFile.getOrDefault("Threshold", defaultPropertyFile.get("Threshold")));
+      randomVariation=Integer.parseInt((String)propertyFile.getOrDefault("Random_Variation", defaultPropertyFile.get("Random_Variation")));
+    }
+    catch(NumberFormatException e){
+      throw new ModelException("Invalid Threshold/Variation Input");
+    }
   }
 
   public void updateState(int row, int column, List<Cell> neighbors) {

@@ -1,6 +1,7 @@
 package Model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
@@ -35,5 +36,10 @@ public class SpreadingFireModelTest extends DukeApplicationTest {
     assertEquals(2, testModel.getCellState(0,0));
     testModel.step();
     assertEquals(0, testModel.getCellState(0,0));
+  }
+
+  @Test
+  public void testInvalidCatchFireProbability(){
+    assertThrows(ModelException.class, () -> new SpreadingFireModel("TestInvalidProbCatch", "SpreadingFire"));
   }
 }

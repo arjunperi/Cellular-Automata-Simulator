@@ -135,13 +135,14 @@ public class Controller {
     }
     catch (ClassNotFoundException e){
       showError(INVALID_MODEL_TYPE);
+      initializeSplashMenu();
     }
     catch (InvocationTargetException e){
       showError(e.getTargetException().getMessage());
+      initializeSplashMenu();
     }
     catch (Exception e) {
       showError(e.getMessage());
-//      e.printStackTrace();
       initializeSplashMenu();
     }
   }

@@ -1,6 +1,7 @@
 package Model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
@@ -36,4 +37,10 @@ public class RPSModelTest extends DukeApplicationTest {
     testModel.step();
     assertEquals(4, testModel.getCellState(1,2));
   }
+
+  @Test
+  public void testInvalidThresholdVariation(){
+    assertThrows(ModelException.class, () -> new RPSModel("TestInvalidThresholdVariation", "RPS"));
+  }
+
 }

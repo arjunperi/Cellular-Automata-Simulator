@@ -1,6 +1,7 @@
 package Model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
@@ -37,5 +38,10 @@ public class WaTorModelTest extends DukeApplicationTest {
     assertEquals(1, testModel.getCellState(0,99));
     testModel.step();
     assertEquals(2, testModel.getCellState(0,99));
+  }
+
+  @Test
+  public void testInvalidRates(){
+    assertThrows(ModelException.class, () -> new WaTorModel("TestInvalidStarveBreedingRates", "WaTor"));
   }
 }

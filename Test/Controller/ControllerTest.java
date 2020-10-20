@@ -374,6 +374,7 @@ public class ControllerTest extends DukeApplicationTest {
     Button test = lookup("#Home").queryButton();
     assertEquals("Inicio", test.getText());
   }
+  
   @Test
   public void reopenSimulationView(){
     javafxRun(() -> mainController.initializeSplashMenu());

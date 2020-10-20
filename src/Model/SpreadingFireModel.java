@@ -13,7 +13,12 @@ public class SpreadingFireModel extends Model{
 
   public SpreadingFireModel(String fileName, String modelType) {
     super(fileName, modelType);
-    probCatchFire=Double.parseDouble((String)propertyFile.getOrDefault(PROB_CATCH_FIRE, defaultPropertyFile.get(PROB_CATCH_FIRE)));
+    try{
+      probCatchFire=Double.parseDouble((String)propertyFile.getOrDefault(PROB_CATCH_FIRE, defaultPropertyFile.get(PROB_CATCH_FIRE)));
+    }
+    catch (NumberFormatException e){
+      throw new ModelException("Invalid Catching Fire Probability Input");
+    }
   }
 
   public void updateState(int row, int column, List<Cell> neighbors) {
