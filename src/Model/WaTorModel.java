@@ -16,9 +16,13 @@ public class WaTorModel extends Model{
 
   public WaTorModel(String fileName, String modelType) {
     super(fileName, modelType);
-    fishBreedingRate=Integer.parseInt((String)propertyFile.getOrDefault(FISH_BREEDING_RATE, defaultPropertyFile.get(FISH_BREEDING_RATE)));
-    sharkBreedingRate=Integer.parseInt((String)propertyFile.getOrDefault(SHARK_BREEDING_RATE, defaultPropertyFile.get(SHARK_BREEDING_RATE)));
-    sharkStarve=Integer.parseInt((String)propertyFile.getOrDefault(SHARK_STARVE_RATE, defaultPropertyFile.get(SHARK_STARVE_RATE)));
+    try{fishBreedingRate=Integer.parseInt((String)propertyFile.getOrDefault(FISH_BREEDING_RATE, defaultPropertyFile.get(FISH_BREEDING_RATE)));
+      sharkBreedingRate=Integer.parseInt((String)propertyFile.getOrDefault(SHARK_BREEDING_RATE, defaultPropertyFile.get(SHARK_BREEDING_RATE)));
+      sharkStarve=Integer.parseInt((String)propertyFile.getOrDefault(SHARK_STARVE_RATE, defaultPropertyFile.get(SHARK_STARVE_RATE)));
+    }
+    catch(NumberFormatException e){
+      throw new ModelException("Invalid Breeding/Starve Rate Input");
+    }
   }
 
   public void updateState(int row, int column, List<Cell> neighbors) {

@@ -24,49 +24,30 @@ public class CSVWriteTest extends DukeApplicationTest {
         stage.show();
     }
 
-  @Test
-  public void testWriteConwayToad() {
-      javafxRun(() -> mainController.initializeSplashMenu());
-      inputTest = lookup("#inputTextBox").query();
-      inputTest.setText("ConwayStatesToad");
-      press(KeyCode.ENTER);
-      javafxRun(() ->  mainController.displayInfo("ConwayStatesToad"));
-      javafxRun(() ->  mainController.initializeSimulation());
-      View testView = mainController.getMainView();
-      FrontEndCell currentCell = testView.getFrontEndCellGrid().get(7).get(10);
-      assertEquals("0x000000ff", currentCell.getCellColor());
-      clickOn(lookup("#Step").queryButton());
-      javafxRun(() -> mainController.initializeSplashMenu());
-      inputTest = lookup("#inputTextBox").query();
-      inputTest.setText("ConwayStatesToad");
-      press(KeyCode.ENTER);
-      javafxRun(() ->  mainController.displayInfo("ConwayStatesToad"));
-      javafxRun(() ->  mainController.initializeSimulation());
-      View testViewOut = mainController.getMainView();
-      currentCell = testViewOut.getFrontEndCellGrid().get(7).get(10);
-      assertEquals("0xffffffff", currentCell.getCellColor());
-  }
+    @Test
+    public void testWriteToCSV(){
+        javafxRun(() -> mainController.initializeSplashMenu());
+        inputTest = lookup("#inputTextBox").query();
+        inputTest.setText("TestSaveBlinker");
+        press(KeyCode.ENTER);
+        buttonTest = lookup("#TestSaveBlinker").queryButton();
+        clickOn(buttonTest);
 
-  @Test
-  public void testWriteConwayPulsar() {
-      javafxRun(() -> mainController.initializeSplashMenu());
-      inputTest = lookup("#inputTextBox").query();
-      inputTest.setText("ConwayStatesPulsar");
-      press(KeyCode.ENTER);
-      javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
-      javafxRun(() ->  mainController.initializeSimulation());
-      View testView = mainController.getMainView();
-      FrontEndCell currentCell = testView.getFrontEndCellGrid().get(4).get(5);
-      assertEquals("0x000000ff", currentCell.getCellColor());
-      clickOn(lookup("#Step").queryButton());
-      javafxRun(() -> mainController.initializeSplashMenu());
-      inputTest = lookup("#inputTextBox").query();
-      inputTest.setText("ConwayStatesPulsar");
-      press(KeyCode.ENTER);
-      javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
-      javafxRun(() ->  mainController.initializeSimulation());
-      View testViewOut = mainController.getMainView();
-      currentCell = testViewOut.getFrontEndCellGrid().get(4).get(5);
-      assertEquals("0xffffffff", currentCell.getCellColor());
-  }
+        javafxRun(() -> mainController.updateColorStateMapping("0", "PINK"));
+        javafxRun(() -> mainController.gameStep());
+
+        buttonTest = lookup("#Save").queryButton();
+        clickOn(buttonTest);
+        TextField titleTest = lookup("#titleInput").query();
+        titleTest.setText("TestSaveBlinker");
+        Button okTest = lookup("#SaveOK").queryButton();
+        clickOn(okTest);
+
+        javafxRun(() -> mainController.initializeSplashMenu());
+        inputTest = lookup("#inputTextBox").query();
+        inputTest.setText("TestSaveBlinker");
+        press(KeyCode.ENTER);
+        javafxRun(() -> mainController.displayInfo("TestSaveBlinker"));
+        assertEquals("0xffc0cbff", mainController.getMainView().getFrontEndCellGrid().get(0).get(0).getCellColor());
+    }
 }
