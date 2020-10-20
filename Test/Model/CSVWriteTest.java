@@ -19,7 +19,7 @@ public class CSVWriteTest extends DukeApplicationTest {
     private TextField inputTest;
 
     public void start(final Stage stage) {
-        mainController = new Controller();
+        mainController = new Controller(stage);
         stage.setScene(mainController.setupScene());
         stage.show();
     }
