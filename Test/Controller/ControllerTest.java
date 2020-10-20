@@ -375,32 +375,4 @@ public class ControllerTest extends DukeApplicationTest {
   }
 }
 
-//  @Test
-//  public void testSaveSimulationProperties(){
-//    javafxRun(() -> mainController.initializeButtonMenu());
-//    inputTest = lookup("#inputTextBox").query();
-//    inputTest.setText("ConwayStatesPulsar");
-//    press(KeyCode.ENTER);
-//    javafxRun(() ->  mainController.displayInfo("ConwayStatesPulsar"));
-//    javafxRun(() ->  mainController.initializeSimulation("ConwayStatesPulsar.csv",
-//            "ConwayStatesPulsarOut.csv"));
-//    buttonTest = lookup("#Save").queryButton();
-//    clickOn(buttonTest);
-//    TextField titleTest = lookup("#titleInput").query();
-//    TextField authorTest = lookup("#authorInput").query();
-//    TextField descriptionTest = lookup("#descriptionInput").query();
-//    titleTest.setText("TestPulsarSave");
-//    authorTest.setText("TestPulsarAuthorSave");
-//    descriptionTest.setText("TestPulsarDescriptionSave");
-//    Button okTest = lookup("#SaveOK").queryButton();
-//    clickOn(okTest);
-//    javafxRun(() ->  mainController.initializeSimulation("ConwayStatesPulsar.csv",
-//            "ConwayStatesPulsarOut.csv"));
-//    buttonTest = lookup("#Home").queryButton();
-//    javafxRun(() -> stage.close());
-//    javafxRun(() ->  mainController.initializeSimulation("ConwayStatesPulsar.csv",
-//            "ConwayStatesPulsarOut.csv"));
-//    assertEquals("TestPulsarDescriptionSave", mainController.getPropertyFile("TestPulsarSave").getProperty("Description"));
-//  }
-
 
