@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -14,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -28,6 +30,14 @@ import javafx.scene.text.Text;
 
 public class View {
 
+  private static final String THEME = "Theme";
+  private static final String RESOURCES = "Resources/";
+  private static final String DUKE = "Duke";
+  private static final String LIGHT = "Light";
+  private static final String DARK = "Dark";
+  private static final String DOT_CSS = ".css";
+  private static final String START = "Start ";
+  private static final String DISPLAY_BOX_ID = "displayBox";
   private static final String SLIDER = "slider";
   private static final String CELL = "cell";
   private static final String INPUT_TEXT_BOX = "inputTextBox";
@@ -58,9 +68,6 @@ public class View {
   private static final String COLOR = "Color";
   private static final String BUTTON = "Button";
   private static final String SAVE = "Save";
-  private static final int ZERO = 0;
-  private static final int ONE = 1;
-  private static final int TWO = 2;
   private static final String STATE_LOWER = "state";
   private static final String STATE = "State";
   private static final String CONTROLLER = "Controller";
@@ -68,12 +75,21 @@ public class View {
   private static final String OK = "OK";
   private static final String ALERT = "Alert";
 
+  private static final int ZERO = 0;
+  private static final int ONE = 1;
+  private static final int TWO = 2;
+  private static int SLIDER_MAX = 100;
+  private static int SLIDER_MIN = 0;
+  private static int SLIDER_INITIAL_VALUE = 50;
+  private static int SLIDER_TICK_VALUE = 1;
+  private static int SLIDER_BLOCK = 10;
+
+  private Scene scene;
   private final BorderPane root;
   private final Group topGroup;
   private final Group centerGroup;
   private List<List<FrontEndCell>> frontEndCellGrid;
   private List<List<String>> frontEndCellColors;
-  private TextField inputText;
   private Button homeButton;
   private ResourceBundle viewTextResources;
 
@@ -87,7 +103,9 @@ public class View {
   }
 
   public Scene setupScene() {
-    return new Scene(root, SimulationRunner.SCENE_WIDTH, SimulationRunner.SCENE_HEIGHT, SimulationRunner.BACKGROUND);
+    this.scene = new Scene(root, SimulationRunner.SCENE_WIDTH, SimulationRunner.SCENE_HEIGHT, SimulationRunner.BACKGROUND);
+    updateCSS(RESOURCES + DUKE + DOT_CSS);
+    return this.scene;
   }
 
   public void viewStep(List<List<String>> frontEndCellColors) {
@@ -139,9 +157,8 @@ public class View {
     clearCenterGroup();
     clearTopMenuGroup();
     VBox inputTextBox = new VBox();
-    this.inputText = inputText;
-    this.inputText.setId(INPUT_TEXT_BOX);
-    this.inputText.setOnAction(inputTextEvent);
+    inputText.setId(INPUT_TEXT_BOX);
+    inputText.setOnAction(inputTextEvent);
     Label inputLabel = new Label(viewTextResources.getString( INPUT+LABEL+TEXT));
     inputTextBox.getChildren().add(inputLabel);
     inputTextBox.getChildren().add(inputText);
@@ -157,13 +174,15 @@ public class View {
   public void displaySimulationInfo(String fileName, Properties simulationPropertyFile, EventHandler<ActionEvent> startButtonEvent){
     clearCenterGroup();
     HBox simulationInfoBox = new HBox();
-    Button startButton = makeButton(fileName, startButtonEvent);
+    Button startButton = makeButton(START + fileName, startButtonEvent);
+    startButton.setId(fileName);
     updateHomeButton();
     simulationInfoBox.getChildren().add(homeButton);
     simulationInfoBox.getChildren().add(startButton);
     this.topGroup.getChildren().add(simulationInfoBox);
     try {
       Text startupText = new Text();
+      startupText.getStyleClass().add(DISPLAY_BOX_ID);
       String type = (String) simulationPropertyFile.getOrDefault(TYPE, NO + SPACE + TYPE + SPACE + SPECIFIED);
       String title = (String) simulationPropertyFile.getOrDefault(TITLE, NO + SPACE + TITLE + SPACE + SPECIFIED);
       String author = (String) simulationPropertyFile.getOrDefault(AUTHOR, NO + SPACE + AUTHOR + SPACE + SPECIFIED);
@@ -188,6 +207,7 @@ public class View {
     topMenuBox.getChildren().add(saveButton);
     topMenuBox.getChildren().add(pauseButton);
     topMenuBox.getChildren().add(stepButton);
+    topMenuBox.getChildren().add(getThemeComboBox());
     topMenuBox.getChildren().add(changeColorsButton);
     topMenuBox.getChildren().add(showGraphButton);
     topMenuBox.getChildren().add(createSpeedSlider(sliderEvent));
@@ -195,11 +215,11 @@ public class View {
   }
 
   private Slider createSpeedSlider(ChangeListener<Number> sliderEvent){
-    Slider speedSlider = new Slider(0,100,50);
-    speedSlider.setMinorTickCount(100);
-    speedSlider.setMajorTickUnit(1);
-    speedSlider.setMinorTickCount(1);
-    speedSlider.setBlockIncrement(10);
+    Slider speedSlider = new Slider(SLIDER_MIN,SLIDER_MAX,SLIDER_INITIAL_VALUE);
+    speedSlider.setMinorTickCount(SLIDER_MAX);
+    speedSlider.setMajorTickUnit(SLIDER_TICK_VALUE);
+    speedSlider.setMinorTickCount(SLIDER_TICK_VALUE);
+    speedSlider.setBlockIncrement(SLIDER_BLOCK);
     speedSlider.valueProperty().addListener(sliderEvent);
     speedSlider.setId(SLIDER);
     return speedSlider;
@@ -258,6 +278,28 @@ public class View {
     this.homeButton.setText(viewTextResources.getString(HOME + BUTTON + TEXT));
   }
 
+  public ComboBox getThemeComboBox(){
+    ComboBox themeComboBox = new ComboBox();
+    themeComboBox.setPromptText(viewTextResources.getString(THEME));
+    themeComboBox.getItems().addAll(
+        DUKE,
+        LIGHT,
+        DARK
+    );
+    themeComboBox.valueProperty().addListener(new ChangeListener<String>() {
+      @Override
+      public void changed(ObservableValue ov, String oldString, String newString) {
+        updateCSS(RESOURCES + newString + DOT_CSS);
+      }
+    });
+    return themeComboBox;
+  }
+
+  public void updateCSS(String cssFile){
+    this.scene.getStylesheets().clear();
+    this.scene.getStylesheets().add(cssFile);
+  }
+
   private void showError(String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle(viewTextResources.getString(CONTROLLER + ALERT + TEXT));
@@ -270,15 +312,6 @@ public class View {
   public void clearCenterGroup(){this.centerGroup.getChildren().clear();}
   public List<List<FrontEndCell>> getFrontEndCellGrid() {
     return frontEndCellGrid;
-  }
-  public BorderPane getRoot() {
-    return this.root;
-  }
-  public Group getCenterGroup() {
-    return this.centerGroup;
-  }
-  public Group getTopGroup() {
-    return this.topGroup;
   }
 }
 

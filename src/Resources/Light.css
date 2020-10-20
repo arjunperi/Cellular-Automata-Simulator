@@ -1,0 +1,67 @@
+.displayBox {
+  -fx-font-size: 20px;
+  -fx-font-weight: bold;
+  -fx-fill: darkgray;
+  -fx-prompt-text-fill: white;
+  -fx-background-color: white;
+  -fx-highlight-text-fill: white;
+}
+
+.button {
+  -fx-font-size: 16px;
+  -fx-text-fill: white;
+  -fx-font-family: "Arial Narrow";
+  -fx-font-weight: bold;
+  -fx-background-color: linear-gradient(gray, darkgrey);
+}
+
+.slider {
+  -fx-color: grey;
+  -fx-background-color: linear-gradient(white, darkgrey);
+  -fx-border-radius: 20;
+  -fx-background-radius: 20;
+  -fx-max-height: 50;
+}
+
+.slider:hover {
+  -thumb-color: darkgrey;
+}
+
+.slider .thumb {
+  fx-color: grey;
+}
+
+.slider .track {
+  -fx-control-inner-background: grey;
+  -fx-background-color: linear-gradient(to right, gray 0%, darkgrey 100%);
+  -fx-background-insets: 0 0 -1 0, 0, 1;
+  -fx-background-radius: 0.25em, 0.25em, 0.166667em;
+  -fx-padding: 0.25em;
+}
+
+.button:hover {
+  -fx-background-color: linear-gradient(gray, darkgrey);
+}
+
+.label {
+  -fx-font-size: 20px;
+  -fx-font-weight: bold;
+  -fx-text-fill: darkgray;
+  -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+
+.combo-box{
+  -fx-font-size: 16px;
+  -fx-text-fill: white;
+  -fx-font-family: "Arial Narrow";
+  -fx-font-weight: bold;
+  -fx-background-color: linear-gradient(gray, darkgrey);
+}
+
+.combo-box-base .text{
+  -fx-fill: white;
+}
+.combo-box .text-field:focused {
+  -fx-prompt-text-fill: transparent ;
+}
+
