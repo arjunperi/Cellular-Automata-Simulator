@@ -6,6 +6,7 @@ import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 import java.lang.reflect.Method;
 import java.util.Properties;
+import java.util.Random;
 import javafx.scene.control.Alert;
 
 import java.io.*;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class Grid {
 
-  private final List<List<Cell>> gridOfCells = new ArrayList<>();
+  private List<List<Cell>> gridOfCells;
   private static final String TOROIDAL = "TOROIDAL";
   private static final String FINITE = "FINITE";
   private static final String OSCILLATING = "OSCILLATING";
@@ -30,6 +31,7 @@ public class Grid {
   private static final String GRID_ERROR = "Grid Error";
   private static final String SHAPE = "Shape";
   private static final String NEIGHBORHOOD_TYPE = "NeighborhoodType";
+  private static final String INITIALIZE_CELL = "initializeCell";
   private static final String EDGE_POLICY = "EdgePolicy";
   private static final String GET_NEIGHBORS = "getNeighbors";
   private static final String DOT_CSV = ".csv";
@@ -41,36 +43,44 @@ public class Grid {
   Properties defaultPropertyFile;
   int[][] allPossibleNeighbors;
   private final String fullModelClassName;
-  private String[] allStatesArray;
+  private List<Integer> allStatesList;
+  private final List<String[]> cellStates;
 
 
   public Grid(String fileName, String modelType) {
-    List<String[]> cellStates = readAll(fileName);
+    cellStates = readAll(fileName);
     fullModelClassName = MODEL_DOT + modelType + CELL;
     String[] firstRow = cellStates.get(0);
     cellsPerRow = Double.parseDouble(firstRow[0]);
     cellsPerColumn = Double.parseDouble(firstRow[1]);
     checkCSVDimensions(cellStates.size() - 1, cellStates.get(1).length);
-
-    initializeCell(cellStates);
+    initializeCellCSV();
   }
 
-  private void makeAllStates() {
-    String allStates = ((String) propertyFile.getOrDefault(STATES, defaultPropertyFile.get(STATES)));
-    allStatesArray = allStates.split(",");
+  protected void initializeWithType(String initializationType, List<Integer> allStates) {
+    this.allStatesList = allStates;
+    gridOfCells = new ArrayList<>();
+    try {
+      Method method = this.getClass().getDeclaredMethod(INITIALIZE_CELL + initializationType);
+      method.invoke(this);
+    } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+      throw new ModelException("Invalid Initialization Type");
+    }
   }
 
   private void initializeCellInOrder() {
+    gridOfCells = new ArrayList<>();
     int stateRotator = 0;
     try {
-      for(int i = 1; i < cellsPerColumn; i++) {
+      for(int i = 1; i < cellStates.size(); i++) {
         List<Cell> cellRow = new ArrayList<>();
-        for(int j = 1; j < cellsPerRow; j++) {
-          int state = stateRotator%allStatesArray.length;
+        for(int j = 0; j < cellStates.get(1).length; j++) {
+          int state =allStatesList.get(stateRotator%allStatesList.size());
           Class<?> cl = Class.forName(fullModelClassName);
           Cell cellToAdd = (Cell) cl.getConstructor(int.class)
               .newInstance(state);
           stateRotator++;
+          cellRow.add(cellToAdd);
         }
         gridOfCells.add(cellRow);
       }
@@ -83,10 +93,30 @@ public class Grid {
   }
 
   private void initializeCellProbabilityDistribution() {
-
+    Random randomNumberGenerator = new Random();
+    gridOfCells = new ArrayList<>();
+    try {
+      for(int i = 1; i < cellStates.size(); i++) {
+        List<Cell> cellRow = new ArrayList<>();
+        for(int j = 0; j < cellStates.get(1).length; j++) {
+          int state =allStatesList.get(randomNumberGenerator.nextInt(allStatesList.size()));
+          Class<?> cl = Class.forName(fullModelClassName);
+          Cell cellToAdd = (Cell) cl.getConstructor(int.class)
+              .newInstance(state);
+          cellRow.add(cellToAdd);
+        }
+        gridOfCells.add(cellRow);
+      }
+    } catch(NumberFormatException | IndexOutOfBoundsException e){
+      throw new ModelException(INVALID_CSV_STATES);
+    }
+    catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+      throw new ModelException(INVALID_MODEL);
+    }
   }
 
-  private void initializeCellCSV(List<String[]> cellStates) {
+  private void initializeCellCSV() {
+    gridOfCells = new ArrayList<>();
     try {
       for (int i = 1; i < cellStates.size(); i++) {
         String[] row = cellStates.get(i);

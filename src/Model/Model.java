@@ -19,6 +19,7 @@ public abstract class Model {
   public static final String PROPERTIES = ".properties";
   public static final String INVALID = "Invalid File Name";
   public static final String STATES_ERROR = "Invalid States Input";
+  public static final String INITIALIZATION_TYPE = "Initialization_Type";
   public static final Character SLASH = '/';
   public static final Character DOT = '.';
   private static final String STATES = "States";
@@ -44,8 +45,11 @@ public abstract class Model {
     this.propertyFile = getPropertyFile(trimmedFileName);
     String defaultStates = defaultPropertyFile.getProperty(STATES);
     initializeAllStates((String) propertyFile.getOrDefault(STATES, defaultStates));
+    String initializationTypeDefault = defaultPropertyFile.getProperty(INITIALIZATION_TYPE);
+    String initializationType = (String)propertyFile.getOrDefault(INITIALIZATION_TYPE, initializationTypeDefault);
     gridOfCells = new Grid(fileName, modelType);
-    gridOfCells.setPropertyFiles(propertyFile, defaultPropertyFile);
+    gridOfCells.setPropertyFiles(propertyFile,defaultPropertyFile);
+    gridOfCells.initializeWithType(initializationType, allStates);
   }
 
   public boolean modelStep() {

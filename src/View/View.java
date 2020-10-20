@@ -101,7 +101,7 @@ public class View {
     this.frontEndCellColors = frontEndCellColors;
     this.frontEndCellGrid = new ArrayList<>();
     double xOffset = SimulationRunner.SCENE_WIDTH / (double) numberOfRows;
-    double yOffset = SimulationRunner.SCENE_HEIGHT / (double) numberOfColumns;
+    double yOffset = (SimulationRunner.SCENE_HEIGHT) / (double) numberOfColumns;
     double x;
     double y = 0;
     for (int row = 0; row < numberOfRows; row++) {
@@ -151,7 +151,6 @@ public class View {
     spanishButton.setId(SPANISH_LOWER);
     inputTextBox.getChildren().add(spanishButton);
     inputTextBox.getChildren().add(makeButton(FAKE_LANGUAGE, languageEvent));
-
     this.centerGroup.getChildren().add(inputTextBox);
   }
 
