@@ -21,10 +21,9 @@ public class FrontEndCell extends Rectangle {
   }
 
   public void updateCellColor(String stateColor) {
-    try{
+    try {
       cellStateColor = Paint.valueOf(stateColor);
-    }
-    catch(NullPointerException e){
+    } catch (NullPointerException e) {
       throw new ModelException("Invalid CSV Intitial State Inputs");
     }
     this.setFill(Color.valueOf(String.valueOf(this.cellStateColor)));

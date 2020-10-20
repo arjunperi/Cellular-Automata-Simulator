@@ -34,31 +34,32 @@ public class GraphView {
   private final Map<Integer, String> stateColorMap;
   private final Stage simulationStage;
   private Stage graphStage;
-  private LineChart<Number,Number> lineChart;
+  private LineChart<Number, Number> lineChart;
 
-  public GraphView(Stage stage, Map<Integer, String> stateColorMap, ResourceBundle projectTextResources){
+  public GraphView(Stage stage, Map<Integer, String> stateColorMap,
+      ResourceBundle projectTextResources) {
     this.simulationStage = stage;
     this.stateColorMap = stateColorMap;
     this.projectTextResources = projectTextResources;
   }
 
-  public void createLineChart(){
+  public void createLineChart() {
     this.graphStage = new Stage();
     final NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
-    this.lineChart = new LineChart<>(xAxis,yAxis);
+    this.lineChart = new LineChart<>(xAxis, yAxis);
     lineChart.getStylesheets().clear();
     lineChart.setTitle(this.projectTextResources.getString(GRAPH_TITLE));
     lineChart.setId(GRAPH_ID);
   }
 
-  public void addLinesToGraph(Collection<XYChart.Series> stateSeries){
-    for(XYChart.Series series: stateSeries){
+  public void addLinesToGraph(Collection<XYChart.Series> stateSeries) {
+    for (XYChart.Series series : stateSeries) {
       lineChart.getData().add(series);
     }
   }
 
-  public void createGraphWindow(){
+  public void createGraphWindow() {
     Group topGroup = new Group();
     BorderPane root = new BorderPane();
     root.setCenter(lineChart);
@@ -73,35 +74,43 @@ public class GraphView {
 
   }
 
-  public void setOnGraphClose(EventHandler event){
+  public void setOnGraphClose(EventHandler event) {
     this.graphStage.setOnCloseRequest(event);
   }
 
-  public void addPointToLine(int stepCount, int stateCount,int state, XYChart.Series line){
+  public void addPointToLine(int stepCount, int stateCount, int state, XYChart.Series line) {
     XYChart.Data dataPoint = new XYChart.Data(stepCount, stateCount);
     line.getData().add(dataPoint);
-    dataPoint.getNode().setId(state+","+stateCount);
+    dataPoint.getNode().setId(state + "," + stateCount);
     setPointStyle(state, dataPoint.getNode());
   }
 
-  public void setPointStyle(int state, Node node){
+  public void setPointStyle(int state, Node node) {
     StringBuilder style = new StringBuilder();
     style.append(FX_STROKE + Color
-        .web(stateColorMap.get(state)).toString().substring(TWO, EIGHT)  +SEMICOLON);
-    style.append(FX_BACKGROUND + Color.web(stateColorMap.get(state)).toString().substring(TWO, EIGHT)+ WHITE);
+        .web(stateColorMap.get(state)).toString().substring(TWO, EIGHT) + SEMICOLON);
+    style.append(
+        FX_BACKGROUND + Color.web(stateColorMap.get(state)).toString().substring(TWO, EIGHT)
+            + WHITE);
     node.setStyle(style.toString());
   }
 
-  public void setLineStyle(int state){
-    Set<Node> nodes = this.lineChart.lookupAll(DOT_SERIES +state);
-    for(Node node:nodes){
-      setPointStyle(state,node);
+  public void setLineStyle(int state) {
+    Set<Node> nodes = this.lineChart.lookupAll(DOT_SERIES + state);
+    for (Node node : nodes) {
+      setPointStyle(state, node);
     }
   }
 
-  public void close(){
+  public void close() {
     this.graphStage.close();
   }
-  public Stage getStage(){ return this.graphStage; }
-  public void showGraph(){this.graphStage.show();}
+
+  public Stage getStage() {
+    return this.graphStage;
+  }
+
+  public void showGraph() {
+    this.graphStage.show();
+  }
 }
