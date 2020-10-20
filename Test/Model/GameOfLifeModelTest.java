@@ -61,10 +61,8 @@ class GameOfLifeModelTest {
   }
 
   @Test
-  public void testInvalidStates() throws IOException {
-    Model testModel = new GameOfLifeModel("Test/TestInvalidStates.csv", "GameOfLife");
-    Properties propertyFile = new Properties();
-    propertyFile.load(Controller.class.getClassLoader().getResourceAsStream("TestInvalidStates" + ".properties"));
-    assertThrows(ModelException.class, () -> testModel.initializeAllStates((String) propertyFile.getProperty("States")));
+  public void testInvalidStates() {
+    assertThrows(ModelException.class, () -> new GameOfLifeModel("Test/TestInvalidStates.csv", "GameOfLife"));
   }
+
 }

@@ -106,7 +106,8 @@ public class Controller {
   public void displayInfo(String fileName) {
     try {
       this.mainView.displaySimulationInfo(fileName, currentPropertyFile, event -> initializeSimulation());
-    } catch (ControllerException e){
+    }
+    catch (ControllerException e){
       showError(e.getMessage());
     }
   }
@@ -116,6 +117,22 @@ public class Controller {
     mainView.clearTopMenuGroup();
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
+    try{
+      initializeModel();
+      this.frontEndCellColors = updateFrontEndCellColors();
+      mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
+              mainModel.getNumberOfColumns(), frontEndCellColors);
+      simIsSet = true;
+      addCellEventHandlers();
+      initializeSimulationMenu();
+    }
+    catch (Exception e){
+      showError(e.getMessage());
+      initializeSplashMenu();
+    }
+  }
+
+  private void initializeModel() {
     try {
       modelType = currentPropertyFile.getProperty(TYPE);
       Class<?> cl = Class.forName(MODEL + DOT + modelType + MODEL);
@@ -124,23 +141,15 @@ public class Controller {
       defaultFile = getPropertyFile(modelType + DEFAULT);
       String defaultStates = defaultFile.getProperty(STATES);
       mainModel.initializeAllStates((String) currentPropertyFile.getOrDefault(STATES, defaultStates));
-      this.frontEndCellColors = updateFrontEndCellColors();
-      mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
-          mainModel.getNumberOfColumns(), frontEndCellColors);
-      simIsSet = true;
-      addCellEventHandlers();
-      initializeSimulationMenu();
     }
     catch (ClassNotFoundException e){
-      showError(INVALID_MODEL_TYPE);
+      throw new ControllerException(INVALID_MODEL_TYPE);
     }
     catch (InvocationTargetException e){
-      showError(e.getTargetException().getMessage());
+      throw new ControllerException(e.getTargetException().getMessage());
     }
     catch (Exception e) {
-      showError(e.getMessage());
-//      e.printStackTrace();
-      initializeSplashMenu();
+      throw new ControllerException(e.getMessage());
     }
   }
 

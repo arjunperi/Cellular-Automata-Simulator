@@ -9,7 +9,12 @@ public class SegregationModel extends Model{
 
   public SegregationModel(String fileName, String modelType) {
     super(fileName, modelType);
-    percentSimilar=Double.parseDouble((String)propertyFile.getOrDefault(PERCENT_SIMILAR, defaultPropertyFile.get(PERCENT_SIMILAR)));
+    try{
+      percentSimilar=Double.parseDouble((String)propertyFile.getOrDefault(PERCENT_SIMILAR, defaultPropertyFile.get(PERCENT_SIMILAR)));
+    }
+    catch (NumberFormatException e){
+      throw new ModelException("Invalid Percent Similar Input");
+    }
     initializeEmptyQueue();
   }
 
