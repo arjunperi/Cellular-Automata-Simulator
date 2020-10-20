@@ -34,6 +34,7 @@ public class Controller {
   private static final String SPANISH = "Spanish";
   private static final String FAKE_LANGUAGE = "FakeLanguage";
   private static final String DOT_CSV = ".csv";
+  private static final String DOT_CSS = ".css";
   private static final String TYPE = "Type";
   private static final String MODEL = "Model";
   private static final String DOT = ".";
@@ -52,7 +53,7 @@ public class Controller {
   private static final String INVALID = "Invalid File Name";
   private static final String COLOR_MAPPING_ERROR = "ColorMappingError";
   private static final String GRAPH_ERROR = "GraphError";
-  private static final int ONEHUNDRED = 100;
+  private static final int ONE_HUNDRED = 100;
 
   private static final String RESOURCES = "Resources/";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES.replace("/", ".");
@@ -259,12 +260,12 @@ public class Controller {
     EventHandler<ActionEvent> stepEvent = e ->{
       mainModel.step();
       if(graphController!=null) {
-
         graphController.updateGraph();
       }
     };
-    ChangeListener<Number> test = (ov, old_val, new_val) -> {this.mainModel.setSimulationSpeed(new_val.doubleValue() / ONEHUNDRED);};
-    this.mainView.initializeSimulationMenu(saveEvent, colorEvent, graphEvent, pauseEvent, stepEvent, test);
+
+    ChangeListener<Number> speedEvent = (ov, old_val, new_val) -> {this.mainModel.setSimulationSpeed(new_val.doubleValue() / ONE_HUNDRED);};
+    this.mainView.initializeSimulationMenu(saveEvent, colorEvent, graphEvent, pauseEvent, stepEvent, speedEvent);
   }
 
 

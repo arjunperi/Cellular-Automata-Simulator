@@ -339,7 +339,7 @@ public class ControllerTest extends DukeApplicationTest {
 
 
   @Test
-  public void testupdateColorStateMapping(){
+  public void testUpdateColorStateMapping(){
     javafxRun(() -> mainController.initializeSplashMenu());
     inputTest = lookup("#inputTextBox").query();
     inputTest.setText("ConwayStatesBlinker");
@@ -374,6 +374,8 @@ public class ControllerTest extends DukeApplicationTest {
     press(KeyCode.ENTER);
     Button test = lookup("#Home").queryButton();
     assertEquals("Inicio", test.getText());
+    clickOn(lookup("#Home").queryButton());
+    clickOn(lookup("#English").queryButton());
   }
   @Test
   public void reopenSimulationView(){

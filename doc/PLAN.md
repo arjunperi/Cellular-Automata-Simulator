@@ -104,8 +104,12 @@ taken from [Brilliant Examples of Sketched UI Wireframes and Mock-Ups](https://o
 
 ## Team Responsibilities
 
- * Team Member #1
-
- * Team Member #2
-
- * Team Member #3
+ * Alex
+    * Main: View
+    * Second: Model
+ * Chris
+    * Main: Model
+    * Second: Configuration
+ * Arjun
+    * Main: Configuration/Error Handling
+    * Second: Model/View
