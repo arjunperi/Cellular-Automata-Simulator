@@ -28,29 +28,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 
 
 public class Controller {
-
-  private Model mainModel;
-  private final View mainView;
-  private boolean simIsSet = false;
-  private boolean graphShowing = false;
-  private String modelType;
-  private Properties defaultFile;
-  private Properties currentPropertyFile;
-
-  private static final String RESOURCES = "Resources/";
-  public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES.replace("/", ".");
-  public static final String DEFAULT_RESOURCE_FOLDER = "/" + RESOURCES;
-  public static final String STYLESHEET = "GameOfLife.css";
-  public static final String BLANK = " ";
-  private  ResourceBundle projectTextResources;
-  private final Map<Integer, String> stateColorMapping = new HashMap<>();
-  private List<List<String>> frontEndCellColors;
-  private String currentFileName;
-  private GraphController graphController;
-  private TextField inputText;
 
   private static final String ENGLISH = "English";
   private static final String SPANISH = "Spanish";
@@ -75,10 +56,33 @@ public class Controller {
   private static final String COLOR_MAPPING_ERROR = "ColorMappingError";
   private static final String GRAPH_ERROR = "GraphError";
 
-  public Controller() {
+  private static final String RESOURCES = "Resources/";
+  public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES.replace("/", ".");
+  public static final String DEFAULT_RESOURCE_FOLDER = "/" + RESOURCES;
+  public static final String STYLESHEET = "GameOfLife.css";
+  public static final String BLANK = " ";
+  private  ResourceBundle projectTextResources;
+  private final Map<Integer, String> stateColorMapping = new HashMap<>();
+  private List<List<String>> frontEndCellColors;
+  private String currentFileName;
+  private GraphController graphController;
+  private TextField inputText;
+
+  private Stage stage;
+  private Model mainModel;
+  private final View mainView;
+  private boolean simIsSet = false;
+  private boolean graphShowing = false;
+  private String modelType;
+  private Properties defaultFile;
+  private Properties currentPropertyFile;
+
+
+  public Controller(Stage stage) {
     projectTextResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + ENGLISH);
     this.mainView = new View(projectTextResources);
     initializeSplashMenu();
+    this.stage = stage;
   }
 
   public void initializeSplashMenu() {
@@ -297,7 +301,7 @@ public class Controller {
       showError(this.projectTextResources.getString(GRAPH_ERROR));
       return;
     }
-    this.graphController = new GraphController(this.mainModel, this.stateColorMapping);
+    this.graphController = new GraphController(this.mainModel, this.stateColorMapping, this.stage, this.projectTextResources);
     this.graphShowing = true;
   }
 

@@ -4,8 +4,10 @@ import Model.Model;
 import View.GraphView;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
+import javafx.stage.Stage;
 
 
 public class GraphController {
@@ -21,14 +23,16 @@ public class GraphController {
   private boolean graphShowing = GRAPH_NOT_SHOWING;
   private int graphStepCount = NEW_GRAPH_STEP_COUNT;
 
+  private Stage stage;
   private final Map<Integer, String> stateColorMap;
   private Map<Integer, Series> stateSeries = new HashMap<>();
   private Map<Integer, Integer> stateCountsMap = new HashMap<>();
 
-  public GraphController(Model model, Map<Integer, String> stateColorMap){
-    this.graphView = new GraphView(stateColorMap);
+  public GraphController(Model model, Map<Integer, String> stateColorMap, Stage stage, ResourceBundle projectTextResources){
+    this.graphView = new GraphView(stage, stateColorMap, projectTextResources);
     this.mainModel = model;
     this.stateColorMap = stateColorMap;
+    this.stage = stage;
     createGraph();
   }
 

@@ -6,6 +6,7 @@ import Model.GameOfLifeModel;
 import View.GraphView;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,6 @@ import util.DukeApplicationTest;
 class GraphControllerTest extends DukeApplicationTest {
 
   private GameOfLifeModel mainModel;
-  private GraphView graphView;
   private GraphController graphController;
   Map<Integer, String> stateColorMap = new HashMap<>();
 
@@ -23,8 +23,8 @@ class GraphControllerTest extends DukeApplicationTest {
     stateColorMap.put(0,"Pink");
     stateColorMap.put(1, "Cyan");
     mainModel = new GameOfLifeModel("ConwayStatesBlinker.csv", "GameOfLife");
-    graphController = new GraphController(mainModel, stateColorMap);
-    graphView = graphController.getGraphView();
+    graphController = new GraphController(mainModel, stateColorMap, stage, ResourceBundle
+        .getBundle("Resources" + ".English"));
   }
 
   @Test
@@ -37,6 +37,15 @@ class GraphControllerTest extends DukeApplicationTest {
 
   @Test
   public void testCorrectPointsOnGraph(){
+    Scene currentScene = graphController.getGraphView().getStage().getScene();
+    assertNull(currentScene.lookup("#1,3"));
+    javafxRun(() -> graphController.updateGraph());
+    assertNotNull(currentScene.lookup("#1,3"));
+    assertNotNull(currentScene.lookup("#0,397"));
+  }
+
+  @Test
+  public void reopenSimulationMenu(){
     Scene currentScene = graphController.getGraphView().getStage().getScene();
     assertNull(currentScene.lookup("#1,3"));
     javafxRun(() -> graphController.updateGraph());

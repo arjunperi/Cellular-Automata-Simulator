@@ -28,7 +28,7 @@ import javafx.util.Duration;
  * @author Arjun Peri
  * @author Christopher Shin
  */
-public class Simulation extends Application {
+public class SimulationRunner extends Application {
 
   public static final String TITLE = "Cellular Automata";
 
@@ -41,7 +41,7 @@ public class Simulation extends Application {
 
   @Override
   public void start(final Stage stage) {
-    mainController = new Controller();
+    mainController = new Controller(stage);
     stage.setScene(mainController.setupScene());
     stage.setTitle(TITLE);
     stage.show();

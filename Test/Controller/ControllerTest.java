@@ -2,6 +2,7 @@ package Controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import View.FrontEndCell;
 import View.View;
@@ -21,7 +22,7 @@ public class ControllerTest extends DukeApplicationTest {
   private Stage stage;
 
   public void start(final Stage stage) {
-    mainController = new Controller();
+    mainController = new Controller(stage);
     this.stage = stage;
     this.stage.setScene(mainController.setupScene());
     this.stage.show();
@@ -332,7 +333,7 @@ public class ControllerTest extends DukeApplicationTest {
 
   @Test
   public void testInvalidFileName(){
-    Controller testController = new Controller();
+    Controller testController = new Controller(stage);
     assertThrows(ControllerException.class, () -> testController.getPropertyFile("nonexistent"));
   }
 
@@ -373,6 +374,20 @@ public class ControllerTest extends DukeApplicationTest {
     press(KeyCode.ENTER);
     Button test = lookup("#Home").queryButton();
     assertEquals("Inicio", test.getText());
+  }
+  @Test
+  public void reopenSimulationView(){
+    javafxRun(() -> mainController.initializeSplashMenu());
+    javafxRun(() -> mainController.initializeSplashMenu());
+    inputTest = lookup("#inputTextBox").query();
+    inputTest.setText("SegregationExample");
+    press(KeyCode.ENTER);
+    clickOn(lookup("#SegregationExample").queryButton());
+    clickOn(lookup("Show State Population Graph").queryButton());
+    javafxRun(() -> this.stage.close());
+    assertTrue(false == this.stage.isShowing());
+    clickOn(lookup("Display Simulation Grid").queryButton());
+    assertTrue(true == this.stage.isShowing());
   }
 }
 

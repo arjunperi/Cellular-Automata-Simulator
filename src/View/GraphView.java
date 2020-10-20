@@ -1,20 +1,25 @@
 package View;
 
-import cellsociety.Simulation;
+import cellsociety.SimulationRunner;
 import java.util.Collection;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class GraphView {
 
+  private static final String OPEN_SIMULATION_BUTTON = "OpenSimulationButton";
   private static final String GRAPH_TITLE = "Graph";
   private static final String GRAPH_ID = "graph";
   private static final String FX_STROKE = "-fx-stroke: #";
@@ -25,14 +30,17 @@ public class GraphView {
   private static final int TWO = 2;
   private static final int EIGHT = 8;
 
+  private ResourceBundle projectTextResources;
   private final Map<Integer, String> stateColorMap;
-
+  private Stage simulationStage;
   private Scene graphScene;
   private Stage graphStage;
   private LineChart<Number,Number> lineChart;
 
-  public GraphView(Map<Integer, String> stateColorMap){
+  public GraphView(Stage stage, Map<Integer, String> stateColorMap, ResourceBundle projectTextResources){
+    this.simulationStage = stage;
     this.stateColorMap = stateColorMap;
+    this.projectTextResources = projectTextResources;
   }
 
   public void createLineChart(){
@@ -51,9 +59,17 @@ public class GraphView {
   }
 
   public void createGraphWindow(){
-    this.graphScene = new Scene(lineChart, Simulation.SCENE_WIDTH, Simulation.SCENE_HEIGHT, Simulation.BACKGROUND);
+    Group topGroup = new Group();
+    BorderPane root = new BorderPane();
+    root.setCenter(lineChart);
+    root.setTop(topGroup);
+    this.graphScene = new Scene(root, SimulationRunner.SCENE_WIDTH, SimulationRunner.SCENE_HEIGHT, SimulationRunner.BACKGROUND);
     this.graphStage.setScene(graphScene);
     this.graphStage.show();
+    Button button = new Button(this.projectTextResources.getString(OPEN_SIMULATION_BUTTON));
+    button.setOnAction(event -> this.simulationStage.show());
+    topGroup.getChildren().add(button);
+
   }
 
   public void setOnGraphClose(EventHandler event){
