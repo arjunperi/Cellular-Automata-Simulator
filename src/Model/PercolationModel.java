@@ -2,7 +2,8 @@ package Model;
 
 import java.util.List;
 
-public class PercolationModel extends Model{
+public class PercolationModel extends Model {
+
   private static final int FULL = 1;
   private static final int EMPTY = 0;
 
@@ -11,7 +12,7 @@ public class PercolationModel extends Model{
   }
 
   protected void updateState(int row, int column, List<Cell> neighbors) {
-    Cell currentCell = getCell(row,column);
+    Cell currentCell = getCell(row, column);
     if (currentCell.getCurrentState() == EMPTY) {
       for (Cell currentNeighbor : neighbors) {
         int neighborState = currentNeighbor.getCurrentState();

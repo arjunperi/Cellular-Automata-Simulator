@@ -7,7 +7,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 
-public class RPSModel extends Model{
+public class RPSModel extends Model {
+
   private final int threshold;
   private final int randomVariation;
   private static final String MAPPING = "Mapping";
@@ -17,24 +18,24 @@ public class RPSModel extends Model{
 
   public RPSModel(String fileName, String modelType) {
     super(fileName, modelType);
-    try{
-      threshold=Integer.parseInt((String)propertyFile.getOrDefault("Threshold", defaultPropertyFile.get("Threshold")));
-      randomVariation=Integer.parseInt((String)propertyFile.getOrDefault("Random_Variation", defaultPropertyFile.get("Random_Variation")));
-    }
-    catch(NumberFormatException e){
+    try {
+      threshold = Integer.parseInt(
+          (String) propertyFile.getOrDefault("Threshold", defaultPropertyFile.get("Threshold")));
+      randomVariation = Integer.parseInt((String) propertyFile
+          .getOrDefault("Random_Variation", defaultPropertyFile.get("Random_Variation")));
+    } catch (NumberFormatException e) {
       throw new ModelException("Invalid Threshold/Variation Input");
     }
     RPSMap = new HashMap<>();
-    try{
+    try {
       initializeMap();
-    }
-    catch (NumberFormatException e){
+    } catch (NumberFormatException e) {
       throw new ModelException("Invalid RPS Mapping Inputs");
     }
   }
 
   public void updateState(int row, int column, List<Cell> neighbors) {
-    Cell currentCell = getCell(row,column);
+    Cell currentCell = getCell(row, column);
     Map<Integer, Integer> statesCounts = new HashMap<>();
     for (Cell currentNeighbor : neighbors) {
       int neighborState = currentNeighbor.getCurrentState();
@@ -50,7 +51,7 @@ public class RPSModel extends Model{
     Random random = new Random();
     int mostCommonState = state;
     int maxValue = 0;
-    if(randomVariation>0) {
+    if (randomVariation > 0) {
       variable = random.nextInt(randomVariation);
     }
     for (Map.Entry<Integer, Integer> entry : statesCounts.entrySet()) {
@@ -64,11 +65,12 @@ public class RPSModel extends Model{
   }
 
   private void initializeMap() {
-    for(Integer state:allStates) {
-      String mappings =(String)propertyFile.getOrDefault(state + MAPPING, defaultPropertyFile.get(state + MAPPING));
+    for (Integer state : allStates) {
+      String mappings = (String) propertyFile
+          .getOrDefault(state + MAPPING, defaultPropertyFile.get(state + MAPPING));
       String[] mappingsArray = mappings.split(",");
       List<Integer> mappingsList = new ArrayList<>();
-      for(String mappingString:mappingsArray) {
+      for (String mappingString : mappingsArray) {
         mappingsList.add(Integer.parseInt(mappingString));
       }
       RPSMap.put(state, mappingsList);

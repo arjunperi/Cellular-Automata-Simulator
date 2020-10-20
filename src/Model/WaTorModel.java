@@ -3,7 +3,8 @@ package Model;
 import java.util.Collections;
 import java.util.List;
 
-public class WaTorModel extends Model{
+public class WaTorModel extends Model {
+
   public static final int WATER = 0;
   public static final int FISH = 1;
   public static final int SHARK = 2;
@@ -16,18 +17,21 @@ public class WaTorModel extends Model{
 
   public WaTorModel(String fileName, String modelType) {
     super(fileName, modelType);
-    try{fishBreedingRate=Integer.parseInt((String)propertyFile.getOrDefault(FISH_BREEDING_RATE, defaultPropertyFile.get(FISH_BREEDING_RATE)));
-      sharkBreedingRate=Integer.parseInt((String)propertyFile.getOrDefault(SHARK_BREEDING_RATE, defaultPropertyFile.get(SHARK_BREEDING_RATE)));
-      sharkStarve=Integer.parseInt((String)propertyFile.getOrDefault(SHARK_STARVE_RATE, defaultPropertyFile.get(SHARK_STARVE_RATE)));
-    }
-    catch(NumberFormatException e){
+    try {
+      fishBreedingRate = Integer.parseInt((String) propertyFile
+          .getOrDefault(FISH_BREEDING_RATE, defaultPropertyFile.get(FISH_BREEDING_RATE)));
+      sharkBreedingRate = Integer.parseInt((String) propertyFile
+          .getOrDefault(SHARK_BREEDING_RATE, defaultPropertyFile.get(SHARK_BREEDING_RATE)));
+      sharkStarve = Integer.parseInt((String) propertyFile
+          .getOrDefault(SHARK_STARVE_RATE, defaultPropertyFile.get(SHARK_STARVE_RATE)));
+    } catch (NumberFormatException e) {
       throw new ModelException("Invalid Breeding/Starve Rate Input");
     }
   }
 
   public void updateState(int row, int column, List<Cell> neighbors) {
-    WaTorCell currentCell = (WaTorCell)getCell(row,column);
-    currentCell.setParameters(fishBreedingRate,sharkBreedingRate,sharkStarve);
+    WaTorCell currentCell = (WaTorCell) getCell(row, column);
+    currentCell.setParameters(fishBreedingRate, sharkBreedingRate, sharkStarve);
     Collections.shuffle(neighbors);
     if (currentCell.getCurrentState() == FISH && currentCell.getFutureState() == FISH) {
       currentCell.moveIfCellIsFish(neighbors);
