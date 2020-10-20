@@ -41,6 +41,8 @@ To run the program, simply run main in the SimulationRunner.java class.
 Data files needed: 
 - Properties file and csv file for each initial state configuration of each simulation. Each property file contains the key "fileName" that links the corresponding csv file.
 - Default files for each of the 6 simulaiont types that hold default values for potential missing keys (see assumptions).
+- Language Resource files in the src/Resources folder
+- CSS files in the src/Resources folder
 
 Features implemented:
 - Main menu with file input text box.
@@ -75,4 +77,5 @@ Extra credit:
 
 ### Impressions
 - Arjun: Overall, I thought this project was a great introduction to front end development as well a great opportunity to continue building on JavaFx skills. Learning about GUI elements, css, and properties files was tough at first but the iterative nature of the project made it manageable.
+- Alex: I also enjoyed the project and thought it was a good intro to front end development. Since I was primarily in charge of the view and vizualization, I got to spend alot of time with the GUI, css, and property files which are all great to know about for future UI development. The usage of the MVC model was difficult to understand at first, but as the project progressed I think we were able to follow it better and actually see its advantages.
 
