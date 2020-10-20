@@ -45,16 +45,21 @@ public class Grid {
   Properties propertyFile;
   Properties defaultPropertyFile;
   int[][] allPossibleNeighbors;
+  private final String fullModelClassName;
 
 
   public Grid(String fileName, String modelType) {
     List<String[]> cellStates = readAll(fileName);
-    String fullModelClassName = MODEL_DOT + modelType + CELL;
+    fullModelClassName = MODEL_DOT + modelType + CELL;
     String[] firstRow = cellStates.get(0);
-    try {
       cellsPerRow = Double.parseDouble(firstRow[0]);
       cellsPerColumn = Double.parseDouble(firstRow[1]);
       checkCSVDimensions(cellStates.size() - 1, cellStates.get(1).length);
+      initializeCell(cellStates);
+  }
+
+  private void initializeCell(List<String[]> cellStates) {
+    try {
       for (int i = 1; i < cellStates.size(); i++) {
         String[] row = cellStates.get(i);
         List<Cell> cellRow = new ArrayList<>();
@@ -68,9 +73,9 @@ public class Grid {
         gridOfCells.add(cellRow);
       }
     } catch(NumberFormatException | IndexOutOfBoundsException e){
-        throw new ModelException(INVALID_CSV_STATES);
+      throw new ModelException(INVALID_CSV_STATES);
     }
-    catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+      catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
       throw new ModelException(INVALID_MODEL);
     }
   }
