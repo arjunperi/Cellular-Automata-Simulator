@@ -1,6 +1,7 @@
 package Model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
@@ -35,5 +36,10 @@ public class SegregationModelTest extends DukeApplicationTest {
     assertEquals(1, testModel.getCellState(0,8));
     testModel.step();
     assertEquals(2, testModel.getCellState(0,8));
+  }
+
+  @Test
+  public void testInvalidPercentSimilar(){
+    assertThrows(ModelException.class, () -> new SegregationModel("Test/TestInvalidPercentSimilar.csv", "Segregation"));
   }
 }

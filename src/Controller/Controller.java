@@ -108,7 +108,8 @@ public class Controller {
   public void displayInfo(String fileName) {
     try {
       this.mainView.displaySimulationInfo(fileName, currentPropertyFile, event -> initializeSimulation());
-    } catch (ControllerException e){
+    }
+    catch (ControllerException e){
       showError(e.getMessage());
     }
   }
@@ -118,13 +119,19 @@ public class Controller {
     mainView.clearTopMenuGroup();
     frontEndCellColors = new ArrayList<>();
     stateColorMapping.clear();
-    initializeModel();
-    this.frontEndCellColors = updateFrontEndCellColors();
-    mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
-        mainModel.getNumberOfColumns(), frontEndCellColors);
-    simIsSet = true;
-    addCellEventHandlers();
-    initializeSimulationMenu();
+    try{
+      initializeModel();
+      this.frontEndCellColors = updateFrontEndCellColors();
+      mainView.initializeFrontEndCells(mainModel.getNumberOfRows(),
+              mainModel.getNumberOfColumns(), frontEndCellColors);
+      simIsSet = true;
+      addCellEventHandlers();
+      initializeSimulationMenu();
+    }
+    catch (Exception e){
+      showError(e.getMessage());
+      initializeSplashMenu();
+    }
   }
 
   private void initializeModel() {
@@ -138,16 +145,13 @@ public class Controller {
       mainModel.initializeAllStates((String) currentPropertyFile.getOrDefault(STATES, defaultStates));
     }
     catch (ClassNotFoundException e){
-      showError(INVALID_MODEL_TYPE);
-      initializeSplashMenu();
+      throw new ControllerException(INVALID_MODEL_TYPE);
     }
     catch (InvocationTargetException e){
-      showError(e.getTargetException().getMessage());
-      initializeSplashMenu();
+      throw new ControllerException(e.getTargetException().getMessage());
     }
     catch (Exception e) {
-      showError(e.getMessage());
-      initializeSplashMenu();
+      throw new ControllerException(e.getMessage());
     }
   }
 

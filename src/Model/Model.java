@@ -9,6 +9,7 @@ import java.util.Properties;
 import java.util.Queue;
 
 import javafx.scene.control.Alert;
+import org.apache.commons.lang3.ObjectUtils;
 
 
 public abstract class Model {
@@ -65,7 +66,13 @@ public abstract class Model {
           updateState(row, column, cellNeighbors);
         }
       }
-    } catch (ModelException e){
+    }
+    catch (NullPointerException e){
+      switchPause();
+      showError("Pausing Simulation: Listed States and RPS Mapping Inputs Don't Match. \n" +
+              "Please press home and try another file or edit current properties file");
+    }
+    catch (ModelException e){
       switchPause();
       showError(e.getMessage());
     }

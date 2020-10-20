@@ -14,20 +14,23 @@ public class RPSModel extends Model{
   private int variable = 0;
   Map<Integer, List<Integer>> RPSMap;
 
-//  //DEFINE IN PROPERTIES FILES
-//  Map<Integer, List<Integer>> RPSMap = Map.of(
-//      0, List.of(1, 2),
-//      1, List.of(2, 3),
-//      2, List.of(3, 4),
-//      3, List.of(4, 0),
-//      4, List.of(0, 1));
 
   public RPSModel(String fileName, String modelType) {
     super(fileName, modelType);
-    threshold=Integer.parseInt((String)propertyFile.getOrDefault("Threshold", defaultPropertyFile.get("Threshold")));
-    randomVariation=Integer.parseInt((String)propertyFile.getOrDefault("Random_Variation", defaultPropertyFile.get("Random_Variation")));
+    try{
+      threshold=Integer.parseInt((String)propertyFile.getOrDefault("Threshold", defaultPropertyFile.get("Threshold")));
+      randomVariation=Integer.parseInt((String)propertyFile.getOrDefault("Random_Variation", defaultPropertyFile.get("Random_Variation")));
+    }
+    catch(NumberFormatException e){
+      throw new ModelException("Invalid Threshold/Variation Input");
+    }
     RPSMap = new HashMap<>();
-    initializeMap();
+    try{
+      initializeMap();
+    }
+    catch (NumberFormatException e){
+      throw new ModelException("Invalid RPS Mapping Inputs");
+    }
   }
 
   public void updateState(int row, int column, List<Cell> neighbors) {
