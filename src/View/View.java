@@ -72,9 +72,6 @@ public class View {
   private static final int ZERO = 0;
   private static final int ONE = 1;
   private static final int TWO = 2;
-  private static final int TEN = 10;
-  private static final int FIFTY = 50;
-  private static final int ONE_HUNDRED = 100;
   private static final String STATE_LOWER = "state";
   private static final String STATE = "State";
   private static final String CONTROLLER = "Controller";
