@@ -15,18 +15,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Map;
-import java.util.Queue;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
@@ -55,6 +52,7 @@ public class Controller {
   private static final String INVALID = "Invalid File Name";
   private static final String COLOR_MAPPING_ERROR = "ColorMappingError";
   private static final String GRAPH_ERROR = "GraphError";
+  private static final int ONE_HUNDRED = 100;
 
   private static final String RESOURCES = "Resources/";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES.replace("/", ".");
@@ -68,7 +66,7 @@ public class Controller {
   private GraphController graphController;
   private TextField inputText;
 
-  private Stage stage;
+  private final Stage stage;
   private Model mainModel;
   private final View mainView;
   private boolean simIsSet = false;
@@ -271,7 +269,7 @@ public class Controller {
         graphController.updateGraph();
       }
     };
-    ChangeListener<Number> test = (ov, old_val, new_val) -> {this.mainModel.setSimulationSpeed(new_val.doubleValue() / 100);};
+    ChangeListener<Number> test = (ov, old_val, new_val) -> {this.mainModel.setSimulationSpeed(new_val.doubleValue() / ONE_HUNDRED);};
     this.mainView.initializeSimulationMenu(saveEvent, colorEvent, graphEvent, pauseEvent, stepEvent, test);
   }
 

@@ -61,6 +61,9 @@ public class View {
   private static final int ZERO = 0;
   private static final int ONE = 1;
   private static final int TWO = 2;
+  private static final int TEN = 10;
+  private static final int FIFTY = 50;
+  private static final int ONE_HUNDRED = 100;
   private static final String STATE_LOWER = "state";
   private static final String STATE = "State";
   private static final String CONTROLLER = "Controller";
@@ -73,7 +76,6 @@ public class View {
   private final Group centerGroup;
   private List<List<FrontEndCell>> frontEndCellGrid;
   private List<List<String>> frontEndCellColors;
-  private TextField inputText;
   private Button homeButton;
   private ResourceBundle viewTextResources;
 
@@ -139,9 +141,8 @@ public class View {
     clearCenterGroup();
     clearTopMenuGroup();
     VBox inputTextBox = new VBox();
-    this.inputText = inputText;
-    this.inputText.setId(INPUT_TEXT_BOX);
-    this.inputText.setOnAction(inputTextEvent);
+    inputText.setId(INPUT_TEXT_BOX);
+    inputText.setOnAction(inputTextEvent);
     Label inputLabel = new Label(viewTextResources.getString( INPUT+LABEL+TEXT));
     inputTextBox.getChildren().add(inputLabel);
     inputTextBox.getChildren().add(inputText);
@@ -195,11 +196,11 @@ public class View {
   }
 
   private Slider createSpeedSlider(ChangeListener<Number> sliderEvent){
-    Slider speedSlider = new Slider(0,100,50);
-    speedSlider.setMinorTickCount(100);
-    speedSlider.setMajorTickUnit(1);
-    speedSlider.setMinorTickCount(1);
-    speedSlider.setBlockIncrement(10);
+    Slider speedSlider = new Slider(ZERO,ONE_HUNDRED,FIFTY);
+    speedSlider.setMinorTickCount(ONE_HUNDRED);
+    speedSlider.setMajorTickUnit(ONE);
+    speedSlider.setMinorTickCount(ONE);
+    speedSlider.setBlockIncrement(TEN);
     speedSlider.valueProperty().addListener(sliderEvent);
     speedSlider.setId(SLIDER);
     return speedSlider;

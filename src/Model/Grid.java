@@ -4,19 +4,13 @@ import Controller.Controller;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Properties;
-import java.util.Queue;
-
-import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Grid {
@@ -39,6 +33,7 @@ public class Grid {
   private static final String EDGE_POLICY = "EdgePolicy";
   private static final String GET_NEIGHBORS = "getNeighbors";
   private static final String DOT_CSV = ".csv";
+  private static final String STATES = "States";
   final String PATH = "data/";
   private final double cellsPerRow;
   private final double cellsPerColumn;
@@ -46,19 +41,52 @@ public class Grid {
   Properties defaultPropertyFile;
   int[][] allPossibleNeighbors;
   private final String fullModelClassName;
+  private String[] allStatesArray;
 
 
   public Grid(String fileName, String modelType) {
     List<String[]> cellStates = readAll(fileName);
     fullModelClassName = MODEL_DOT + modelType + CELL;
     String[] firstRow = cellStates.get(0);
-      cellsPerRow = Double.parseDouble(firstRow[0]);
-      cellsPerColumn = Double.parseDouble(firstRow[1]);
-      checkCSVDimensions(cellStates.size() - 1, cellStates.get(1).length);
-      initializeCell(cellStates);
+    cellsPerRow = Double.parseDouble(firstRow[0]);
+    cellsPerColumn = Double.parseDouble(firstRow[1]);
+    checkCSVDimensions(cellStates.size() - 1, cellStates.get(1).length);
+
+    initializeCell(cellStates);
   }
 
-  private void initializeCell(List<String[]> cellStates) {
+  private void makeAllStates() {
+    String allStates = ((String) propertyFile.getOrDefault(STATES, defaultPropertyFile.get(STATES)));
+    allStatesArray = allStates.split(",");
+  }
+
+  private void initializeCellInOrder() {
+    int stateRotator = 0;
+    try {
+      for(int i = 1; i < cellsPerColumn; i++) {
+        List<Cell> cellRow = new ArrayList<>();
+        for(int j = 1; j < cellsPerRow; j++) {
+          int state = stateRotator%allStatesArray.length;
+          Class<?> cl = Class.forName(fullModelClassName);
+          Cell cellToAdd = (Cell) cl.getConstructor(int.class)
+              .newInstance(state);
+          stateRotator++;
+        }
+        gridOfCells.add(cellRow);
+      }
+    } catch(NumberFormatException | IndexOutOfBoundsException e){
+      throw new ModelException(INVALID_CSV_STATES);
+    }
+    catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+      throw new ModelException(INVALID_MODEL);
+    }
+  }
+
+  private void initializeCellProbabilityDistribution() {
+
+  }
+
+  private void initializeCellCSV(List<String[]> cellStates) {
     try {
       for (int i = 1; i < cellStates.size(); i++) {
         String[] row = cellStates.get(i);
@@ -83,13 +111,6 @@ public class Grid {
   protected void setPropertyFiles(Properties propertyFile, Properties defaultPropertyFile) {
     this.propertyFile=propertyFile;
     this.defaultPropertyFile = defaultPropertyFile;
-  }
-
-  private void showError(String message) {
-    Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle(GRID_ERROR);
-    alert.setContentText(message);
-    alert.showAndWait();
   }
 
   private void checkCSVDimensions(int columnCheck, int rowCheck) throws ModelException{

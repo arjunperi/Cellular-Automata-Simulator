@@ -25,6 +25,7 @@ public abstract class Model {
 
   private double framesPerModelUpdate = 60;
   public static final int MIN_FRAMES_PER_MODEL_UPDATE = 5;
+  public static final double TEN = 10;
   public static final int MAX_FRAMES_PER_MODEL_UPDATE = 100;
   protected final Grid gridOfCells;
   protected final Queue<Cell> emptyQueue = new LinkedList<>();
@@ -150,8 +151,8 @@ public abstract class Model {
   }
 
   public void setSimulationSpeed(double speed){
-    Double temp = (1-speed)*MAX_FRAMES_PER_MODEL_UPDATE;
-    this.framesPerModelUpdate = Math.max(MIN_FRAMES_PER_MODEL_UPDATE, Math.round(temp/10.0) * 10);
+    double temp = (1-speed)*MAX_FRAMES_PER_MODEL_UPDATE;
+    this.framesPerModelUpdate = Math.max(MIN_FRAMES_PER_MODEL_UPDATE, Math.round(temp/TEN) * TEN);
   }
 
   public Properties getPropertyFile(String fileName) {

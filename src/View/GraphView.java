@@ -30,10 +30,9 @@ public class GraphView {
   private static final int TWO = 2;
   private static final int EIGHT = 8;
 
-  private ResourceBundle projectTextResources;
+  private final ResourceBundle projectTextResources;
   private final Map<Integer, String> stateColorMap;
-  private Stage simulationStage;
-  private Scene graphScene;
+  private final Stage simulationStage;
   private Stage graphStage;
   private LineChart<Number,Number> lineChart;
 
@@ -63,7 +62,8 @@ public class GraphView {
     BorderPane root = new BorderPane();
     root.setCenter(lineChart);
     root.setTop(topGroup);
-    this.graphScene = new Scene(root, SimulationRunner.SCENE_WIDTH, SimulationRunner.SCENE_HEIGHT, SimulationRunner.BACKGROUND);
+    Scene graphScene = new Scene(root, SimulationRunner.SCENE_WIDTH, SimulationRunner.SCENE_HEIGHT,
+        SimulationRunner.BACKGROUND);
     this.graphStage.setScene(graphScene);
     this.graphStage.show();
     Button button = new Button(this.projectTextResources.getString(OPEN_SIMULATION_BUTTON));

@@ -15,15 +15,10 @@ public class SegregationModel extends Model{
 
   public void updateState(int row, int column, List<Cell> neighbors) {
     Cell currentCell = getCell(row,column);
-    if (currentCell.getCurrentState() != EMPTY) {
-      double percentSimilarInNeighborhood = getPercentageSimilar(currentCell, neighbors);
-      if (percentSimilarInNeighborhood <= percentSimilar) {
-        if (!emptyQueue.isEmpty()) {
-          emptyQueue.poll().setFutureState(currentCell.getCurrentState());
-          currentCell.setFutureState(EMPTY);
-          emptyQueue.add(currentCell);
-        }
-      }
+    if (currentCell.getCurrentState() != EMPTY && getPercentageSimilar(currentCell, neighbors) <= percentSimilar && !emptyQueue.isEmpty()) {
+      emptyQueue.poll().setFutureState(currentCell.getCurrentState());
+      currentCell.setFutureState(EMPTY);
+      emptyQueue.add(currentCell);
     }
   }
 

@@ -23,7 +23,6 @@ public class GraphController {
   private boolean graphShowing = GRAPH_NOT_SHOWING;
   private int graphStepCount = NEW_GRAPH_STEP_COUNT;
 
-  private Stage stage;
   private final Map<Integer, String> stateColorMap;
   private Map<Integer, Series> stateSeries = new HashMap<>();
   private Map<Integer, Integer> stateCountsMap = new HashMap<>();
@@ -32,7 +31,6 @@ public class GraphController {
     this.graphView = new GraphView(stage, stateColorMap, projectTextResources);
     this.mainModel = model;
     this.stateColorMap = stateColorMap;
-    this.stage = stage;
     createGraph();
   }
 
