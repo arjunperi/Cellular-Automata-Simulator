@@ -58,9 +58,6 @@ public class View {
   private static final String COLOR = "Color";
   private static final String BUTTON = "Button";
   private static final String SAVE = "Save";
-  private static final int ZERO = 0;
-  private static final int ONE = 1;
-  private static final int TWO = 2;
   private static final String STATE_LOWER = "state";
   private static final String STATE = "State";
   private static final String CONTROLLER = "Controller";
@@ -68,12 +65,21 @@ public class View {
   private static final String OK = "OK";
   private static final String ALERT = "Alert";
 
+  private static final int ZERO = 0;
+  private static final int ONE = 1;
+  private static final int TWO = 2;
+  private static int SLIDER_MAX = 100;
+  private static int SLIDER_MIN = 0;
+  private static int SLIDER_INITIAL_VALUE = 50;
+  private static int SLIDER_TICK_VALUE = 1;
+  private static int SLIDER_BLOCK = 10;
+
+
   private final BorderPane root;
   private final Group topGroup;
   private final Group centerGroup;
   private List<List<FrontEndCell>> frontEndCellGrid;
   private List<List<String>> frontEndCellColors;
-  private TextField inputText;
   private Button homeButton;
   private ResourceBundle viewTextResources;
 
@@ -139,9 +145,8 @@ public class View {
     clearCenterGroup();
     clearTopMenuGroup();
     VBox inputTextBox = new VBox();
-    this.inputText = inputText;
-    this.inputText.setId(INPUT_TEXT_BOX);
-    this.inputText.setOnAction(inputTextEvent);
+    inputText.setId(INPUT_TEXT_BOX);
+    inputText.setOnAction(inputTextEvent);
     Label inputLabel = new Label(viewTextResources.getString( INPUT+LABEL+TEXT));
     inputTextBox.getChildren().add(inputLabel);
     inputTextBox.getChildren().add(inputText);
@@ -195,11 +200,11 @@ public class View {
   }
 
   private Slider createSpeedSlider(ChangeListener<Number> sliderEvent){
-    Slider speedSlider = new Slider(0,100,50);
-    speedSlider.setMinorTickCount(100);
-    speedSlider.setMajorTickUnit(1);
-    speedSlider.setMinorTickCount(1);
-    speedSlider.setBlockIncrement(10);
+    Slider speedSlider = new Slider(SLIDER_MIN,SLIDER_MAX,SLIDER_INITIAL_VALUE);
+    speedSlider.setMinorTickCount(SLIDER_MAX);
+    speedSlider.setMajorTickUnit(SLIDER_TICK_VALUE);
+    speedSlider.setMinorTickCount(SLIDER_TICK_VALUE);
+    speedSlider.setBlockIncrement(SLIDER_BLOCK);
     speedSlider.valueProperty().addListener(sliderEvent);
     speedSlider.setId(SLIDER);
     return speedSlider;
@@ -270,15 +275,6 @@ public class View {
   public void clearCenterGroup(){this.centerGroup.getChildren().clear();}
   public List<List<FrontEndCell>> getFrontEndCellGrid() {
     return frontEndCellGrid;
-  }
-  public BorderPane getRoot() {
-    return this.root;
-  }
-  public Group getCenterGroup() {
-    return this.centerGroup;
-  }
-  public Group getTopGroup() {
-    return this.topGroup;
   }
 }
 
