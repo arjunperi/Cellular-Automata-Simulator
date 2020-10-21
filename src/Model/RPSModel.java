@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * Model designated with handling the RPS simulation.
+ *
+ * @author Chris Shin
+ */
+
 public class RPSModel extends Model {
 
   private final int threshold;
@@ -33,7 +39,7 @@ public class RPSModel extends Model {
     }
   }
 
-  public void updateState(int row, int column, List<Cell> neighbors) {
+  protected void updateState(int row, int column, List<Cell> neighbors) {
     Cell currentCell = getCell(row, column);
     Map<Integer, Integer> statesCounts = new HashMap<>();
     for (Cell currentNeighbor : neighbors) {

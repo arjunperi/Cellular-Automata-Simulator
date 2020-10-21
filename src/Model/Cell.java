@@ -2,6 +2,12 @@ package Model;
 
 import java.util.List;
 
+/**
+ * General ell class to handle changing states between steps.
+ *
+ * @author Chris Shin
+ */
+
 public abstract class Cell {
 
   protected int currentState;
@@ -11,6 +17,10 @@ public abstract class Cell {
     this.currentState = state;
     this.futureState = currentState;
   }
+
+  /**
+   * Cycles state of this cell to the next available state when clicked on in UI.
+   */
 
   public void cycleNextState(List<Integer> allStates) {
     int currentStateIndex = allStates.indexOf(currentState);

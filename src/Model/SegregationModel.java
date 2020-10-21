@@ -2,6 +2,13 @@ package Model;
 
 import java.util.List;
 
+/**
+ * Model designated with handling the segregation simulation.  Calculates the percentage of similar
+ * neighbors in neighborhood and calculates the next state accordingly.
+ *
+ * @author Chris Shin
+ */
+
 public class SegregationModel extends Model {
 
   public static final int EMPTY = 0;
@@ -19,7 +26,7 @@ public class SegregationModel extends Model {
     initializeEmptyQueue();
   }
 
-  public void updateState(int row, int column, List<Cell> neighbors) {
+  protected void updateState(int row, int column, List<Cell> neighbors) {
     Cell currentCell = getCell(row, column);
     if (currentCell.getCurrentState() != EMPTY
         && getPercentageSimilar(currentCell, neighbors) <= percentSimilar && !emptyQueue

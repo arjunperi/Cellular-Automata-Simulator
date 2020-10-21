@@ -14,6 +14,15 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
+/**
+ * Grid class designed to hold all cells in a given simulation and handle cell updates and information
+ * transfers to the controller.
+ *
+ * @author Chris Shin
+ * @author Alex Jimenez
+ * @author Arjun Peri
+ */
+
 public class Grid {
 
   private List<List<Cell>> gridOfCells;
@@ -243,6 +252,10 @@ public class Grid {
     }
   }
 
+  /**
+   * Gets cell at specified row and column
+   */
+
   public Cell getCell(int row, int column) {
     try {
       return gridOfCells.get(row).get(column);
@@ -260,6 +273,10 @@ public class Grid {
     return cellsPerColumn;
   }
 
+  /**
+   * Retrieves property file from resources as indicated by the filename
+   */
+
   public Properties getPropertyFile(String fileName) {
     Properties propertyFile = new Properties();
     if (fileName.contains(DOT_CSV)) {
@@ -275,6 +292,11 @@ public class Grid {
     }
     return propertyFile;
   }
+
+  /**
+   * Enum used to define the different types of neighborhoods possible for different shapes and
+   * configurations.
+   */
 
   public enum neighborhoodTypes {
     RECTANGLECARDINAL(new int[][]{{-1, 0},
@@ -306,10 +328,6 @@ public class Grid {
 
     neighborhoodTypes(int[][] neighborhoods) {
       this.neighborhood = neighborhoods;
-    }
-
-    public int[][] getNeighborhood() {
-      return neighborhood;
     }
   }
 }

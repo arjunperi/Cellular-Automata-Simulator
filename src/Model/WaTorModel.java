@@ -3,6 +3,12 @@ package Model;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Model designated with handling the WaTor simulation.
+ *
+ * @author Chris Shin
+ */
+
 public class WaTorModel extends Model {
 
   public static final int WATER = 0;
@@ -29,7 +35,7 @@ public class WaTorModel extends Model {
     }
   }
 
-  public void updateState(int row, int column, List<Cell> neighbors) {
+  protected void updateState(int row, int column, List<Cell> neighbors) {
     WaTorCell currentCell = (WaTorCell) getCell(row, column);
     currentCell.setParameters(fishBreedingRate, sharkBreedingRate, sharkStarve);
     Collections.shuffle(neighbors);

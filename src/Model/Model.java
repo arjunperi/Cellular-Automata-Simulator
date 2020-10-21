@@ -10,6 +10,14 @@ import java.util.Queue;
 import javafx.scene.control.Alert;
 
 
+/**
+ * General model class for use by specific simulations.
+ *
+ * @author Chris Shin
+ * @author Alex Jimenez
+ * @author Arjun Peri
+ */
+
 public abstract class Model {
 
   private static final int ANIMATION_RATE_CHANGE = 5;
@@ -52,6 +60,10 @@ public abstract class Model {
     gridOfCells.initializeWithType(initializationType, allStates);
   }
 
+  /**
+   * Steps the model and updates the cells for each step.
+   */
+
   public boolean modelStep() {
     if ((!isPaused && checkTimeElapsed()) || isStep) {
       cycles = 0;
@@ -61,6 +73,10 @@ public abstract class Model {
     }
     return false;
   }
+
+  /**
+   * Updates the cells in the grid.
+   */
 
   public void updateCells() {
     try {
@@ -80,6 +96,12 @@ public abstract class Model {
     }
   }
 
+  /**
+   * Shows an error when one an exception is caught
+   *
+   * @param message message to display
+   */
+
   public void showError(String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle("Controller Error");
@@ -90,6 +112,11 @@ public abstract class Model {
 
   protected abstract void updateState(int row, int column, List<Cell> cellNeighbors);
 
+
+  /**
+   * writes the current states out to a CSV.
+   * @param fileOut name of CSV to write to.
+   */
 
   public void writeToCSV(String fileOut) {
     if (fileOut != null) {
@@ -102,13 +129,25 @@ public abstract class Model {
     return cycles % this.framesPerModelUpdate == 0;
   }
 
+  /**
+   * pauses or unpauses updating the simulation
+   */
+
   public void switchPause() {
     isPaused = !isPaused;
   }
 
+  /**
+   * pauses simulation
+   */
+
   public void setPaused() {
     isPaused = PAUSED;
   }
+
+  /**
+   * Steps/updates the model one time
+   */
 
   public void step() {
     isPaused = true;
@@ -125,6 +164,13 @@ public abstract class Model {
     return gridOfCells.getCell(row, column);
   }
 
+  /**
+   * parses all states from the appropriate properties file.
+   *
+   * @param allStates string that defines all possible states from properties file
+   * @throws ModelException throws model exception
+   */
+
   public void initializeAllStates(String allStates) throws ModelException {
     try {
       this.allStates = new ArrayList<>();
@@ -136,6 +182,13 @@ public abstract class Model {
       throw new ModelException(STATES_ERROR);
     }
   }
+
+  /**
+   * cycles the state of a cell when clicked.
+   *
+   * @param row row of cell to be cycled
+   * @param column column of cell to be cycled.
+   */
 
   public void cycleState(int row, int column) {
     getCell(row, column).cycleNextState(allStates);
@@ -149,20 +202,40 @@ public abstract class Model {
     return (int) gridOfCells.getCellsPerRow();
   }
 
+  /**
+   * speeds up the simulation by a set rate of change
+   */
+
   public void speedUp() {
     this.framesPerModelUpdate = Math
         .max(MIN_FRAMES_PER_MODEL_UPDATE, framesPerModelUpdate - ANIMATION_RATE_CHANGE);
   }
+
+  /**
+   * slows down the simulation by a set rate of change
+   */
 
   public void slowDown() {
     this.framesPerModelUpdate = Math
         .min(MAX_FRAMES_PER_MODEL_UPDATE, framesPerModelUpdate + ANIMATION_RATE_CHANGE);
   }
 
+  /**
+   * Sets the speed of the simulation
+   * @param speed how fast simulation runs
+   */
+
   public void setSimulationSpeed(double speed) {
     double temp = (1 - speed) * MAX_FRAMES_PER_MODEL_UPDATE;
     this.framesPerModelUpdate = Math.max(MIN_FRAMES_PER_MODEL_UPDATE, Math.round(temp / TEN) * TEN);
   }
+
+  /**
+   * retrieves appropriate property file, if it exists
+   *
+   * @param fileName name of the property file to retrieve
+   * @return property file from filename.
+   */
 
   public Properties getPropertyFile(String fileName) {
     Properties propertyFile = new Properties();

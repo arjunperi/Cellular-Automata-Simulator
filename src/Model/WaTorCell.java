@@ -2,6 +2,12 @@ package Model;
 
 import java.util.List;
 
+/**
+ * Cell class for the WaTor model
+ *
+ * @author Chris Shin
+ */
+
 public class WaTorCell extends Cell {
 
   private int stepsAlive = ONE;
@@ -98,6 +104,10 @@ public class WaTorCell extends Cell {
     this.sharkBreedingRate = sharkBreedingRate;
     this.sharkStarve = sharkStarve;
   }
+
+  /**
+   * modified to nextstate method, where now steps alive and steps after eating are now included.
+   */
 
   @Override
   public void toNextState() {

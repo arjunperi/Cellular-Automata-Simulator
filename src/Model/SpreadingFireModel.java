@@ -3,6 +3,12 @@ package Model;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Model designated with handling the spreading fire simulation.
+ *
+ * @author Chris Shin
+ */
+
 public class SpreadingFireModel extends Model {
 
   public static final int ALIVE = 1;
@@ -22,7 +28,7 @@ public class SpreadingFireModel extends Model {
     }
   }
 
-  public void updateState(int row, int column, List<Cell> neighbors) {
+  protected void updateState(int row, int column, List<Cell> neighbors) {
     Cell currentCell = getCell(row, column);
     if (currentCell.getCurrentState() == BURNING) {
       currentCell.setFutureState(EMPTY);
