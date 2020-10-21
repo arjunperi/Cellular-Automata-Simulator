@@ -34,7 +34,6 @@ public class Controller {
   private static final String SPANISH = "Spanish";
   private static final String FAKE_LANGUAGE = "FakeLanguage";
   private static final String DOT_CSV = ".csv";
-  private static final String DOT_CSS = ".css";
   private static final String TYPE = "Type";
   private static final String MODEL = "Model";
   private static final String DOT = ".";
@@ -57,9 +56,6 @@ public class Controller {
 
   private static final String RESOURCES = "Resources/";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES.replace("/", ".");
-  public static final String DEFAULT_RESOURCE_FOLDER = "/" + RESOURCES;
-  public static final String STYLESHEET = "GameOfLife.css";
-  public static final String BLANK = " ";
   private ResourceBundle projectTextResources;
   private final Map<Integer, String> stateColorMapping = new HashMap<>();
   private List<List<String>> frontEndCellColors;

@@ -41,6 +41,8 @@ To run the program, simply run main in the SimulationRunner.java class.
 Data files needed: 
 - Properties file and csv file for each initial state configuration of each simulation. Each property file contains the key "fileName" that links the corresponding csv file.
 - Default files for each of the 6 simulaiont types that hold default values for potential missing keys (see assumptions).
+- Language Resource files in the src/Resources folder
+- CSS files in the src/Resources folder
 
 Features implemented:
 - Main menu with file input text box.
@@ -68,6 +70,8 @@ Interesting data files:
 
 Known Bugs:
 - Bottom row of cells are cut off on the screen. This may have to do with BorderPane setup and menu panel at the top messing with the screen/grid fitting.
+- The theme dropdown menu item has invisible text because it is the same color as the dropdown background color. Had troubles changing the CSS to fix this without throwing warnings so left it as is. You can see the different themes if you hover over the text.
+- The CSS theme does not get applied to the graph view. This would theoretically be a very easy change by just feeind the css file into the graph controller and applying it to the second graph scene. Was running into issues with setting the proper CSS tag for the graph and was getting invisible items in the graph view so left the CSS not applied to the graph view due to lack of time/patience. 
 
 Extra credit:
 - Completed part of optional configuration specifications. 
@@ -75,4 +79,6 @@ Extra credit:
 
 ### Impressions
 - Arjun: Overall, I thought this project was a great introduction to front end development as well a great opportunity to continue building on JavaFx skills. Learning about GUI elements, css, and properties files was tough at first but the iterative nature of the project made it manageable.
+- Alex: I also enjoyed the project and thought it was a good intro to front end development. Since I was primarily in charge of the view and vizualization, I got to spend alot of time with the GUI, css, and property files which are all great to know about for future UI development. The usage of the MVC model was difficult to understand at first, but as the project progressed I think we were able to follow it better and actually see its advantages.
+- Chris: I think this project was really challenging but interesting.  The MVC model was quite difficult to absorb at first, but in the end it made development way easier, as we could all work on different things without worrying about breaking anything.  I spent the majority of my time on the backend, which I thought had it's own challenges, but was fun to work on.  The abstractions/how to structure the backend was especially challenging, but I'm sure the intuition for how to structure it will come with more experience.
 
