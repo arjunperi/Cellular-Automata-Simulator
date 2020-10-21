@@ -2,6 +2,12 @@ package Model;
 
 import java.util.List;
 
+/**
+ * Model designated with handling the percolation simulation.
+ *
+ * @author Chris Shin
+ */
+
 public class PercolationModel extends Model {
 
   private static final int FULL = 1;

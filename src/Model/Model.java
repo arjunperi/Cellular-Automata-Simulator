@@ -7,9 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Queue;
-
 import javafx.scene.control.Alert;
-import org.apache.commons.lang3.ObjectUtils;
 
 
 public abstract class Model {

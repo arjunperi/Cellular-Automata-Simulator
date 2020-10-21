@@ -2,6 +2,13 @@ package Model;
 
 import java.util.List;
 
+/**
+ * Model designated with handling the game of life simulation.  Gets the number of neighbors alive
+ * in the neighborhood and updates state accordingly.
+ *
+ * @author Chris Shin
+ */
+
 public class GameOfLifeModel extends Model {
 
   private static final int ALIVE = 1;

@@ -4,15 +4,15 @@ import Controller.Controller;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
-import java.lang.reflect.Method;
-import java.util.Properties;
-import java.util.Random;
-import javafx.scene.control.Alert;
-
-import java.io.*;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+import java.util.Random;
 
 public class Grid {
 

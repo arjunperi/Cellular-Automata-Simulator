@@ -2,28 +2,28 @@ package Controller;
 
 import Model.Model;
 import Model.ModelException;
-import View.View;
 import View.FrontEndCell;
-
-
-import java.io.*;
-
+import View.View;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.Map;
 import java.util.ResourceBundle;
-
 import javafx.beans.value.ChangeListener;
-import javafx.event.Event;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
