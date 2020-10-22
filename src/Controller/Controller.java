@@ -28,6 +28,13 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 
+/**
+ * @author Alex Jimenez
+ * @author Arjun Peri
+ *
+ * The controller class for the simulation. This "hosts" the simulation, creating the backend model and
+ * the front end view and mediating communication between the two
+ */
 public class Controller {
 
   private static final String ENGLISH = "English";
@@ -72,6 +79,12 @@ public class Controller {
   private Properties currentPropertyFile;
 
 
+  /**
+   * Constructor for the controller class. Initializes a controller object and in doing so
+   * creates a view and launches the simulation splash screen.
+   *
+   * @param stage The stage upon which the main simulation grid is created.
+   */
   public Controller(Stage stage) {
     projectTextResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + ENGLISH);
     this.mainView = new View(projectTextResources);
@@ -79,6 +92,10 @@ public class Controller {
     this.stage = stage;
   }
 
+  /**
+   * Initializes the user inputs for the splash screen that decides which simulation type is ran.
+   * It then passes these inputs to the view which creates the splash screen view
+   */
   public void initializeSplashMenu() {
     if (this.graphShowing) {
       this.graphController.closeGraph();
@@ -100,6 +117,13 @@ public class Controller {
     this.mainView.setHomeButton(homeButtonEvent -> initializeSplashMenu());
   }
 
+  /**
+   * Calls the view to create the page after the simulation splash screen. This view displays the information for the
+   * chosen simulation and has buttons to go home or to start the simulation grid view
+   *
+   * @param fileName The file name of the simulation being ran that was input by the user in the
+   *                 inputText text field of the initializeSplashMenu function
+   */
   public void displayInfo(String fileName) {
     try {
       this.mainView
@@ -109,6 +133,10 @@ public class Controller {
     }
   }
 
+  /**
+   * This function is called by a button created in the view called in the displayInfo scene. It mediates
+   * between the backend model and the front end view to diplay the simulation grid.
+   */
   public void initializeSimulation() {
     mainView.clearCenterGroup();
     mainView.clearTopMenuGroup();
@@ -128,6 +156,10 @@ public class Controller {
     }
   }
 
+  /**
+   * Called in the initializeSimulation method, this activates the backend model with the proper simulation
+   * type. This model's information is then used to display the front end grid view.
+   */
   private void initializeModel() {
     try {
       modelType = currentPropertyFile.getProperty(TYPE);
@@ -180,6 +212,10 @@ public class Controller {
     initializeSplashMenu();
   }
 
+  /**
+   * Corresponds to a step in the backend model and graph if it is visible. After updating the backend model,
+   * the front end view is updated using the new data
+   */
   public void gameStep() {
     if (simIsSet) {
       if (mainModel.modelStep() && graphShowing) {
@@ -213,6 +249,12 @@ public class Controller {
     alert.showAndWait();
   }
 
+  /**
+   * Adds a mapping of the input state and its corresponding color in the property file to the
+   * color map.
+   *
+   * @param state The cell state being considered
+   */
   public void initializeColorMapping(int state) {
     String defaultColor = defaultFile.getProperty(String.valueOf(state));
     String color = (String) currentPropertyFile.getOrDefault(String.valueOf(state), defaultColor);
@@ -239,6 +281,9 @@ public class Controller {
     initializeSplashMenu();
   }
 
+  /**
+   * Adds eventHandlers to the view cells that cause for the cells to cycle colors when clicked on
+   */
   public void addCellEventHandlers() {
     List<List<FrontEndCell>> frontEndCells = this.mainView.getFrontEndCellGrid();
     for (List<FrontEndCell> cellRow : frontEndCells) {
@@ -248,6 +293,11 @@ public class Controller {
     }
   }
 
+  /**
+   * Calls to the model to cycle the state of the cell that was clicked on
+   *
+   * @param event Event that indicated what cell was clicked on
+   */
   public void changeClickedCellState(Event event) {
     EventTarget clickedEvent = event.getTarget();
     FrontEndCell clickedCell = (FrontEndCell) clickedEvent;
@@ -256,6 +306,11 @@ public class Controller {
     mainModel.cycleState(clickedCellRow, clickedCellColumn);
   }
 
+  /**
+   * Initializes the simulation menu that is displayed while the simulation grid is being displayed.
+   * Creates events that handle what occurs when the buttons are clicked on then delegates to the view
+   * to create and display the buttons.
+   */
   public void initializeSimulationMenu() {
     EventHandler<ActionEvent> saveEvent = e -> getSaveInputs();
     EventHandler<ActionEvent> colorEvent = e -> changeColorsPopUp();
@@ -275,6 +330,9 @@ public class Controller {
   }
 
 
+  /**
+   * Creates the text pop up to allow users to change the state color mappings that they input.
+   */
   public void changeColorsPopUp() {
     mainModel.setPaused();
     TextField colorInput = new TextField();
@@ -287,6 +345,12 @@ public class Controller {
     mainModel.switchPause();
   }
 
+  /**
+   * Updates the color map of the state specified to map to the new color
+   *
+   * @param state The state of the mapping to be changed
+   * @param color The color of the mapping to be changed to
+   */
   public void updateColorStateMapping(String state, String color) {
     try {
       int stateInt = Integer.parseInt(state);
@@ -300,6 +364,9 @@ public class Controller {
     }
   }
 
+  /**
+   * Displays the state concentration graph if not already showing
+   */
   public void createGraph() {
     if (this.graphShowing) {
       showError(this.projectTextResources.getString(GRAPH_ERROR));

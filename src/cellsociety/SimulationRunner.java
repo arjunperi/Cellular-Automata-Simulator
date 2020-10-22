@@ -29,6 +29,11 @@ public class SimulationRunner extends Application {
   public static final double SCENE_HEIGHT = 800;
   private Controller mainController;
 
+  /**
+   * This class starts and runs the simulation by creating a Controller
+   *
+   * @param stage The stage upon which the main simulation is ran
+   */
   @Override
   public void start(final Stage stage) {
     mainController = new Controller(stage);

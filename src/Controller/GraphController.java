@@ -10,6 +10,12 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.stage.Stage;
 
 
+/**
+ * @author Alex Jimenez
+ *
+ * Controller class for the graph display. Handles the backend data to update the graph and delegates to
+ * the graphView class to display the graph scene.
+ */
 public class GraphController {
 
   private final static int NEW_GRAPH_STEP_COUNT = 0;
@@ -27,6 +33,12 @@ public class GraphController {
   private Map<Integer, Series> stateSeries = new HashMap<>();
   private Map<Integer, Integer> stateCountsMap = new HashMap<>();
 
+  /**
+   * @param model The main model of the simulation being ran.
+   * @param stateColorMap The state color mapping of the current simulation. Initially read from property file in the controller.
+   * @param stage The stage upon which the simulation grid is displayed.
+   * @param projectTextResources The current text recourse properties file of the simulation being ran.
+   */
   public GraphController(Model model, Map<Integer, String> stateColorMap, Stage stage,
       ResourceBundle projectTextResources) {
     this.graphView = new GraphView(stage, stateColorMap, projectTextResources);
@@ -36,6 +48,10 @@ public class GraphController {
   }
 
 
+  /**
+   * Initializes the new graph by creating data object for state counts and calling the graphView to
+   * initialize the line chart view with relevant state lines.
+   */
   public void createGraph() {
     graphStepCount = NEW_GRAPH_STEP_COUNT;
     graphShowing = GRAPH_SHOWING;
@@ -51,6 +67,12 @@ public class GraphController {
     this.graphView.setOnGraphClose(event -> graphShowing = GRAPH_NOT_SHOWING);
   }
 
+  /**
+   * Updates the graph by adding points for the current state concentrations. Does so by iterating over the
+   * state counts map and providing this information to the view
+   *
+   * @return A boolean that represents if the graph is showing or not
+   */
   public boolean updateGraph() {
     updateStateCounts();
     for (int currentState : this.stateCountsMap.keySet()) {

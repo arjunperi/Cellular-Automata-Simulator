@@ -28,6 +28,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 
+/**
+ * @author Alex Jimenez
+ * @author Arjun Peri
+ */
 public class View {
 
   private static final String COLOR_BUTTON = "colorsButton";
