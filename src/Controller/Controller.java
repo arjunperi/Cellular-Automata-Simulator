@@ -293,6 +293,12 @@ public class Controller {
     return propertyFile;
   }
 
+  /**
+   * According to the language passed from the spalsh screen language buttons, sets the language of
+   * all future created text fields
+   *
+   * @param language The language of the text file to be used
+   */
   public void changeTextResourceFile(String language) {
     ResourceBundle newBundle = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
     this.projectTextResources = newBundle;
@@ -396,10 +402,16 @@ public class Controller {
     this.graphShowing = true;
   }
 
+  /**
+   * @return the scene upon which the simulation grid is displayed
+   */
   public Scene setupScene() {
     return mainView.setupScene();
   }
 
+  /**
+   * @return The view that corresponds to the simulations main grid view.
+   */
   public View getMainView() {
     return mainView;
   }

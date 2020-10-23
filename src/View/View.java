@@ -278,6 +278,13 @@ public class View {
     return speedSlider;
   }
 
+  /**
+   * Creates the textfield pop up for users to specify a new state color mapping
+   *
+   * @param stateInput The state of the color mapping to be changed
+   * @param colorInput The new color of the color mapping to be changed
+   * @return the text field box that accepts the state color inputs
+   */
   public Dialog changeColorsPopUp(TextField stateInput, TextField colorInput) {
     Dialog colorBox = new TextInputDialog();
     stateInput.setId(STATE_LOWER + INPUT);
@@ -348,10 +355,18 @@ public class View {
     return this.homeButton;
   }
 
+  /**
+   * Updates the text field on the hope button
+   */
   public void updateHomeButton() {
     this.homeButton.setText(viewTextResources.getString(HOME + BUTTON + TEXT));
   }
 
+  /**
+   * Creates the combo box to set the view theme
+   *
+   * @return The combo box that allows the user to select the view theme
+   */
   public ComboBox getThemeComboBox() {
     ComboBox themeComboBox = new ComboBox();
     themeComboBox.setPromptText(viewTextResources.getString(THEME));
@@ -369,6 +384,11 @@ public class View {
     return themeComboBox;
   }
 
+  /**
+   * Updates the css file that is applied to the current view, allowing the theme to be changed
+   *
+   * @param cssFile the css file to be applied to the project
+   */
   public void updateCSS(String cssFile) {
     this.scene.getStylesheets().clear();
     this.scene.getStylesheets().add(cssFile);
@@ -381,18 +401,32 @@ public class View {
     alert.showAndWait();
   }
 
+  /**
+   * Allows the resource bundle to be updated to change text field languages
+   *
+   * @param resources The new recource bundle to be applied
+   */
   public void updateResourceBundle(ResourceBundle resources) {
     this.viewTextResources = resources;
   }
 
+  /**
+   * Clears the top section of the borderpane which holds the menu
+   */
   public void clearTopMenuGroup() {
     this.topGroup.getChildren().clear();
   }
 
+  /**
+   * Clears the center section of the borderpane which holds the simulation details or the grid view
+   */
   public void clearCenterGroup() {
     this.centerGroup.getChildren().clear();
   }
 
+  /**
+   * @return Grid of frontEndCells
+   */
   public List<List<FrontEndCell>> getFrontEndCellGrid() {
     return frontEndCellGrid;
   }
