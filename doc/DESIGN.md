@@ -54,7 +54,7 @@
         fields that the view displays.
 
 ## Assumptions that Affect the Design
-   *One assumption that we make is that there is an existing default properties file for each of the
+   * One assumption that we make is that there is an existing default properties file for each of the
     6 simulation types that are currently implemented. Without this default file, the user will have
     to specify all the existing keys for a given simulation’s properties file, otherwise errors will
     be thrown as the getOrDefault() file won’t work properly.
@@ -80,7 +80,7 @@
 ## New Features HowTo
 
 #### Easy to Add Features
-   *Adding a new simulation requires someone to create a new properties file with all of the appropriate
+   * Adding a new simulation requires someone to create a new properties file with all of the appropriate
     keys/required parameters, new CSV files for the simulation, and a new model/cell class in the model 
     package.  The model class will handle the specific rules for updating the cell states for this simulation, 
     as well as parse the parameters as specified in the properties file.
