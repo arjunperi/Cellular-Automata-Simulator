@@ -180,6 +180,10 @@ public class Controller {
     }
   }
 
+  /**
+   * Pops up a dialog box when the save button is pressed that allows the user to input a title, author, and description of the simulation to be saved
+   to a properties file.
+   */
   public void getSaveInputs() {
     mainModel.setPaused();
     TextField titleInput = new TextField();
@@ -201,6 +205,11 @@ public class Controller {
     mainModel.switchPause();
   }
 
+
+  /**
+   * Writes the user inputs to a properties file with specified title, and then returns back to splash menu.
+   * @param propertyFile
+   */
   public void writeToPropertyFile(Properties propertyFile) {
     try {
       FileWriter writer = new FileWriter(
@@ -242,6 +251,11 @@ public class Controller {
     return frontEndCellColors;
   }
 
+
+  /**
+   * Displays an alert to the user with a message describing the error.
+   * @param message
+   */
   public void showError(String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle(CONTROLLER_ERROR);
@@ -263,6 +277,11 @@ public class Controller {
     }
   }
 
+  /**
+   * Gets the properties file corresponding to the file name entered by the user in the splash menu.
+   * @param fileName
+   * @return
+   */
   public Properties getPropertyFile(String fileName) {
     Properties propertyFile = new Properties();
     try {
