@@ -98,6 +98,11 @@ public class View {
   private Button homeButton;
   private ResourceBundle viewTextResources;
 
+
+  /**
+   * Constructor. Sets up a BorderPane root so that the interface can be organized into sections on a screen.
+   * @param resources
+   */
   public View(ResourceBundle resources) {
     topGroup = new Group();
     centerGroup = new Group();
@@ -107,6 +112,10 @@ public class View {
     this.viewTextResources = resources;
   }
 
+  /**
+   * Sets up the JavaFX scene.
+   * @return
+   */
   public Scene setupScene() {
     this.scene = new Scene(root, SimulationRunner.SCENE_WIDTH, SimulationRunner.SCENE_HEIGHT,
         SimulationRunner.BACKGROUND);
@@ -114,6 +123,10 @@ public class View {
     return this.scene;
   }
 
+  /**
+   * Updates front end cells with the passed in front end cell colors at every iteration of the game loop.
+   * @param frontEndCellColors
+   */
   public void viewStep(List<List<String>> frontEndCellColors) {
     updateFrontEndCells(frontEndCellColors);
   }
@@ -158,6 +171,15 @@ public class View {
     }
   }
 
+  
+  /**
+   * Creates the input text box to be displayed at the start of the program and adds to the center of the BorderPane.
+   * @param inputText
+   * @param inputTextEvent
+   * @param englishEvent
+   * @param spanishEvent
+   * @param languageEvent
+   */
   public void createInputTextField(TextField inputText, EventHandler<ActionEvent> inputTextEvent,
       EventHandler<ActionEvent> englishEvent, EventHandler<ActionEvent> spanishEvent,
       EventHandler<ActionEvent> languageEvent) {
@@ -177,6 +199,12 @@ public class View {
     this.centerGroup.getChildren().add(inputTextBox);
   }
 
+  /**
+   * Displays the information about a simulation as read in from the corresponding properties file along with the start button and home button.
+   * @param fileName
+   * @param simulationPropertyFile
+   * @param startButtonEvent
+   */
   public void displaySimulationInfo(String fileName, Properties simulationPropertyFile,
       EventHandler<ActionEvent> startButtonEvent) {
     clearCenterGroup();
@@ -205,6 +233,15 @@ public class View {
     }
   }
 
+  /**
+   * Displays the appropriate buttons and sliders that exist while the simultion is running.
+   * @param saveEvent
+   * @param changeColorEvent
+   * @param graphEvent
+   * @param pauseEvent
+   * @param stepEvent
+   * @param sliderEvent
+   */
   public void initializeSimulationMenu(EventHandler<ActionEvent> saveEvent,
       EventHandler<ActionEvent> changeColorEvent,
       EventHandler<ActionEvent> graphEvent, EventHandler<ActionEvent> pauseEvent,
@@ -256,6 +293,13 @@ public class View {
     return colorBox;
   }
 
+  /**
+   * Displays a pop dialog box that enables a user to input their specifications for the file they are saving.
+   * @param titleInput
+   * @param authorInput
+   * @param descriptionInput
+   * @return
+   */
   public Dialog showSaveInputs(TextField titleInput, TextField authorInput,
       TextField descriptionInput) {
     Dialog saveBox = new TextInputDialog();
@@ -277,6 +321,13 @@ public class View {
     return saveBox;
   }
 
+  /**
+   * Generalized method to allow for buttons to be made given a property that is the button ID and text display, as well as an Event Handler tha  specifies
+   * the action event of the button press.
+   * @param property
+   * @param handler
+   * @return
+   */
   private Button makeButton(String property, EventHandler<ActionEvent> handler) {
     Button result = new Button();
     result.setId(property);
@@ -285,6 +336,12 @@ public class View {
     return result;
   }
 
+  
+  /**
+   * Makes the home button based on information read in from the resources package.
+   * @param inputTextEvent
+   * @return
+   */
   public Button setHomeButton(EventHandler<ActionEvent> inputTextEvent) {
     this.homeButton = makeButton(viewTextResources.getString(HOME + BUTTON + TEXT), inputTextEvent);
     this.homeButton.setId(HOME);
