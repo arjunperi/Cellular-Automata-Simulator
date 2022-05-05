@@ -1,12 +1,12 @@
-simulation
+Cell Simulation
 ====
 
 This project implements a cellular automata simulator.
 
 Names:
-- Alex Jimenez (ajj29)
-- Arjun Peri (ap458)
-- Christopher Shin (cjs97)
+- Arjun Peri
+- Alex Jimenez
+- Christopher Shin
 
 ### Timeline
 
@@ -18,19 +18,16 @@ Hours Spent:
 30 hrs/week * 3 weeks = 90 hrs
 
 ### Primary Roles
-- Alex: Handled visualization and Controller.
 - Arjun: Worked with exceptions and configuration. 
+- Alex: Handled visualization and Controller.
 - Chris: Responsible for Model and simulations. 
 
 
 ### Resources Used
-- Course website - Some starter code with setting up GUI elements was taken and modified from works of Dr. Robert Duvall.
 - Stack overflow 
 	- Used [this](https://howtodoinjava.com/java/io/read-write-properties-file/) for help  with property file writing. 
 	- Used [this](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Dialog.html) for help with dialog box. 
 	- Used [this](https://dzone.com/articles/implementing-custom-exceptions-in-java) for help with custom exceptions. 
-- Class Piazza board
-- Office hour TA's - Ben Xu, Christina Chen
 
 ### Running the Program
 
@@ -72,13 +69,3 @@ Known Bugs:
 - Bottom row of cells are cut off on the screen. This may have to do with BorderPane setup and menu panel at the top messing with the screen/grid fitting.
 - The theme dropdown menu item has invisible text because it is the same color as the dropdown background color. Had troubles changing the CSS to fix this without throwing warnings so left it as is. You can see the different themes if you hover over the text.
 - The CSS theme does not get applied to the graph view. This would theoretically be a very easy change by just feeind the css file into the graph controller and applying it to the second graph scene. Was running into issues with setting the proper CSS tag for the graph and was getting invisible items in the graph view so left the CSS not applied to the graph view due to lack of time/patience. 
-
-Extra credit:
-- Completed part of optional configuration specifications. 
-
-
-### Impressions
-- Arjun: Overall, I thought this project was a great introduction to front end development as well a great opportunity to continue building on JavaFx skills. Learning about GUI elements, css, and properties files was tough at first but the iterative nature of the project made it manageable.
-- Alex: I also enjoyed the project and thought it was a good intro to front end development. Since I was primarily in charge of the view and vizualization, I got to spend alot of time with the GUI, css, and property files which are all great to know about for future UI development. The usage of the MVC model was difficult to understand at first, but as the project progressed I think we were able to follow it better and actually see its advantages.
-- Chris: I think this project was really challenging but interesting.  The MVC model was quite difficult to absorb at first, but in the end it made development way easier, as we could all work on different things without worrying about breaking anything.  I spent the majority of my time on the backend, which I thought had it's own challenges, but was fun to work on.  The abstractions/how to structure the backend was especially challenging, but I'm sure the intuition for how to structure it will come with more experience.
-
